@@ -8,6 +8,7 @@ import { ChallengeModule } from './challenge/challenge.module';
 import { validateEnv } from './config/env.validation';
 import { DbModule } from './db/db.module';
 import { HealthModule } from './health/health.module';
+import { MealsModule } from './meals/meals.module';
 import { ProfileModule } from './profile/profile.module';
 import { RuleLogsModule } from './rule-logs/rule-logs.module';
 import { RulesModule } from './rules/rules.module';
@@ -34,6 +35,7 @@ import { WeightsModule } from './weights/weights.module';
     StreaksModule,
     ProfileModule,
     ChallengeModule,
+    MealsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })

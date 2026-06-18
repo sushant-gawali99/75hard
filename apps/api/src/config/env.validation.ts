@@ -11,6 +11,10 @@ export const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_ANDROID_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
+  // Meals AI. Optional; analysis falls back to Claude estimates without FatSecret.
+  ANTHROPIC_API_KEY: z.string().optional(),
+  FATSECRET_CLIENT_ID: z.string().optional(),
+  FATSECRET_CLIENT_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

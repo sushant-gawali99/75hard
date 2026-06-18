@@ -19,7 +19,7 @@ async function bootstrap() {
   // Mount Better Auth (raw body) before enabling JSON parsing for the rest.
   const server = app.getHttpAdapter().getInstance();
   server.all('/api/auth/{*path}', toNodeHandler(auth));
-  app.use(json());
+  app.use(json({ limit: '12mb' })); // meal photos arrive as base64
 
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT', 3000);
