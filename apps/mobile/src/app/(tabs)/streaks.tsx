@@ -3,7 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Card, Icon, type IconName } from '@/components/ui';
-import { useRules, useStreaks } from '@/lib/queries';
+import { useRules, useStreaks, useStreaksCalendar } from '@/lib/queries';
 import { colors, radius, ruleIconPalettes, spacing, type RuleIconPalette } from '@/theme';
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -11,8 +11,7 @@ const HEAT = ['#BFE3B4', '#8FD392', '#5CC376', '#21B96B'];
 
 type Cell = { day: number; pct: number; missed: boolean; future: boolean; today: boolean } | null;
 
-// NOTE: calendar uses sample completion data until a per-day aggregate endpoint exists.
-function buildMonth(): { label: string; weeks: Cell[][] } {
+function buildMonth(pctByDay: Map<number, number>): { label: string; weeks: Cell[][] } {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -24,9 +23,8 @@ function buildMonth(): { label: string; weeks: Cell[][] } {
   for (let i = 0; i < firstWeekday; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) {
     const future = d > today;
-    const seed = (d * 37) % 100;
-    const missed = !future && seed < 12;
-    const pct = future || missed ? 0 : 45 + (seed % 56);
+    const pct = pctByDay.get(d) ?? 0;
+    const missed = !future && d < today && pct === 0;
     cells.push({ day: d, pct, missed, future, today: d === today });
   }
   while (cells.length % 7 !== 0) cells.push(null);
@@ -47,7 +45,13 @@ export default function StreaksScreen() {
   const [view, setView] = useState<'rules' | 'calendar'>('rules');
   const { data: rules = [], isLoading } = useRules();
   const { data: streaks } = useStreaks();
-  const month = buildMonth();
+  const now = new Date();
+  const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const { data: calendar } = useStreaksCalendar(monthStr);
+  const pctByDay = new Map<number, number>(
+    (calendar?.days ?? []).map((d) => [Number(d.date.slice(8, 10)), d.pct]),
+  );
+  const month = buildMonth(pctByDay);
 
   const byRule = new Map((streaks?.rules ?? []).map((s) => [s.ruleId, s]));
   const hero = [
@@ -171,7 +175,7 @@ export default function StreaksScreen() {
               </View>
             ))}
             <AppText variant="caption" color={colors.mutedSoft} style={{ marginTop: 14, textAlign: 'center' }}>
-              Calendar shows sample data (per-day endpoint coming).
+              Each square shows how much of your process you completed that day.
             </AppText>
           </Card>
         )}

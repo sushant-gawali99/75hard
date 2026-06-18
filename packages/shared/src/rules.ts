@@ -65,3 +65,9 @@ export const StreaksSummary = z.object({
   ),
 });
 export type StreaksSummary = z.infer<typeof StreaksSummary>;
+
+/** Per-day completion for a month (calendar heatmap). */
+export const StreaksCalendar = z.object({
+  days: z.array(z.object({ date: z.string().date(), pct: z.number().int().nonnegative() })),
+});
+export type StreaksCalendar = z.infer<typeof StreaksCalendar>;

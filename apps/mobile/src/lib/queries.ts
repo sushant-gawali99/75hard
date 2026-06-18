@@ -40,6 +40,13 @@ export function useStreaks() {
   return useQuery({ queryKey: ['streaks'], queryFn: api.getStreaks });
 }
 
+export function useStreaksCalendar(month: string) {
+  return useQuery({
+    queryKey: ['streaks', 'calendar', month],
+    queryFn: () => api.getStreaksCalendar(month),
+  });
+}
+
 export function useProfile() {
   return useQuery({ queryKey: ['profile'], queryFn: api.getProfile });
 }

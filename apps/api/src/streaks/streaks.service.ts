@@ -71,4 +71,24 @@ export class StreaksService {
       rules: ruleSummaries,
     };
   }
+
+  /** Per-day completion % for a month (YYYY-MM). */
+  async calendar(userId: string, month: string): Promise<{ days: { date: string; pct: number }[] }> {
+    const [userRules, logs] = await Promise.all([
+      this.db.select().from(rules).where(eq(rules.userId, userId)),
+      this.db.select().from(ruleLogs).where(eq(ruleLogs.userId, userId)),
+    ]);
+    const total = userRules.length;
+    const counts = new Map<string, number>();
+    for (const l of logs) {
+      if (l.state === 'done' && l.date.startsWith(month)) {
+        counts.set(l.date, (counts.get(l.date) ?? 0) + 1);
+      }
+    }
+    const days = [...counts.entries()].map(([date, c]) => ({
+      date,
+      pct: total > 0 ? Math.round((c / total) * 100) : 0,
+    }));
+    return { days };
+  }
 }

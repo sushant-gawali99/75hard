@@ -12,6 +12,7 @@ import type {
   SaveMealInput,
   SetRuleStateInput,
   StreaksSummary,
+  StreaksCalendar,
   UpsertProfileInput,
   WeightEntry,
 } from '@process/shared';
@@ -57,6 +58,8 @@ export const api = {
   listWeights: () => request<WeightEntry[]>('/weights'),
   addWeight: (body: AddWeightInput) => request<WeightEntry>('/weights', { method: 'POST', body: JSON.stringify(body) }),
   getStreaks: () => request<StreaksSummary>('/streaks'),
+  getStreaksCalendar: (month: string) =>
+    request<StreaksCalendar>(`/streaks/calendar?month=${month}`),
   getProfile: () => request<Profile | null>('/profile'),
   upsertProfile: (body: UpsertProfileInput) => request<Profile>('/profile', { method: 'PUT', body: JSON.stringify(body) }),
   getNutritionTargets: () => request<NutritionTargets | null>('/nutrition-targets'),
