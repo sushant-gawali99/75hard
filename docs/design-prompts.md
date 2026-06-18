@@ -121,6 +121,34 @@ Edge-to-edge, transparent status bar, large bottom safe padding.
 This screen should feel serene and inspiring — like taking a deep breath.
 ```
 
+## 1a · Launch & auth states
+
+```
+Design the LAUNCH + AUTH states that pair with the Welcome screen. These are brief states, not a full
+screen — Google's account picker itself is a native system dialog and is NOT designed here.
+
+LAUNCH / SESSION CHECK (cold start):
+- A calm branded splash on the Fresh Sage background (#F4F8F1): the "Process" wordmark + leaf/check
+  mark, centered, with a subtle gradient glow and a gentle breathing animation.
+- While it shows, the app checks for an existing session: valid → go straight to Today; none → fade
+  into the Welcome screen. Keep it under a second where possible; no spinner unless it actually lags.
+
+SIGNING-IN STATE (after "Continue with Google"):
+- The native Google account picker appears (system UI). Once the user picks an account, show an inline
+  loading state on the Welcome screen: the "Continue with Google" button becomes a disabled spinner
+  with "Signing you in…", the rest of the screen dimmed slightly. This covers backend token
+  verification + session creation.
+- On success: a gentle transition to onboarding (new user) or Today (returning user).
+
+ERROR STATE:
+- If sign-in fails or is cancelled, return to the Welcome screen and show a soft inline message below
+  the button in clay (#D9806A), not alarming: "Couldn't sign you in. Please try again." The button
+  resets to its normal "Continue with Google" state for retry.
+
+Material 3: circular progress inside or beside the button; inline text (or snackbar) for the error.
+Keep everything on-brand — calm and reassuring.
+```
+
 ## 2 · Set Challenge Length
 
 ```
