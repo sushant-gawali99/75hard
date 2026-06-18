@@ -1,30 +1,17 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Card, Icon, type IconName } from '@/components/ui';
+import { useRules, useStreaks } from '@/lib/queries';
 import { colors, radius, ruleIconPalettes, spacing, type RuleIconPalette } from '@/theme';
-
-type RuleStat = { name: string; icon: IconName; palette: RuleIconPalette; current: number; longest: number; last7: boolean[] };
-
-const RULES: RuleStat[] = [
-  { name: 'Drink 3L of water', icon: 'water-drop', palette: 'water', current: 41, longest: 52, last7: [true, true, true, true, true, true, true] },
-  { name: 'Walk 30 minutes', icon: 'directions-walk', palette: 'green', current: 28, longest: 40, last7: [true, true, false, true, true, true, true] },
-  { name: 'No sugar after 7pm', icon: 'cookie', palette: 'orange', current: 12, longest: 30, last7: [false, true, true, true, false, true, true] },
-  { name: 'Lights out by 11pm', icon: 'bedtime', palette: 'purple', current: 41, longest: 41, last7: [true, true, true, true, true, true, false] },
-];
-
-const HERO = [
-  { label: 'CURRENT', value: 41, accent: true },
-  { label: 'LONGEST', value: 52, accent: false },
-  { label: 'PERFECT DAYS', value: 38, accent: false },
-];
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const HEAT = ['#BFE3B4', '#8FD392', '#5CC376', '#21B96B'];
 
 type Cell = { day: number; pct: number; missed: boolean; future: boolean; today: boolean } | null;
 
+// NOTE: calendar uses sample completion data until a per-day aggregate endpoint exists.
 function buildMonth(): { label: string; weeks: Cell[][] } {
   const now = new Date();
   const year = now.getFullYear();
@@ -43,12 +30,9 @@ function buildMonth(): { label: string; weeks: Cell[][] } {
     cells.push({ day: d, pct, missed, future, today: d === today });
   }
   while (cells.length % 7 !== 0) cells.push(null);
-
   const weeks: Cell[][] = [];
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
-
-  const label = now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-  return { label, weeks };
+  return { label: now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }), weeks };
 }
 
 function heatColor(pct: number): string {
@@ -61,7 +45,16 @@ function heatColor(pct: number): string {
 export default function StreaksScreen() {
   const insets = useSafeAreaInsets();
   const [view, setView] = useState<'rules' | 'calendar'>('rules');
+  const { data: rules = [], isLoading } = useRules();
+  const { data: streaks } = useStreaks();
   const month = buildMonth();
+
+  const byRule = new Map((streaks?.rules ?? []).map((s) => [s.ruleId, s]));
+  const hero = [
+    { label: 'CURRENT', value: streaks?.overall.current ?? 0, accent: true },
+    { label: 'LONGEST', value: streaks?.overall.longest ?? 0, accent: false },
+    { label: 'PERFECT DAYS', value: streaks?.overall.perfectDays ?? 0, accent: false },
+  ];
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
@@ -75,16 +68,8 @@ export default function StreaksScreen() {
 
         {/* hero stats */}
         <Card style={{ marginTop: 14, padding: 18, flexDirection: 'row' }}>
-          {HERO.map((s, i) => (
-            <View
-              key={s.label}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                borderLeftWidth: i === 0 ? 0 : 1,
-                borderLeftColor: colors.divider,
-              }}
-            >
+          {hero.map((s, i) => (
+            <View key={s.label} style={{ flex: 1, alignItems: 'center', borderLeftWidth: i === 0 ? 0 : 1, borderLeftColor: colors.divider }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                 {s.accent ? <Icon name="local-fire-department" size={20} color={colors.amber} /> : null}
                 <AppText variant="stat" color={s.accent ? colors.green : colors.ink}>
@@ -106,15 +91,7 @@ export default function StreaksScreen() {
               <Pressable
                 key={key}
                 onPress={() => setView(key)}
-                style={{
-                  flex: 1,
-                  height: 38,
-                  borderRadius: radius.pill,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: active ? colors.surface : 'transparent',
-                  ...(active ? { shadowColor: '#285037', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 } : {}),
-                }}
+                style={{ flex: 1, height: 38, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center', backgroundColor: active ? colors.surface : 'transparent' }}
               >
                 <AppText variant="caption" color={active ? colors.green : colors.muted} style={{ fontSize: 13 }}>
                   {key === 'rules' ? 'By rule' : 'Calendar'}
@@ -125,41 +102,41 @@ export default function StreaksScreen() {
         </View>
 
         {view === 'rules' ? (
-          <View style={{ marginTop: 16, gap: 12 }}>
-            {RULES.map((r) => {
-              const p = ruleIconPalettes[r.palette];
-              return (
-                <Card key={r.name} style={{ padding: 16 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          isLoading ? (
+            <View style={{ paddingTop: 40, alignItems: 'center' }}>
+              <ActivityIndicator color={colors.green} />
+            </View>
+          ) : rules.length === 0 ? (
+            <AppText variant="bodyMuted" color={colors.muted} style={{ textAlign: 'center', marginTop: 40 }}>
+              No rules yet — add some to build streaks.
+            </AppText>
+          ) : (
+            <View style={{ marginTop: 16, gap: 12 }}>
+              {rules.map((r) => {
+                const p = ruleIconPalettes[r.palette as RuleIconPalette];
+                const s = byRule.get(r.id);
+                return (
+                  <Card key={r.id} style={{ padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={{ width: 40, height: 40, borderRadius: radius.md, backgroundColor: p.chipBg, alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon name={r.icon} size={22} color={p.icon} />
+                      <Icon name={r.icon as IconName} size={22} color={p.icon} />
                     </View>
                     <View style={{ flex: 1 }}>
                       <AppText variant="itemTitle">{r.name}</AppText>
                       <AppText variant="bodyMuted" color={colors.muted} style={{ marginTop: 2 }}>
-                        Longest {r.longest} days
+                        Longest {s?.longest ?? 0} days
                       </AppText>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                       <Icon name="local-fire-department" size={20} color={colors.amber} />
                       <AppText variant="stat" color={colors.ink} style={{ fontSize: 20 }}>
-                        {r.current}
+                        {s?.current ?? 0}
                       </AppText>
                     </View>
-                  </View>
-                  {/* last 7 days */}
-                  <View style={{ flexDirection: 'row', gap: 6, marginTop: 14 }}>
-                    {r.last7.map((d, i) => (
-                      <View
-                        key={i}
-                        style={{ flex: 1, height: 8, borderRadius: 4, backgroundColor: d ? colors.green : colors.track }}
-                      />
-                    ))}
-                  </View>
-                </Card>
-              );
-            })}
-          </View>
+                  </Card>
+                );
+              })}
+            </View>
+          )
         ) : (
           <Card style={{ marginTop: 16, padding: 18 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
@@ -169,7 +146,6 @@ export default function StreaksScreen() {
               </AppText>
               <Icon name="chevron-right" size={24} color={colors.muted} />
             </View>
-
             <View style={{ flexDirection: 'row' }}>
               {WEEKDAYS.map((w, i) => (
                 <AppText key={i} variant="caption" color={colors.mutedSoft} style={{ flex: 1, textAlign: 'center' }}>
@@ -177,7 +153,6 @@ export default function StreaksScreen() {
                 </AppText>
               ))}
             </View>
-
             {month.weeks.map((week, wi) => (
               <View key={wi} style={{ flexDirection: 'row', marginTop: 6 }}>
                 {week.map((c, di) => (
@@ -185,23 +160,8 @@ export default function StreaksScreen() {
                     {c === null ? (
                       <View style={{ width: 34, height: 34 }} />
                     ) : (
-                      <View
-                        style={{
-                          width: 34,
-                          height: 34,
-                          borderRadius: 9,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: c.future ? 'transparent' : c.missed ? colors.clay : heatColor(c.pct),
-                          borderWidth: c.future ? 1 : c.today ? 2 : 0,
-                          borderColor: c.today ? colors.green : colors.track,
-                        }}
-                      >
-                        <AppText
-                          variant="caption"
-                          color={c.future ? colors.mutedSoft : c.pct >= 55 || c.missed ? colors.white : colors.ink}
-                          style={{ fontSize: 11 }}
-                        >
+                      <View style={{ width: 34, height: 34, borderRadius: 9, alignItems: 'center', justifyContent: 'center', backgroundColor: c.future ? 'transparent' : c.missed ? colors.clay : heatColor(c.pct), borderWidth: c.future ? 1 : c.today ? 2 : 0, borderColor: c.today ? colors.green : colors.track }}>
+                        <AppText variant="caption" color={c.future ? colors.mutedSoft : c.pct >= 55 || c.missed ? colors.white : colors.ink} style={{ fontSize: 11 }}>
                           {c.day}
                         </AppText>
                       </View>
@@ -210,23 +170,9 @@ export default function StreaksScreen() {
                 ))}
               </View>
             ))}
-
-            {/* legend */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16 }}>
-              <AppText variant="caption" color={colors.muted}>
-                Less
-              </AppText>
-              {[colors.track, ...HEAT].map((c, i) => (
-                <View key={i} style={{ width: 14, height: 14, borderRadius: 4, backgroundColor: c }} />
-              ))}
-              <AppText variant="caption" color={colors.muted}>
-                More
-              </AppText>
-              <View style={{ width: 14, height: 14, borderRadius: 4, backgroundColor: colors.clay, marginLeft: 8 }} />
-              <AppText variant="caption" color={colors.muted}>
-                Missed
-              </AppText>
-            </View>
+            <AppText variant="caption" color={colors.mutedSoft} style={{ marginTop: 14, textAlign: 'center' }}>
+              Calendar shows sample data (per-day endpoint coming).
+            </AppText>
           </Card>
         )}
       </ScrollView>
