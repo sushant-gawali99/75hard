@@ -6,7 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
 import { AppText, Icon, type IconName } from '@/components/ui';
+import { api } from '@/lib/api';
 import { signInWithGoogle } from '@/lib/auth';
+import { queryClient } from '@/lib/queries';
 import { colors, radius, spacing } from '@/theme';
 
 const SPLIT_AT = appMeta.philosophy.indexOf('the process');
@@ -28,7 +30,10 @@ export default function WelcomeScreen() {
     setLoading(true);
     try {
       await signInWithGoogle();
-      router.replace('/');
+      // New session = different user; drop dev-user cache, then route by onboarding state.
+      queryClient.clear();
+      const profile = await api.getProfile().catch(() => null);
+      router.replace(profile?.onboardingCompleted ? '/' : '/set-days');
     } catch (e) {
       Alert.alert('Sign-in unavailable', e instanceof Error ? e.message : 'Please try again.');
     } finally {

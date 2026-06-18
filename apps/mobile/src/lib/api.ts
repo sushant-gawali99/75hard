@@ -49,7 +49,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) {
     throw new Error(`API ${res.status}: ${await res.text().catch(() => res.statusText)}`);
   }
-  return (await res.json()) as T;
+  // Nest returns an empty body for a `null` result (e.g. no profile/challenge yet);
+  // res.json() would throw on that, so parse defensively and treat empty as null.
+  const text = await res.text();
+  return (text ? JSON.parse(text) : null) as T;
 }
 
 export const api = {
