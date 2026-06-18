@@ -9,6 +9,7 @@ import { DbModule } from './db/db.module';
 import { HealthModule } from './health/health.module';
 import { RuleLogsModule } from './rule-logs/rule-logs.module';
 import { RulesModule } from './rules/rules.module';
+import { StreaksModule } from './streaks/streaks.module';
 import { WeightsModule } from './weights/weights.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { WeightsModule } from './weights/weights.module';
     RulesModule,
     RuleLogsModule,
     WeightsModule,
+    StreaksModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
