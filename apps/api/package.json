@@ -13,11 +13,13 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@better-auth/expo": "^1.6.19",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@process/shared": "workspace:*",
+    "better-auth": "^1.6.19",
     "drizzle-orm": "^0.45.2",
     "nestjs-pino": "^4.1.0",
     "pg": "^8.21.0",
