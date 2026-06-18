@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { APP_NAME } from '@process/shared';
 
 @Controller('health')
 export class HealthController {
@@ -7,6 +8,7 @@ export class HealthController {
     return {
       status: 'ok',
       service: 'process-api',
+      app: APP_NAME,
       timestamp: new Date().toISOString(),
     };
   }
