@@ -90,8 +90,7 @@ export default function SetDaysScreen() {
         <AppText variant="caption" color={colors.mutedSoft} style={{ textAlign: 'center', marginBottom: spacing.lg }}>
           Choose with intention — this sets your whole journey.
         </AppText>
-        {/* TODO: route to /define-rules once that screen exists */}
-        <Button title="Continue" onPress={() => router.push('/')} />
+        <Button title="Continue" onPress={() => router.push('/define-rules')} />
       </View>
     </View>
   );
