@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll{ scrollbar-width:none; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    @keyframes scScrim{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes scDialog{ 0%{ opacity:0; transform:scale(.9) translateY(8px); } 100%{ opacity:1; transform:scale(1) translateY(0); } }
+    @keyframes scSnack{ 0%{ opacity:0; transform:translate(-50%,16px); } 100%{ opacity:1; transform:translate(-50%,0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div data-screen-label="Settings" style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- soft glow -->
+      <div style="position:absolute; top:-160px; left:50%; transform:translateX(-50%); width:520px; height:520px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.16) 0%, rgba(22,194,166,.10) 42%, rgba(14,143,224,0) 72%); filter:blur(8px); pointer-events:none;"></div>
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="position:relative; z-index:2; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:6px 18px 26px;">
+
+        <!-- large title -->
+        <h1 style="margin:10px 4px 4px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:30px; line-height:1.1; letter-spacing:-.03em; color:#23332A;">Settings</h1>
+        <p style="margin:0 4px 8px; font-size:13.5px; font-weight:500; color:#7C9080; letter-spacing:-.005em;">Tune your challenge, reminders &amp; app.</p>
+
+        <!-- ===== PROFILE ===== -->
+        <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C9080; margin:20px 6px 9px;">PROFILE</div>
+        <div style="border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); overflow:hidden;">
+
+          <!-- identity -->
+          <div style="display:flex; align-items:center; gap:15px; padding:18px 16px 16px;">
+            <div onClick="{{ editPhoto }}" style="position:relative; width:62px; height:62px; flex:none; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:25px; box-shadow:0 8px 18px -4px rgba(22,194,166,.45); border:2.5px solid #fff; cursor:pointer;">
+              {{ avatarInitial }}
+              <div style="position:absolute; right:-3px; bottom:-3px; width:26px; height:26px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(40,80,55,.25);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:16px; font-variation-settings:'FILL' 1,'wght' 500; color:#21B96B;">photo_camera</span>
+              </div>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:19px; letter-spacing:-.02em; color:#23332A;">{{ name }}</div>
+              <button onClick="{{ editName }}" style="margin-top:3px; display:inline-flex; align-items:center; gap:4px; border:none; background:none; padding:0; cursor:pointer; color:#268C53; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13px; letter-spacing:-.005em;" style-hover="opacity:.7;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:15px; font-variation-settings:'wght' 600;">edit</span>
+                Edit name
+              </button>
+            </div>
+          </div>
+
+          <!-- units -->
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-top:1px solid #EEF3EA;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">straighten</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Units</div>
+            </div>
+            <!-- compact segmented -->
+            <div style="display:flex; flex:none; padding:3px; border-radius:100px; background:#EDF3EB; gap:3px;">
+              <sc-for list="{{ unitOpts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.select }}" style="height:32px; min-width:48px; padding:0 4px; border:none; border-radius:100px; cursor:pointer; background:{{ o.bg }}; color:{{ o.color }}; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; letter-spacing:-.005em; box-shadow:{{ o.shadow }}; transition:background .2s, color .2s;" style-active="transform:scale(.94);">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== YOUR CHALLENGE ===== -->
+        <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C9080; margin:22px 6px 9px;">YOUR CHALLENGE</div>
+        <div style="border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); overflow:hidden;">
+
+          <!-- summary -->
+          <div style="display:flex; align-items:center; gap:14px; padding:15px 16px;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 5px 12px -3px rgba(22,194,166,.5);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">flag</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15.5px; letter-spacing:-.01em; color:#23332A;">75 Hard</div>
+              <div style="font-size:12.5px; font-weight:600; color:#7C9080; margin-top:2px;">Day 41 of 75 · 34 to go</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:5px; height:30px; padding:0 11px; border-radius:100px; background:#FBF1DD; border:1px solid #F2E2C2; flex:none;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:16px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+              <span style="font-weight:700; font-size:13.5px; color:#B97E22; font-variant-numeric:tabular-nums;">41</span>
+            </div>
+          </div>
+
+          <!-- progress strip -->
+          <div style="padding:0 16px 14px;">
+            <div style="height:7px; border-radius:100px; background:#DBEBD6; overflow:hidden;">
+              <div style="height:100%; width:54.6%; border-radius:100px; background:linear-gradient(110deg,#2BC56F 0%,#16C2A6 100%);"></div>
+            </div>
+          </div>
+
+          <!-- edit rules -->
+          <div onClick="{{ editRules }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:pointer; border-top:1px solid #EEF3EA;" style-hover="background:#F7FAF5;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">checklist</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Edit rules</div>
+              <div style="font-size:12.5px; font-weight:500; color:#7C9080; margin-top:2px;">5 daily non-negotiables</div>
+            </div>
+            <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500; color:#C2D2C0;">chevron_right</span>
+          </div>
+
+          <!-- edit goal weight -->
+          <div onClick="{{ editGoal }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:pointer; border-top:1px solid #EEF3EA;" style-hover="background:#F7FAF5;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">monitor_weight</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Goal weight</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:3px; flex:none;">
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; color:#7C9080; font-variant-numeric:tabular-nums;">{{ goalWeightLabel }}</span>
+              <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500; color:#C2D2C0;">chevron_right</span>
+            </div>
+          </div>
+
+          <!-- restart -->
+          <div onClick="{{ openRestart }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:pointer; border-top:1px solid #EEF3EA;" style-hover="background:#F7FAF5;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 500; color:#21B96B;">restart_alt</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Restart / new challenge</div>
+              <div style="font-size:12.5px; font-weight:500; color:#7C9080; margin-top:2px;">Begin a fresh streak from Day 1</div>
+            </div>
+            <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500; color:#C2D2C0;">chevron_right</span>
+          </div>
+        </div>
+
+        <!-- ===== REMINDERS ===== -->
+        <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C9080; margin:22px 6px 9px;">REMINDERS</div>
+        <div style="border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); overflow:hidden;">
+
+          <!-- daily reminder toggle -->
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">notifications</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Daily reminder</div>
+              <div style="font-size:12.5px; font-weight:500; color:#7C9080; margin-top:2px;">{{ reminderSub }}</div>
+            </div>
+            <!-- M3 switch -->
+            <div onClick="{{ toggleReminder }}" style="width:52px; height:32px; flex:none; border-radius:100px; position:relative; cursor:pointer; background:{{ switchBg }}; border:{{ switchBorder }}; transition:background .25s, border-color .25s;">
+              <div style="position:absolute; top:50%; left:{{ switchThumbLeft }}; transform:translateY(-50%); width:{{ switchThumbSize }}; height:{{ switchThumbSize }}; border-radius:50%; background:{{ switchThumbColor }}; box-shadow:0 2px 5px rgba(20,40,28,.22); transition:all .26s cubic-bezier(.34,1.56,.64,1);"></div>
+            </div>
+          </div>
+
+          <!-- reminder time -->
+          <div onClick="{{ editTime }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:{{ timeCursor }}; border-top:1px solid #EEF3EA; opacity:{{ timeOpacity }}; transition:opacity .25s;" style-hover="background:#F7FAF5;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">schedule</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Reminder time</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:3px; flex:none;">
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; color:#7C9080; font-variant-numeric:tabular-nums;">{{ reminderTime }}</span>
+              <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500; color:#C2D2C0;">chevron_right</span>
+            </div>
+          </div>
+
+          <!-- manage reminders link -->
+          <div onClick="{{ openReminders }}" style="display:flex; align-items:center; gap:14px; padding:14px 16px; cursor:pointer; border-top:1px solid #EEF3EA;" style-hover="background:#F7FAF5;">
+            <div style="width:40px; height:40px; flex:none; border-radius:13px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">tune</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">Manage reminders</div>
+              <div style="font-size:12.5px; font-weight:500; color:#7C9080; margin-top:2px;">Per-rule nudges &amp; quiet hours</div>
+            </div>
+            <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500; color:#C2D2C0;">chevron_right</span>
+          </div>
+        </div>
+
+        <div style="height:8px;"></div>
+
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div style="position:relative; z-index:3; flex:none; height:74px; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-top:1px solid #E6EFE2; display:flex; align-items:center; justify-content:space-around; padding:0 8px 8px;">
+        <div onClick="{{ goToday }}" style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">wb_sunny</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Today</span>
+        </div>
+        <div onClick="{{ goStreaks }}" style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">local_fire_department</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Streaks</span>
+        </div>
+        <div onClick="{{ goWeight }}" style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">monitor_weight</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Weight</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; padding:0 18px; border-radius:100px; background:#DCF0D8; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:#1E8A4C;">settings</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#1E8A4C; letter-spacing:.01em;">Settings</span>
+        </div>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+      <!-- ===== CONFIRM DIALOG ===== -->
+      <sc-if value="{{ dialogOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:28px;">
+          <div onClick="{{ closeDialog }}" style="position:absolute; inset:0; background:rgba(24,38,28,.46); backdrop-filter:blur(2px); animation:scScrim .22s ease both;"></div>
+          <div style="position:relative; z-index:2; width:100%; max-width:320px; border-radius:28px; background:#FBFDFA; padding:24px 22px 20px; box-shadow:0 24px 50px -12px rgba(20,30,24,.45); animation:scDialog .32s cubic-bezier(.22,1,.36,1) both;">
+            <div style="width:56px; height:56px; border-radius:18px; display:flex; align-items:center; justify-content:center; background:{{ dialogIconBg }}; margin-bottom:16px;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:29px; font-variation-settings:'FILL' 0,'wght' 500; color:{{ dialogIconColor }};">{{ dialogIcon }}</span>
+            </div>
+            <h2 style="margin:0; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; letter-spacing:-.02em; color:#23332A;">{{ dialogTitle }}</h2>
+            <p style="margin:9px 0 22px; font-size:14px; font-weight:500; line-height:1.5; color:#7C9080; letter-spacing:-.005em; text-wrap:pretty;">{{ dialogBody }}</p>
+            <div style="display:flex; gap:10px;">
+              <button onClick="{{ closeDialog }}" style="flex:1; height:50px; border:none; border-radius:100px; cursor:pointer; background:#EDF3EB; color:#3A4A40; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em;" style-hover="background:#E2ECDF;" style-active="transform:scale(.98);">Cancel</button>
+              <button onClick="{{ confirmDialog }}" style="flex:1; height:50px; border:none; border-radius:100px; cursor:pointer; background:{{ dialogConfirmBg }}; color:#fff; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; box-shadow:{{ dialogConfirmShadow }};" style-active="transform:scale(.98);">{{ dialogConfirmLabel }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- SNACKBAR -->
+      <sc-if value="{{ snackOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; bottom:96px; left:50%; transform:translateX(-50%); z-index:40; width:320px; max-width:88%; display:flex; align-items:center; gap:11px; padding:0 18px; height:50px; border-radius:16px; background:#26312B; box-shadow:0 16px 30px -8px rgba(20,30,24,.5); animation:scSnack .32s cubic-bezier(.22,1,.36,1) both;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 500; color:#7BE0A8;">check_circle</span>
+          <span style="flex:1; font-size:13.5px; font-weight:600; color:#EAF3E7; letter-spacing:-.01em;">{{ snackText }}</span>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;unitsDefault&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;kg&quot;,&quot;tsType&quot;:&quot;'kg'|'lb'&quot;,&quot;options&quot;:[&quot;kg&quot;,&quot;lb&quot;]},&quot;themeDefault&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;System&quot;,&quot;tsType&quot;:&quot;'System'|'Light'|'Dark'&quot;,&quot;options&quot;:[&quot;System&quot;,&quot;Light&quot;,&quot;Dark&quot;]},&quot;reminderEnabled&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this._snackTimer = null;
+    this.state = {
+      name: 'Sushant',
+      units: (props.unitsDefault === 'lb') ? 'lb' : 'kg',
+      theme: ['System','Light','Dark'].includes(props.themeDefault) ? props.themeDefault : 'System',
+      reminderOn: props.reminderEnabled ?? true,
+      reminderTime: '8:00 AM',
+      dialog: null,        // 'restart' | 'reset'
+      snack: { open:false, text:'' },
+    };
+  }
+
+  componentWillUnmount(){ clearTimeout(this._snackTimer); }
+
+  flash(text){
+    clearTimeout(this._snackTimer);
+    this.setState({ snack:{ open:true, text } });
+    this._snackTimer = setTimeout(()=> this.setState(s=>({ snack:{...s.snack, open:false} })), 2600);
+  }
+
+  setUnits(u){ this.setState({ units:u }); }
+  setTheme(t){ this.setState({ theme:t }); }
+  toggleReminder = ()=>{
+    this.setState(s=>{
+      const on = !s.reminderOn;
+      return { reminderOn:on };
+    }, ()=> this.flash(this.state.reminderOn ? 'Daily reminder on' : 'Daily reminder off'));
+  };
+
+  editName = ()=> this.flash('Edit name');
+  editPhoto = ()=> this.flash('Choose a photo');
+  editRules = ()=>{ window.location.href = 'Set Your Rules.dc.html'; };
+  editGoal = ()=>{ window.location.href = 'Starting & Goal Weight.dc.html'; };
+  editTime = ()=>{ if(this.state.reminderOn) this.flash('Pick a time'); };
+  openReminders = ()=>{};
+  exportData = ()=> this.flash('Exporting CSV…');
+  backupData = ()=> this.flash('Backing up…');
+  openPrivacy = ()=>{};
+  rateApp = ()=>{};
+  goToday = ()=>{};
+  goStreaks = ()=>{};
+  goWeight = ()=>{};
+
+  openRestart = ()=> this.setState({ dialog:'restart' });
+  openReset = ()=> this.setState({ dialog:'reset' });
+  closeDialog = ()=> this.setState({ dialog:null });
+  confirmDialog = ()=>{
+    const d = this.state.dialog;
+    this.setState({ dialog:null });
+    if(d==='restart') this.flash('New challenge started · Day 1');
+    else if(d==='reset') this.flash('All data reset');
+  };
+
+  renderVals(){
+    const { units, theme, reminderOn, reminderTime, dialog, snack } = this.state;
+    const accent = 'linear-gradient(135deg,#2BC56F,#16C2A6)';
+    const goalUnit = units;
+    const goalWeightLabel = units==='kg' ? '70 kg' : '154 lb';
+
+    // units segmented (compact)
+    const unitOpts = ['kg','lb'].map(u=>{
+      const sel = units===u;
+      return {
+        label:u, select: ()=> this.setUnits(u),
+        bg: sel ? '#fff' : 'transparent',
+        color: sel ? '#1E8A4C' : '#7C9080',
+        shadow: sel ? '0 2px 6px rgba(40,80,55,.16)' : 'none',
+      };
+    });
+
+    // theme segmented (full width)
+    const themeMeta = { System:'brightness_auto', Light:'light_mode', Dark:'dark_mode' };
+    const themeOpts = ['System','Light','Dark'].map(t=>{
+      const sel = theme===t;
+      return {
+        label:t, icon:themeMeta[t], select: ()=> this.setTheme(t),
+        bg: sel ? '#fff' : 'transparent',
+        color: sel ? '#1E8A4C' : '#7C9080',
+        shadow: sel ? '0 2px 7px rgba(40,80,55,.16)' : 'none',
+      };
+    });
+
+    // M3 switch styles
+    const switchBg = reminderOn ? accent : '#E3EBDF';
+    const switchBorder = reminderOn ? '2px solid transparent' : '2px solid #CFE0CC';
+    const switchThumbSize = reminderOn ? '24px' : '18px';
+    const switchThumbLeft = reminderOn ? '24px' : '6px';
+    const switchThumbColor = reminderOn ? '#fff' : '#B7C9B8';
+
+    // dialog content
+    const dialogOpen = !!dialog;
+    let dialogIcon='', dialogIconBg='', dialogIconColor='', dialogTitle='', dialogBody='', dialogConfirmLabel='', dialogConfirmBg='', dialogConfirmShadow='';
+    if(dialog==='restart'){
+      dialogIcon='restart_alt'; dialogIconBg='#EAF3E7'; dialogIconColor='#21B96B';
+      dialogTitle='Start a new challenge?';
+      dialogBody='Your current streak of 41 days will be archived and a fresh challenge will begin from Day 1.';
+      dialogConfirmLabel='Restart'; dialogConfirmBg=accent; dialogConfirmShadow='0 10px 22px -6px rgba(22,194,166,.55)';
+    } else if(dialog==='reset'){
+      dialogIcon='delete_forever'; dialogIconBg='rgba(235,87,87,.12)'; dialogIconColor='#EB5757';
+      dialogTitle='Reset all data?';
+      dialogBody='This permanently erases your challenge, streaks, weight history and rules. This cannot be undone.';
+      dialogConfirmLabel='Reset all'; dialogConfirmBg='#EB5757'; dialogConfirmShadow='0 10px 22px -6px rgba(235,87,87,.5)';
+    }
+
+    return {
+      name: this.state.name,
+      avatarInitial: (this.state.name||'?').trim().charAt(0).toUpperCase(),
+      goalWeightLabel,
+      version: '2.4.1',
+
+      unitOpts, themeOpts,
+
+      reminderSub: reminderOn ? 'A gentle nudge every day' : 'Off',
+      reminderTime,
+      switchBg, switchBorder, switchThumbSize, switchThumbLeft, switchThumbColor,
+      timeOpacity: reminderOn ? 1 : 0.45,
+      timeCursor: reminderOn ? 'pointer' : 'default',
+      toggleReminder: this.toggleReminder,
+
+      editName: this.editName, editPhoto: this.editPhoto,
+      editRules: this.editRules, editGoal: this.editGoal,
+      editTime: this.editTime, openReminders: this.openReminders,
+      exportData: this.exportData, backupData: this.backupData,
+      openPrivacy: this.openPrivacy, rateApp: this.rateApp,
+      openRestart: this.openRestart, openReset: this.openReset,
+      goToday: this.goToday, goStreaks: this.goStreaks, goWeight: this.goWeight,
+
+      dialogOpen, dialogIcon, dialogIconBg, dialogIconColor, dialogTitle, dialogBody,
+      dialogConfirmLabel, dialogConfirmBg, dialogConfirmShadow,
+      closeDialog: this.closeDialog, confirmDialog: this.confirmDialog,
+
+      snackOpen: snack.open, snackText: snack.text,
+    };
+  }
+}
+</script>
+</body>
+</html>

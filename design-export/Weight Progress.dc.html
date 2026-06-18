@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    .pscroll{ scrollbar-width:none; }
+    .sc-ruler{ scrollbar-width:none; touch-action:pan-x; }
+    .sc-ruler::-webkit-scrollbar{ display:none; }
+    @keyframes sheetUp{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
+    @keyframes scrimIn{ from{ opacity:0; } to{ opacity:1; } }
+    @keyframes fadeSlide{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+    @keyframes fabIn{ 0%{ opacity:0; transform:translateY(16px) scale(.85); } 100%{ opacity:1; transform:translateY(0) scale(1); } }
+    @keyframes drawA{ to{ stroke-dashoffset:0; } }
+    @keyframes drawB{ to{ stroke-dashoffset:0; } }
+    .wdraw-0{ animation:drawA 1.2s cubic-bezier(.4,0,.2,1) forwards; }
+    .wdraw-1{ animation:drawB 1.2s cubic-bezier(.4,0,.2,1) forwards; }
+    @keyframes areaInA{ from{ opacity:0; } to{ opacity:1; } }
+    @keyframes areaInB{ from{ opacity:0; } to{ opacity:1; } }
+    .warea-0{ animation:areaInA .9s ease .25s both; }
+    .warea-1{ animation:areaInB .9s ease .25s both; }
+    @keyframes dotInA{ 0%{ opacity:0; transform:scale(.2); } 60%{ transform:scale(1.3); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes dotInB{ 0%{ opacity:0; transform:scale(.2); } 60%{ transform:scale(1.3); } 100%{ opacity:1; transform:scale(1); } }
+    .wdot-0{ transform-box:fill-box; transform-origin:center; animation:dotInA .45s ease 1s both; }
+    .wdot-1{ transform-box:fill-box; transform-origin:center; animation:dotInB .45s ease 1s both; }
+    @keyframes ringPulse{ 0%{ opacity:.5; transform:scale(.7); } 70%{ opacity:0; transform:scale(2.6); } 100%{ opacity:0; transform:scale(2.6); } }
+    .wpulse{ transform-box:fill-box; transform-origin:center; opacity:0; animation:ringPulse 2.4s ease-out 1.3s infinite; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div data-screen-label="Weight Progress" style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:6px 18px 100px;">
+
+        <!-- header -->
+        <div style="padding:8px 2px 2px; display:flex; align-items:flex-end; justify-content:space-between; gap:14px;">
+          <div>
+            <div style="font-size:12px; font-weight:700; letter-spacing:.14em; color:#7C9080;">PROGRESS</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:28px; line-height:1.1; letter-spacing:-.025em; color:#23332A; margin-top:4px;">Weight</div>
+          </div>
+          <!-- kg / lb segmented -->
+          <div style="display:inline-flex; align-items:center; padding:3px; border-radius:100px; background:#E4EEDF; box-shadow:inset 0 0 0 1px rgba(40,80,55,.06);">
+            <sc-for list="{{ unitSegs }}" as="u" hint-placeholder-count="2">
+              <button onClick="{{ u.select }}" style="height:30px; padding:0 15px; border:none; border-radius:100px; cursor:pointer; background:{{ u.bg }}; color:{{ u.color }}; box-shadow:{{ u.shadow }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:.01em; transition:background .22s, color .22s, box-shadow .22s;" style-active="transform:scale(.95);">{{ u.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- HERO STAT CARD -->
+        <div style="margin-top:16px; padding:20px 20px 18px; border-radius:26px; background:linear-gradient(150deg,#F1FAEF 0%,#E8F6F1 58%,#E3F0F4 100%); box-shadow:0 10px 28px -12px rgba(40,80,55,.22), inset 0 0 0 1.5px rgba(255,255,255,.6); position:relative; overflow:hidden;">
+          <div style="position:absolute; top:-60px; right:-40px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(43,197,111,.16), rgba(43,197,111,0) 70%); pointer-events:none;"></div>
+          <div style="font-size:11.5px; font-weight:700; letter-spacing:.1em; color:#6E8C77; position:relative;">CURRENT WEIGHT</div>
+          <div style="display:flex; align-items:baseline; gap:7px; margin-top:5px; position:relative;">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:56px; line-height:.95; letter-spacing:-.04em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F 0%,#16C2A6 70%,#0E9FD0 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ heroBig }}</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:20px; color:#8AA391;">{{ unit }}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:14px; position:relative;">
+            <div style="display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 12px 0 9px; border-radius:100px; background:{{ deltaBg }};">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 600; color:{{ deltaColor }};">{{ deltaIcon }}</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:-.01em; color:{{ deltaColor }}; font-variant-numeric:tabular-nums;">{{ deltaText }}</span>
+            </div>
+            <div style="display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 13px 0 10px; border-radius:100px; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(40,80,55,.1);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 600; color:#0E9FD0;">flag</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:-.01em; color:#3A4A40; font-variant-numeric:tabular-nums;">{{ goalChipText }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== EMPTY STATE ===== -->
+        <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px; padding:34px 24px 30px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); display:flex; flex-direction:column; align-items:center; text-align:center; animation:fadeSlide .5s cubic-bezier(.22,1,.36,1) both;">
+            <div style="width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,#EAF3E7,#DCF0EC); display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 1px #D2E8CC;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:42px; font-variation-settings:'wght' 400; background:linear-gradient(135deg,#2BC56F,#16C2A6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">show_chart</span>
+            </div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:20px; letter-spacing:-.02em; color:#23332A; margin-top:18px;">No trend yet</div>
+            <div style="font-size:14px; font-weight:500; line-height:1.5; color:#7C9080; margin-top:8px; max-width:250px;">Add a few entries to see your trend. Tap the button below to log today's weight.</div>
+            <button onClick="{{ openAdd }}" style="margin-top:22px; height:50px; padding:0 26px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; box-shadow:0 10px 22px -6px rgba(22,194,166,.55);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 600;">add</span>
+              Add first entry
+            </button>
+          </div>
+        </sc-if>
+
+        <!-- ===== CHART CARD ===== -->
+        <sc-if value="{{ hasData }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:16px; padding:16px 14px 12px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08);">
+            <!-- chart header -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:0 4px 2px;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; letter-spacing:-.01em; color:#23332A;">Trend</div>
+              <!-- range chips -->
+              <div style="display:flex; gap:6px;">
+                <sc-for list="{{ rangeChips }}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{ c.select }}" style="height:30px; padding:0 13px; border:none; border-radius:100px; cursor:pointer; background:{{ c.bg }}; color:{{ c.color }}; box-shadow:{{ c.ring }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.01em; transition:background .2s,color .2s;" style-active="transform:scale(.95);">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <!-- chart: static SVG base layer (visible at rest, animates once on mount) + interactive overlay -->
+            <div style="position:relative; margin-top:6px; height:188px; width:100%;">
+              <svg viewBox="0 0 322 188" width="100%" height="188" preserveAspectRatio="xMidYMid meet" style="position:absolute; inset:0; display:block; overflow:visible; pointer-events:none;">
+                <defs>
+                  <linearGradient id="wArea" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(43,197,111,0.30)"></stop>
+                    <stop offset="72%" stop-color="rgba(43,197,111,0.05)"></stop>
+                    <stop offset="100%" stop-color="rgba(43,197,111,0)"></stop>
+                  </linearGradient>
+                  <linearGradient id="wLine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#16C2A6"></stop>
+                    <stop offset="100%" stop-color="#2BC56F"></stop>
+                  </linearGradient>
+                </defs>
+                <line x1="12" y1="16" x2="308" y2="16" stroke="#EEF3EA" stroke-width="1"></line>
+                <line x1="12" y1="64" x2="308" y2="64" stroke="#EEF3EA" stroke-width="1"></line>
+                <line x1="12" y1="112" x2="308" y2="112" stroke="#EEF3EA" stroke-width="1"></line>
+                <line x1="12" y1="160" x2="308" y2="160" stroke="#EEF3EA" stroke-width="1"></line>
+                <line x1="12" x2="308" y1="{{ goalY }}" y2="{{ goalY }}" stroke="#16C2A6" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.85"></line>
+                <path d="{{ areaPath }}" fill="url(#wArea)"></path>
+                <path d="{{ linePath }}" fill="none" stroke="url(#wLine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path class="{{ lineCls }}" d="{{ linePath }}" fill="none" stroke="url(#wLine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="{{ pathLen }}" stroke-dashoffset="{{ pathLen }}"></path>
+                <circle class="wpulse" cx="{{ lastX }}" cy="{{ lastY }}" r="5" fill="none" stroke="#2BC56F" stroke-width="2"></circle>
+                <circle cx="{{ lastX }}" cy="{{ lastY }}" r="4.8" fill="#fff" stroke="#2BC56F" stroke-width="3"></circle>
+              </svg>
+              <div style="position:absolute; inset:0;">{{ chartOverlay }}</div>
+            </div>
+            <!-- hint -->
+            <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:6px 0 2px;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:14px; font-variation-settings:'wght' 600; color:#B6C6B8;">touch_app</span>
+              <span style="font-size:11px; font-weight:600; color:#A6B6A8;">Tap the line to inspect a day</span>
+            </div>
+          </div>
+
+          <!-- ===== STATS GRID ===== -->
+          <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <sc-for list="{{ statCards }}" as="s" hint-placeholder-count="4">
+              <div style="padding:15px 16px; border-radius:20px; background:#fff; box-shadow:0 6px 18px rgba(40,80,55,.06);">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ s.iconColor }};">{{ s.icon }}</span>
+                  <span style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#7C9080; text-transform:uppercase;">{{ s.label }}</span>
+                </div>
+                <div style="display:flex; align-items:baseline; gap:4px; margin-top:9px;">
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:26px; line-height:1; letter-spacing:-.025em; color:{{ s.valueColor }}; font-variant-numeric:tabular-nums;">{{ s.value }}</span>
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; color:#9DB2A2;">{{ s.unit }}</span>
+                </div>
+                <div style="font-size:11.5px; font-weight:600; color:{{ s.subColor }}; margin-top:3px;">{{ s.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- ===== HISTORY (collapsible) ===== -->
+          <div style="margin-top:14px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); overflow:hidden;">
+            <button onClick="{{ toggleHistory }}" style="width:100%; display:flex; align-items:center; gap:11px; padding:16px 18px; border:none; background:none; cursor:pointer; text-align:left;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 1,'wght' 500; color:#4C8A5E;">history</span>
+              <span style="flex:1; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; letter-spacing:-.01em; color:#23332A;">History</span>
+              <span style="font-size:12px; font-weight:700; color:#A6BBA8; padding:3px 9px; border-radius:100px; background:rgba(124,144,128,.1); font-variant-numeric:tabular-nums;">{{ entryCount }}</span>
+              <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 600; color:#9DB2A2; transform:{{ historyChevron }}; transition:transform .3s cubic-bezier(.22,1,.36,1);">expand_more</span>
+            </button>
+            <sc-if value="{{ historyOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 12px 12px; display:flex; flex-direction:column; gap:8px;">
+                <sc-for list="{{ historyRows }}" as="r" hint-placeholder-count="6">
+                  <div style="position:relative; border-radius:16px; overflow:hidden;">
+                    <!-- actions behind -->
+                    <div style="position:absolute; inset:0; display:flex; justify-content:flex-end;">
+                      <div onClick="{{ r.edit }}" style="width:66px; display:flex; align-items:center; justify-content:center; background:#0E9FD0; cursor:pointer;">
+                        <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">edit</span>
+                      </div>
+                      <div onClick="{{ r.del }}" style="width:66px; display:flex; align-items:center; justify-content:center; background:#E8654F; cursor:pointer;">
+                        <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">delete</span>
+                      </div>
+                    </div>
+                    <!-- front -->
+                    <div ref="{{ r.setRef }}" onClick="{{ r.tap }}" onPointerDown="{{ r.down }}" onPointerMove="{{ r.move }}" onPointerUp="{{ r.up }}" onPointerCancel="{{ r.up }}" style="position:relative; display:flex; align-items:center; gap:12px; padding:13px 15px; background:{{ r.frontBg }}; border-radius:16px; box-shadow:inset 0 0 0 1px #EEF3EA; transform:{{ r.tx }}; transition:transform .28s cubic-bezier(.22,1,.36,1); touch-action:pan-y; cursor:grab; user-select:none;">
+                      <div style="width:44px; height:44px; flex:none; border-radius:13px; background:{{ r.dayBg }}; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                        <span style="font-size:9px; font-weight:700; letter-spacing:.06em; color:{{ r.daySub }};">{{ r.weekday }}</span>
+                        <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:17px; line-height:1; color:{{ r.dayNum }}; font-variant-numeric:tabular-nums;">{{ r.dayNumText }}</span>
+                      </div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; letter-spacing:-.01em; color:#23332A;">{{ r.dateLabel }}</div>
+                        <sc-if value="{{ r.hasNote }}" hint-placeholder-val="{{ false }}">
+                          <div style="font-size:11.5px; font-weight:500; color:#9DB2A2; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;">{{ r.note }}</div>
+                        </sc-if>
+                      </div>
+                      <div style="text-align:right; flex:none;">
+                        <div style="display:flex; align-items:baseline; gap:3px; justify-content:flex-end;">
+                          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:18px; line-height:1; letter-spacing:-.02em; color:#23332A; font-variant-numeric:tabular-nums;">{{ r.weight }}</span>
+                          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:11px; color:#9DB2A2;">{{ unit }}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:2px; justify-content:flex-end; margin-top:3px;">
+                          <span style="font-family:'Material Symbols Rounded'; font-size:14px; font-variation-settings:'FILL' 1,'wght' 600; color:{{ r.deltaColor }};">{{ r.deltaIcon }}</span>
+                          <span style="font-size:11.5px; font-weight:700; color:{{ r.deltaColor }}; font-variant-numeric:tabular-nums;">{{ r.deltaText }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- FAB -->
+      <button onClick="{{ openAdd }}" style="position:absolute; right:18px; bottom:90px; z-index:20; height:54px; padding:0 22px 0 17px; border:none; border-radius:18px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; display:flex; align-items:center; gap:9px; box-shadow:0 14px 30px -8px rgba(22,194,166,.62); animation:fabIn .5s cubic-bezier(.34,1.4,.64,1) .3s both;" style-hover="box-shadow:0 18px 36px -8px rgba(22,194,166,.75); transform:translateY(-1px);" style-active="transform:translateY(1px) scale(.98);">
+        <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'wght' 600;">add</span>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15.5px; letter-spacing:-.01em;">Add weight</span>
+      </button>
+
+      <!-- BOTTOM NAV -->
+      <div style="flex:none; height:74px; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-top:1px solid #E6EFE2; display:flex; align-items:center; justify-content:space-around; padding:0 8px 8px; position:relative; z-index:10;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">wb_sunny</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Today</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">local_fire_department</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Streaks</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; padding:0 18px; border-radius:100px; background:#DCF0EC; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:#0E9A8A;">monitor_weight</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#0E9A8A; letter-spacing:.01em;">Weight</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">settings</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Settings</span>
+        </div>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:11;"></div>
+
+      <!-- ===== ADD / EDIT BOTTOM SHEET ===== -->
+      <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute; inset:0; z-index:30; background:rgba(28,42,33,.42); animation:scrimIn .25s ease both;"></div>
+        <div style="position:absolute; left:0; right:0; bottom:0; z-index:31; background:#fff; border-radius:30px 30px 34px 34px; padding:10px 22px 28px; box-shadow:0 -12px 40px rgba(28,52,38,.22); animation:sheetUp .36s cubic-bezier(.22,1,.36,1) both;">
+          <div style="width:38px; height:5px; border-radius:3px; background:#D5E2CF; margin:0 auto 14px;"></div>
+          <!-- header -->
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:20px; letter-spacing:-.02em; color:#23332A;">{{ sheetTitle }}</div>
+            <button onClick="{{ closeSheet }}" style="width:36px; height:36px; border:none; border-radius:50%; background:#EFF5EC; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-active="transform:scale(.92);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 600; color:#7C9080;">close</span>
+            </button>
+          </div>
+
+          <!-- big value display -->
+          <div style="display:flex; align-items:baseline; justify-content:center; gap:8px; margin-top:14px;">
+            <span ref="{{ setSheetValEl }}" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:60px; line-height:.9; letter-spacing:-.04em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F 0%,#16C2A6 70%,#0E9FD0 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ sheetValText }}</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:22px; color:#8AA391;">{{ unit }}</span>
+          </div>
+
+          <!-- ruler -->
+          <div style="margin-top:12px; border-radius:20px; background:#F6FAF4; box-shadow:inset 0 0 0 1.5px #E6EFE2; overflow:hidden;">
+            <div style="position:relative; height:72px;">
+              <div style="position:absolute; left:50%; top:6px; transform:translateX(-50%); z-index:3; pointer-events:none; display:flex; flex-direction:column; align-items:center;">
+                <div style="width:10px; height:10px; border-radius:50%; background:#16C2A6; box-shadow:0 2px 6px rgba(22,194,166,.55);"></div>
+                <div style="width:3px; height:42px; margin-top:1px; border-radius:3px; background:linear-gradient(#16C2A6,#2BC56F);"></div>
+              </div>
+              <div style="position:absolute; left:0; top:0; bottom:0; width:54px; z-index:2; pointer-events:none; background:linear-gradient(90deg,#F6FAF4 12%,rgba(246,250,244,0));"></div>
+              <div style="position:absolute; right:0; top:0; bottom:0; width:54px; z-index:2; pointer-events:none; background:linear-gradient(270deg,#F6FAF4 12%,rgba(246,250,244,0));"></div>
+              <div ref="{{ setSheetScroller }}" class="sc-ruler" onScroll="{{ onSheetScroll }}" onPointerDown="{{ onSheetDown }}" onPointerMove="{{ onSheetMove }}" onPointerUp="{{ onSheetUp }}" onPointerCancel="{{ onSheetUp }}" style="position:absolute; inset:0; overflow-x:auto; overflow-y:hidden; display:flex; align-items:flex-end; cursor:grab;">
+                <div style="flex:none; width:171px;"></div>
+                <sc-for list="{{ sheetTicks }}" as="t" hint-placeholder-count="40">
+                  <div style="flex:none; width:{{ sheetTickW }}px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:66px;">
+                    <div style="width:{{ t.barW }}px; height:{{ t.barH }}px; border-radius:2px; background:{{ t.barColor }};"></div>
+                    <div style="height:16px; line-height:16px; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; color:#A2B6A6; font-variant-numeric:tabular-nums;">{{ t.label }}</div>
+                  </div>
+                </sc-for>
+                <div style="flex:none; width:171px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- date stepper -->
+          <div style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 500; color:#7C9080;">event</span>
+            <div style="flex:1; display:flex; align-items:center; justify-content:space-between; height:50px; padding:0 6px 0 16px; border-radius:15px; background:#F6FAF4; box-shadow:inset 0 0 0 1.5px #E6EFE2;">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">{{ sheetDateLabel }}</span>
+              <div style="display:flex; gap:4px;">
+                <button onClick="{{ prevDay }}" style="width:38px; height:38px; border:none; border-radius:11px; background:#fff; box-shadow:inset 0 0 0 1px #E2ECDF; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-active="transform:scale(.92);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600; color:#4C8A5E;">chevron_left</span>
+                </button>
+                <button onClick="{{ nextDay }}" style="width:38px; height:38px; border:none; border-radius:11px; background:{{ nextDayBg }}; box-shadow:inset 0 0 0 1px #E2ECDF; cursor:{{ nextDayCursor }}; display:flex; align-items:center; justify-content:center; opacity:{{ nextDayOp }};" style-active="transform:scale(.92);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600; color:#4C8A5E;">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- note -->
+          <div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 500; color:#7C9080;">edit_note</span>
+            <input value="{{ sheetNote }}" onInput="{{ onNote }}" placeholder="Add a note (optional)" style="flex:1; height:50px; border:none; outline:none; border-radius:15px; background:#F6FAF4; box-shadow:inset 0 0 0 1.5px #E6EFE2; padding:0 16px; font-family:'Inter',sans-serif; font-size:14.5px; font-weight:500; color:#23332A;" />
+          </div>
+
+          <!-- save -->
+          <button onClick="{{ saveEntry }}" style="margin-top:18px; width:100%; height:58px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 14px 30px -8px rgba(22,194,166,.6);" style-hover="transform:translateY(-1px);" style-active="transform:translateY(1px) scale(.99);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 600;">check</span>
+            {{ sheetSaveLabel }}
+          </button>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;emptyState&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;defaultUnit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;kg&quot;,&quot;lb&quot;],&quot;default&quot;:&quot;kg&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;defaultRange&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;week&quot;,&quot;month&quot;,&quot;all&quot;],&quot;default&quot;:&quot;all&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;goalKg&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:72.0,&quot;min&quot;:40,&quot;max&quot;:150,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;},&quot;heightCm&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:175,&quot;min&quot;:0,&quot;max&quot;:230,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const raw = [
+      [2,2,85.0],[2,9,84.6],[2,16,84.1],[2,23,83.6],[2,30,83.0],
+      [3,6,82.5],[3,13,82.8],[3,20,81.9],[3,27,81.4],
+      [4,4,80.9],[4,11,80.6],[4,18,80.0],[4,25,80.2],
+      [5,1,79.5],[5,4,79.3],[5,6,79.4],[5,8,79.0],[5,10,79.1],
+      [5,12,78.9],[5,14,78.9],[5,15,78.7],[5,16,78.7],[5,17,78.8],[5,18,78.6]
+    ];
+    const notes = { 13:'Felt strong after the gym', 18:'Morning weigh-in' };
+    this.entries = raw.map(r=>{
+      const t = new Date(2026, r[0], r[1]).getTime();
+      return { id:t, t, kg:r[2], note: (r[0]===5 && notes[r[1]]) ? notes[r[1]] : '' };
+    });
+
+    this.today = new Date(2026,5,18).getTime();
+    this.RULER = {
+      kg: { min:40,  max:160, step:0.1, tick:0.5, major:5,  px:22 },
+      lb: { min:88,  max:352, step:0.2, tick:1,   major:10, px:10 },
+    };
+    this._rowEls = {};
+    this._sw = null;
+    this._noClick = false;
+    this._sheetScroller = null;
+    this._sheetValEl = null;
+    this._drag = null;
+    this._snapping = false;
+    this._liveSheet = null;
+    this._scrollEnd = null;
+    this._drawTick = 0;
+
+    this.state = {
+      unit: (props.defaultUnit === 'lb') ? 'lb' : 'kg',
+      range: (['week','month','all'].includes(props.defaultRange)) ? props.defaultRange : 'all',
+      selectedPoint: null,
+      historyOpen: true,
+      swipedId: null,
+      sheetOpen: false,
+      sheetMode: 'add',
+      editId: null,
+      sheetKg: 78.6,
+      sheetDateT: this.today,
+      sheetNote: '',
+      version: 0,
+    };
+    this.WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    this.WDL = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    this.MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  }
+
+  /* ---------- unit helpers ---------- */
+  goalKg(){ return this.props.goalKg ?? 72.0; }
+  heightCm(){ return this.props.heightCm ?? 175; }
+  fromKg(kg){ return this.state.unit === 'kg' ? kg : kg * 2.2046226; }
+  toKg(v){ return this.state.unit === 'kg' ? v : v / 2.2046226; }
+  fmt(v){ return (Math.round(v*10)/10).toFixed(1); }
+
+  sorted(){ return this.entries.slice().sort((a,b)=>a.t-b.t); }
+  startOfDay(t){ const d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); }
+
+  visible(){
+    const all = this.sorted();
+    if(this.state.range === 'all' || all.length < 2) return all;
+    const lastT = all[all.length-1].t;
+    const win = this.state.range === 'week' ? 7 : 31;
+    const cut = lastT - win*86400000 + 43200000;
+    const f = all.filter(e=>e.t>=cut);
+    return f.length >= 2 ? f : all.slice(-Math.max(2,f.length));
+  }
+
+  /* ---------- interactions ---------- */
+  setUnit(u){ if(this.state.unit!==u){ this._drawTick++; this.setState({ unit:u, selectedPoint:null }); } }
+  setRange(r){ if(this.state.range!==r){ this._drawTick++; this.setState({ range:r, selectedPoint:null }); } }
+  selectPoint = (i)=> this.setState(s=>({ selectedPoint: s.selectedPoint===i ? null : i }));
+  clearPoint = ()=> this.setState({ selectedPoint:null });
+  toggleHistory = ()=> this.setState(s=>({ historyOpen:!s.historyOpen }));
+
+  openAdd = ()=> this.setState({ sheetOpen:true, sheetMode:'add', editId:null, sheetKg:this.sorted().slice(-1)[0]?.kg ?? 78.6, sheetDateT:this.today, sheetNote:'' });
+  openEdit(e){ this.setState({ sheetOpen:true, sheetMode:'edit', editId:e.id, sheetKg:e.kg, sheetDateT:e.t, sheetNote:e.note||'', swipedId:null }); }
+  closeSheet = ()=> this.setState({ sheetOpen:false });
+  onNote = (ev)=> this.setState({ sheetNote: ev.target.value });
+
+  prevDay = ()=> this.setState(s=>({ sheetDateT: s.sheetDateT - 86400000 }));
+  nextDay = ()=> this.setState(s=>{ const n = s.sheetDateT + 86400000; return n > this.today ? {} : { sheetDateT:n }; });
+
+  saveEntry = ()=>{
+    const kg = this._liveSheet != null ? this.toKg(this._liveSheet) : this.state.sheetKg;
+    const t = this.startOfDay(this.state.sheetDateT);
+    const note = this.state.sheetNote.trim();
+    let list = this.entries.filter(e => this.startOfDay(e.t) !== t || (this.state.sheetMode==='edit' && e.id===this.state.editId));
+    const existing = list.find(e => this.startOfDay(e.t) === t);
+    if(existing){ existing.kg = kg; existing.note = note; }
+    else list.push({ id:t, t, kg, note });
+    this.entries = list;
+    this._liveSheet = null;
+    this._drawTick++;
+    this.setState(s=>({ sheetOpen:false, selectedPoint:null, version:s.version+1 }));
+  };
+
+  delEntry(e){
+    this.entries = this.entries.filter(x=>x.id!==e.id);
+    this._drawTick++;
+    this.setState(s=>({ swipedId:null, selectedPoint:null, version:s.version+1 }));
+  }
+
+  /* ---------- history swipe ---------- */
+  rowDown(ev,id){
+    try{ ev.currentTarget.setPointerCapture(ev.pointerId); }catch(_){}
+    this._sw = { id, x:ev.clientX, y:ev.clientY, decided:false, started:this.state.swipedId===id, moved:false, last:this.state.swipedId===id?-132:0 };
+  }
+  rowMove(ev){
+    const sw = this._sw; if(!sw) return;
+    const dx = ev.clientX - sw.x, dy = ev.clientY - sw.y;
+    if(!sw.decided){
+      if(Math.abs(dx)<6 && Math.abs(dy)<6) return;
+      if(Math.abs(dy) > Math.abs(dx)){ this._sw = null; return; }
+      sw.decided = true;
+      const el = this._rowEls[sw.id]; if(el) el.style.transition = 'none';
+    }
+    const base = sw.started ? -132 : 0;
+    let t = Math.max(-132, Math.min(0, base + dx));
+    sw.last = t; sw.moved = true;
+    const el = this._rowEls[sw.id]; if(el) el.style.transform = 'translateX('+t+'px)';
+  }
+  rowUp(){
+    const sw = this._sw; this._sw = null;
+    if(!sw || !sw.decided) return;
+    const el = this._rowEls[sw.id];
+    if(el){ el.style.transition = ''; el.style.transform = ''; }
+    if(sw.moved) { this._noClick = true; setTimeout(()=>{ this._noClick=false; }, 60); }
+    const open = sw.last < -60;
+    this.setState({ swipedId: open ? sw.id : null });
+  }
+  rowTap(id){
+    if(this._noClick) return;
+    if(this.state.swipedId===id) this.setState({ swipedId:null });
+  }
+
+  /* ---------- sheet ruler ---------- */
+  cfg(){ return this.RULER[this.state.unit]; }
+  setSheetScroller = (el)=>{ const fresh = el && el !== this._sheetScroller; this._sheetScroller = el; if(fresh) setTimeout(()=>this.positionSheet(),0); };
+  setSheetValEl = (el)=>{ this._sheetValEl = el; };
+
+  componentDidUpdate(prevP, prevS){
+    if(!prevS) return;
+    if((!prevS.sheetOpen && this.state.sheetOpen) || (this.state.sheetOpen && prevS.unit!==this.state.unit)){
+      this._liveSheet = null;
+      setTimeout(()=>this.positionSheet(),0);
+    }
+  }
+  componentWillUnmount(){ clearTimeout(this._scrollEnd); }
+
+  positionSheet(tries){
+    const cfg = this.cfg(), sc = this._sheetScroller;
+    if(!sc) return;
+    const v = this.fromKg(this.state.sheetKg);
+    const target = (v - cfg.min) * cfg.px;
+    if(sc.scrollWidth - sc.clientWidth < target - 1 && (tries||0) < 40){
+      setTimeout(()=>this.positionSheet((tries||0)+1), 16); return;
+    }
+    this._snapping = true;
+    sc.scrollLeft = target;
+    setTimeout(()=>{ this._snapping = false; }, 60);
+  }
+  onSheetScroll = ()=>{
+    if(this._snapping) return;
+    const cfg = this.cfg(), sc = this._sheetScroller; if(!sc) return;
+    let v = cfg.min + sc.scrollLeft / cfg.px;
+    v = Math.round(v/cfg.step)*cfg.step;
+    v = Math.max(cfg.min, Math.min(cfg.max, v));
+    this._liveSheet = v;
+    if(this._sheetValEl) this._sheetValEl.textContent = this.fmt(v);
+    clearTimeout(this._scrollEnd);
+    this._scrollEnd = setTimeout(()=>{ if(this._liveSheet!=null) this.setState({ sheetKg: this.toKg(this._liveSheet) }); }, 140);
+  };
+  onSheetDown = (e)=>{ if(!this._sheetScroller) return; this._drag={ x:e.clientX, sl:this._sheetScroller.scrollLeft }; try{ this._sheetScroller.setPointerCapture(e.pointerId); }catch(_){} this._sheetScroller.style.cursor='grabbing'; };
+  onSheetMove = (e)=>{ const d=this._drag; if(!d||!this._sheetScroller) return; this._sheetScroller.scrollLeft = d.sl - (e.clientX - d.x); };
+  onSheetUp = ()=>{ if(this._drag && this._sheetScroller) this._sheetScroller.style.cursor='grab'; this._drag=null; };
+
+  /* ---------- chart ---------- */
+  smooth(pts){
+    if(pts.length < 2) return pts.length ? ('M'+pts[0].x+','+pts[0].y) : '';
+    let d = 'M'+pts[0].x+','+pts[0].y;
+    for(let i=0;i<pts.length-1;i++){
+      const p0=pts[i-1]||pts[i], p1=pts[i], p2=pts[i+1], p3=pts[i+2]||p2;
+      const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+      const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+      d += ' C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2.x+','+p2.y;
+    }
+    return d;
+  }
+
+  chartGeom(){
+    const entries = this.visible();
+    const goalD = this.fromKg(this.goalKg());
+    const W=322,H=188,L=12,Rr=14,T=16,B=30, pw=W-L-Rr, ph=H-T-B;
+    const ws = entries.map(e=>this.fromKg(e.kg));
+    const maxW = Math.max.apply(null, ws);
+    const minW = Math.min.apply(null, ws.concat([goalD]));
+    const span = Math.max(maxW-minW, 1);
+    const domMax = maxW + span*0.14, domMin = minW - span*0.10;
+    const X = (i)=> entries.length===1 ? L+pw/2 : L + (i/(entries.length-1))*pw;
+    const Y = (v)=> T + (1-(v-domMin)/(domMax-domMin))*ph;
+    const pts = entries.map((e,i)=>({ x:X(i), y:Y(this.fromKg(e.kg)), kg:e.kg, t:e.t }));
+    const last = pts.length-1;
+    const linePath = this.smooth(pts);
+    const areaPath = linePath + ' L'+pts[last].x+','+(T+ph)+' L'+pts[0].x+','+(T+ph)+' Z';
+    let pl=0; for(let i=1;i<pts.length;i++){ pl += Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y); }
+    const pathLen = Math.round(pl*1.35 + 50);
+    const goalY = Y(goalD);
+    return { pts, last, W, H, L, Rr, T, ph, linePath, areaPath, pathLen, goalY, goalLabel:this.fmt(goalD), goalLabelY:goalY-6, lastX:pts[last].x, lastY:pts[last].y };
+  }
+
+  buildOverlay(g){
+    const h = React.createElement;
+    const { pts, W, Rr, L, T, ph, H } = g;
+    const children = [];
+    // clear-tap background
+    children.push(h('rect',{key:'bg',x:0,y:0,width:W,height:H,fill:'transparent',onClick:this.clearPoint}));
+    // goal label
+    children.push(h('text',{key:'goalt',x:W-Rr,y:g.goalY-6,textAnchor:'end',fontFamily:'Plus Jakarta Sans, sans-serif',fontSize:9.5,fontWeight:800,fill:'#0E9A8A'},'Goal '+g.goalLabel));
+    // x-axis labels
+    let idxs = [];
+    if(this.state.range === 'week'){ for(let i=0;i<pts.length;i++) idxs.push(i); }
+    else { const cnt=Math.min(5,pts.length); for(let k=0;k<cnt;k++) idxs.push(Math.round(k*(pts.length-1)/(cnt-1||1))); idxs=[...new Set(idxs)]; }
+    idxs.forEach(i=>{
+      const dt = new Date(pts[i].t);
+      children.push(h('text',{key:'x'+i,x:pts[i].x,y:H-10,textAnchor:'middle',fontFamily:'Inter, sans-serif',fontSize:9,fontWeight:700,fill:'#A6B6A8'}, this.MON[dt.getMonth()]+' '+dt.getDate()));
+    });
+    // selected point + tooltip
+    const sel = this.state.selectedPoint;
+    if(sel != null && sel < pts.length){
+      const sp = pts[sel];
+      children.push(h('line',{key:'guide',x1:sp.x,y1:T,x2:sp.x,y2:T+ph,stroke:'#BFD8C6',strokeWidth:1.4,strokeDasharray:'3 3'}));
+      children.push(h('circle',{key:'seldot',cx:sp.x,cy:sp.y,r:5.5,fill:'#16C2A6',stroke:'#fff',strokeWidth:3}));
+      const tw=80, thh=42;
+      let tx = Math.max(L, Math.min(W-Rr-tw, sp.x-tw/2));
+      let ty = sp.y - thh - 12;
+      if(ty < T) ty = sp.y + 12;
+      const dt = new Date(sp.t);
+      const dateStr = this.WDL[dt.getDay()]+', '+this.MON[dt.getMonth()]+' '+dt.getDate();
+      children.push(h('g',{key:'tip'},[
+        h('rect',{key:'r',x:tx,y:ty,width:tw,height:thh,rx:10,fill:'#1F2A23'}),
+        h('text',{key:'d',x:tx+tw/2,y:ty+16,textAnchor:'middle',fontFamily:'Inter, sans-serif',fontSize:9,fontWeight:600,fill:'rgba(255,255,255,.72)'},dateStr),
+        h('text',{key:'w',x:tx+tw/2,y:ty+33,textAnchor:'middle',fontFamily:'Plus Jakarta Sans, sans-serif',fontSize:15,fontWeight:800,fill:'#fff'},this.fmt(this.fromKg(sp.kg))+' '+this.state.unit),
+      ]));
+    }
+    // tap targets
+    pts.forEach((p,i)=>{
+      const lx = i===0 ? L : (pts[i-1].x+p.x)/2;
+      const rx = i===pts.length-1 ? W-Rr : (p.x+pts[i+1].x)/2;
+      children.push(h('rect',{key:'tap'+i,x:lx,y:T,width:Math.max(1,rx-lx),height:ph,fill:'transparent',style:{cursor:'pointer'},onClick:()=>this.selectPoint(i)}));
+    });
+    return h('svg',{viewBox:'0 0 '+W+' '+H,width:'100%',height:188,preserveAspectRatio:'xMidYMid meet',style:{display:'block',overflow:'visible'}},children);
+  }
+
+  /* ---------- stats ---------- */
+  bestWeekDrop(){
+    const a = this.sorted();
+    let best = 0;
+    for(let i=0;i<a.length;i++) for(let j=i+1;j<a.length;j++){
+      const days = (a[j].t-a[i].t)/86400000;
+      if(days>=5 && days<=9){ const drop = a[i].kg-a[j].kg; if(drop>best) best=drop; }
+    }
+    return best;
+  }
+
+  renderVals(){
+    const isEmpty = !!this.props.emptyState;
+    const u = this.state.unit;
+    const g = this.chartGeom();
+    const all = this.sorted();
+    const hasData = !isEmpty && all.length >= 2;
+    const startKg = all[0] ? all[0].kg : 0;
+    const curKg = all[all.length-1] ? all[all.length-1].kg : 0;
+    const goalKg = this.goalKg();
+    const lostKg = startKg - curKg;
+    const remKg = curKg - goalKg;
+
+    // hero
+    const lost = this.fromKg(startKg) - this.fromKg(curKg);
+    const losing = lost > 0.05, gaining = lost < -0.05;
+    const deltaText = isEmpty ? '—' : (losing ? 'down '+this.fmt(Math.abs(lost))+' '+u : gaining ? 'up '+this.fmt(Math.abs(lost))+' '+u : 'no change');
+    const remDisp = this.fromKg(curKg) - this.fromKg(goalKg);
+    const goalChipText = remDisp > 0.05 ? this.fmt(remDisp)+' '+u+' to goal' : 'Goal reached';
+
+    // unit segmented
+    const accent = 'linear-gradient(135deg,#2BC56F,#16C2A6)';
+    const unitSegs = ['kg','lb'].map(x=>{
+      const s = u===x;
+      return { label:x, select:()=>this.setUnit(x), bg: s?accent:'transparent', color: s?'#fff':'#6E8674', shadow: s?'0 4px 10px -3px rgba(22,194,166,.55)':'none' };
+    });
+
+    // range chips
+    const rangeChips = [['week','Week'],['month','Month'],['all','All']].map(([k,lab])=>{
+      const s = this.state.range===k;
+      return { label:lab, select:()=>this.setRange(k), bg: s?'#DCF0EC':'#F1F6EE', color: s?'#0E9A8A':'#7C9080', ring: s?'inset 0 0 0 1.5px rgba(22,194,166,.35)':'inset 0 0 0 1px #E6EFE2' };
+    });
+
+    // stats
+    const weeks = all.length>=2 ? Math.max(1,(all[all.length-1].t-all[0].t)/(7*86400000)) : 1;
+    const perWeek = this.fromKg(lostKg)/weeks;
+    const cm = this.heightCm();
+    let bmiVal='—', bmiCat='add height', bmiColor='#9DB2A2', bmiSubColor='#9DB2A2';
+    if(cm && cm>60){
+      const m=cm/100, bmi=curKg/(m*m);
+      bmiVal=(Math.round(bmi*10)/10).toFixed(1);
+      if(bmi<18.5){ bmiCat='Underweight'; bmiColor='#0E9FD0'; }
+      else if(bmi<25){ bmiCat='Healthy'; bmiColor='#1E9E5E'; }
+      else if(bmi<30){ bmiCat='Overweight'; bmiColor='#E8893C'; }
+      else { bmiCat='Obese'; bmiColor='#E8654F'; }
+      bmiSubColor=bmiColor;
+    }
+    const best = this.fromKg(this.bestWeekDrop());
+    const statCards = [
+      { icon:'trending_down', iconColor:'#1E9E5E', label:'Total lost', value:this.fmt(Math.abs(this.fromKg(lostKg))), unit:u, valueColor:'#23332A', sub:'since '+(all[0]?this.MON[new Date(all[0].t).getMonth()]:'—'), subColor:'#9DB2A2' },
+      { icon:'speed', iconColor:'#0E9FD0', label:'Weekly avg', value:this.fmt(Math.abs(perWeek)), unit:u, valueColor:'#23332A', sub:'per week', subColor:'#9DB2A2' },
+      { icon:'monitor_heart', iconColor:bmiColor, label:'BMI', value:bmiVal, unit:'', valueColor: cm&&cm>60?'#23332A':'#C2D0C4', sub:bmiCat, subColor:bmiSubColor },
+      { icon:'military_tech', iconColor:'#E0A33A', label:'Best week', value:this.fmt(best), unit:u, valueColor:'#23332A', sub:'biggest drop', subColor:'#9DB2A2' },
+    ];
+
+    // history rows
+    const rowsAsc = all.map((e,i)=>({ e, prev: i>0 ? all[i-1].kg : null }));
+    const historyRows = rowsAsc.slice().reverse().slice(0,12).map(({e,prev})=>{
+      const dt = new Date(e.t);
+      const d = prev==null ? null : this.fromKg(e.kg)-this.fromKg(prev);
+      const down = d!=null && d<-0.02, up = d!=null && d>0.02;
+      return {
+        id:e.id,
+        setRef:(el)=>{ if(el) this._rowEls[e.id]=el; },
+        down:(ev)=>this.rowDown(ev,e.id), move:(ev)=>this.rowMove(ev), up:()=>this.rowUp(), tap:()=>this.rowTap(e.id),
+        edit:()=>this.openEdit(e), del:()=>this.delEntry(e),
+        tx: this.state.swipedId===e.id ? 'translateX(-132px)' : 'translateX(0px)',
+        frontBg:'#fff',
+        weekday:this.WD[dt.getDay()], dayNumText:String(dt.getDate()),
+        dayBg: e.id===this.today ? 'linear-gradient(135deg,#2BC56F,#16C2A6)' : '#EFF5EC',
+        daySub: e.id===this.today ? 'rgba(255,255,255,.85)' : '#9DB2A2',
+        dayNum: e.id===this.today ? '#fff' : '#23332A',
+        dateLabel: this.WDL[dt.getDay()]+', '+this.MON[dt.getMonth()]+' '+dt.getDate(),
+        hasNote: !!e.note, note: e.note,
+        weight:this.fmt(this.fromKg(e.kg)),
+        deltaIcon: d==null ? 'remove' : (down?'south':'north'),
+        deltaText: d==null ? '—' : this.fmt(Math.abs(d)),
+        deltaColor: d==null ? '#B6C6B8' : (down?'#1E9E5E':'#E8893C'),
+      };
+    });
+
+    // sheet
+    const cfg = this.cfg();
+    const sheetDispVal = this._liveSheet!=null ? this._liveSheet : this.fromKg(this.state.sheetKg);
+    const sheetTicks = [];
+    const n = Math.round((cfg.max-cfg.min)/cfg.tick), eps=1e-6;
+    for(let i=0;i<=n;i++){
+      const val=+(cfg.min+i*cfg.tick).toFixed(2);
+      const isMajor = Math.abs(val%cfg.major)<eps || Math.abs((val%cfg.major)-cfg.major)<eps;
+      const isWhole = Math.abs(val%1)<eps;
+      let barH,barW,barColor;
+      if(isMajor){ barH=30; barW=2.4; barColor='#5E7A66'; }
+      else if(isWhole){ barH=19; barW=1.8; barColor='#8FAA92'; }
+      else { barH=12; barW=1.5; barColor='#C6D6C2'; }
+      sheetTicks.push({ key:i, barH, barW, barColor, label: isMajor?String(Math.round(val)):'' });
+    }
+    const sdt = new Date(this.state.sheetDateT);
+    const dayDiff = Math.round((this.startOfDay(this.today)-this.startOfDay(this.state.sheetDateT))/86400000);
+    let sheetDateLabel;
+    if(dayDiff===0) sheetDateLabel='Today';
+    else if(dayDiff===1) sheetDateLabel='Yesterday';
+    else sheetDateLabel = this.WDL[sdt.getDay()]+', '+this.MON[sdt.getMonth()]+' '+sdt.getDate();
+    const atToday = this.startOfDay(this.state.sheetDateT) >= this.startOfDay(this.today);
+
+    return {
+      isEmpty, hasData, unit:u,
+      heroBig: isEmpty ? '––.–' : this.fmt(this.fromKg(curKg)),
+      deltaText, deltaIcon: gaining?'trending_up':'trending_down',
+      deltaColor: gaining?'#E8893C':'#1E9E5E',
+      deltaBg: gaining?'rgba(232,137,60,.14)':'rgba(43,197,111,.14)',
+      goalChipText,
+      unitSegs, rangeChips,
+      chartOverlay: this.buildOverlay(g),
+      goalY: g.goalY, goalLabel: g.goalLabel, goalLabelY: g.goalLabelY,
+      linePath: g.linePath, areaPath: g.areaPath, pathLen: g.pathLen,
+      lastX: g.lastX, lastY: g.lastY,
+      lineCls: 'wdraw-'+(this._drawTick%2),
+      areaCls: 'warea-'+(this._drawTick%2),
+      dotCls: 'wdot-'+(this._drawTick%2),
+      statCards,
+      entryCount: String(all.length),
+      historyOpen: this.state.historyOpen,
+      historyChevron: this.state.historyOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleHistory: this.toggleHistory,
+      historyRows,
+      openAdd: this.openAdd,
+      // sheet
+      sheetOpen: this.state.sheetOpen,
+      sheetTitle: this.state.sheetMode==='edit' ? 'Edit entry' : 'Add weight',
+      sheetSaveLabel: this.state.sheetMode==='edit' ? 'Update' : 'Save entry',
+      sheetValText: this.fmt(sheetDispVal),
+      closeSheet: this.closeSheet,
+      setSheetValEl: this.setSheetValEl,
+      setSheetScroller: this.setSheetScroller,
+      onSheetScroll: this.onSheetScroll, onSheetDown:this.onSheetDown, onSheetMove:this.onSheetMove, onSheetUp:this.onSheetUp,
+      sheetTicks, sheetTickW: cfg.px*cfg.tick,
+      sheetDateLabel, prevDay:this.prevDay, nextDay:this.nextDay,
+      nextDayBg: atToday ? '#F2F5F0' : '#fff',
+      nextDayCursor: atToday ? 'default' : 'pointer',
+      nextDayOp: atToday ? '0.4' : '1',
+      sheetNote: this.state.sheetNote, onNote:this.onNote,
+      saveEntry: this.saveEntry,
+    };
+  }
+}
+</script>
+</body>
+</html>
