@@ -24,8 +24,9 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT', 3000);
 
-  await app.listen(port);
-  app.get(Logger).log(`Process API listening on http://localhost:${port}`);
+  // Bind to 0.0.0.0 so the container is reachable on the platform network (Railway, etc.).
+  await app.listen(port, '0.0.0.0');
+  app.get(Logger).log(`Process API listening on port ${port}`);
 }
 
 void bootstrap();

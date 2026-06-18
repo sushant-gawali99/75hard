@@ -16,7 +16,12 @@ const hasGoogle = !!(webClientId && clientSecret);
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: 'pg' }),
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
+  // Falls back to Railway's injected public domain so the URL needn't be set by hand on first deploy.
+  baseURL:
+    process.env.BETTER_AUTH_URL ??
+    (process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : 'http://localhost:3000'),
   trustedOrigins: ['process://'],
   socialProviders: hasGoogle
     ? {

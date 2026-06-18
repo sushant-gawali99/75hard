@@ -1,0 +1,19 @@
+# keep the build context small + reproducible (deps are installed inside the image)
+**/node_modules
+**/dist
+**/.turbo
+.git
+.github
+
+# mobile build artifacts (only apps/mobile/package.json is needed by the image)
+apps/mobile/android
+apps/mobile/ios
+apps/mobile/.expo
+apps/mobile/expo-env.d.ts
+
+# local-only
+**/.env
+**/.env.*
+design-export
+docs
+*.md
