@@ -48,3 +48,26 @@ export const SetRuleStateInput = z.object({
   state: RuleState,
 });
 export type SetRuleStateInput = z.infer<typeof SetRuleStateInput>;
+
+/** Computed streak summary for the user. */
+export const StreaksSummary = z.object({
+  overall: z.object({
+    current: z.number().int().nonnegative(),
+    longest: z.number().int().nonnegative(),
+    perfectDays: z.number().int().nonnegative(),
+  }),
+  rules: z.array(
+    z.object({
+      ruleId: z.string().uuid(),
+      current: z.number().int().nonnegative(),
+      longest: z.number().int().nonnegative(),
+    }),
+  ),
+});
+export type StreaksSummary = z.infer<typeof StreaksSummary>;
+
+/** Per-day completion for a month (calendar heatmap). */
+export const StreaksCalendar = z.object({
+  days: z.array(z.object({ date: z.string().date(), pct: z.number().int().nonnegative() })),
+});
+export type StreaksCalendar = z.infer<typeof StreaksCalendar>;

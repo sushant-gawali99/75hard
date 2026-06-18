@@ -1,14 +1,25 @@
+import 'dotenv/config';
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
+
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { toNodeHandler } from 'better-auth/node';
+import { json } from 'express';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
+import { auth } from './auth/auth';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // bodyParser disabled so Better Auth can read the raw request body.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, bodyParser: false });
   app.useLogger(app.get(Logger));
   app.enableShutdownHooks();
+
+  // Mount Better Auth (raw body) before enabling JSON parsing for the rest.
+  const server = app.getHttpAdapter().getInstance();
+  server.all('/api/auth/{*path}', toNodeHandler(auth));
+  app.use(json({ limit: '12mb' })); // meal photos arrive as base64
 
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT', 3000);

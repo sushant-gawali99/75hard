@@ -1,10 +1,18 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { View } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
 
 import { colors } from '@/theme';
 
-/** Gradient progress ring (green->teal) on a sage track. `progress` is 0..1. */
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+/** Gradient progress ring (green->teal) on a sage track. `progress` is 0..1; sweeps to fill on change. */
 export function ProgressRing({
   size = 150,
   stroke = 13,
@@ -20,7 +28,15 @@ export function ProgressRing({
 }) {
   const clamped = Math.max(0, Math.min(1, progress));
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - clamped);
+  const anim = useSharedValue(0);
+
+  useEffect(() => {
+    anim.value = withTiming(clamped, { duration: 900, easing: Easing.out(Easing.cubic) });
+  }, [clamped, anim]);
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - anim.value),
+  }));
 
   return (
     <View style={{ width: size, height: size }}>
@@ -32,7 +48,7 @@ export function ProgressRing({
           </SvgGradient>
         </Defs>
         <Circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={colors.track} strokeWidth={stroke} />
-        <Circle
+        <AnimatedCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -41,7 +57,7 @@ export function ProgressRing({
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
-          strokeDashoffset={offset}
+          animatedProps={animatedProps}
         />
       </Svg>
       <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>

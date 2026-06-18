@@ -1,5 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { colors, ruleIconPalettes, type RuleIconPalette } from '@/theme';
 import { AppText } from './AppText';
@@ -24,6 +32,13 @@ export function HabitRow({
   showDivider?: boolean;
 }) {
   const p = ruleIconPalettes[palette];
+  const scale = useSharedValue(done ? 1 : 0);
+  useEffect(() => {
+    scale.value = done
+      ? withSequence(withTiming(1.18, { duration: 130 }), withSpring(1, { damping: 9, stiffness: 200 }))
+      : withTiming(0, { duration: 110 });
+  }, [done, scale]);
+  const checkStyle = useAnimatedStyle(() => ({ opacity: scale.value, transform: [{ scale: scale.value }] }));
 
   return (
     <Pressable
@@ -40,7 +55,8 @@ export function HabitRow({
     >
       {/* checkbox (44pt tap target) */}
       <View style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center', marginVertical: -2 }}>
-        {done ? (
+        <View style={{ position: 'absolute', width: 30, height: 30, borderRadius: 15, borderWidth: 2, borderColor: '#CFE2C8' }} />
+        <Animated.View style={checkStyle}>
           <LinearGradient
             colors={p.grad}
             start={{ x: 0, y: 0 }}
@@ -60,9 +76,7 @@ export function HabitRow({
           >
             <Icon name="check" size={18} color={colors.white} />
           </LinearGradient>
-        ) : (
-          <View style={{ width: 30, height: 30, borderRadius: 15, borderWidth: 2, borderColor: '#CFE2C8' }} />
-        )}
+        </Animated.View>
       </View>
 
       {/* icon chip */}

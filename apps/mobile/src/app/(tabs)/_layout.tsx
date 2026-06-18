@@ -1,8 +1,15 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 
 import { CustomTabBar } from '@/components/navigation/CustomTabBar';
+import { useProfile } from '@/lib/queries';
 
 export default function TabsLayout() {
+  const { data: profile, isLoading, isError } = useProfile();
+  if (isLoading) return null;
+  // Route un-onboarded users to Welcome (only when the API actually answered).
+  if (!isError && (profile === null || profile?.onboardingCompleted === false)) {
+    return <Redirect href="/welcome" />;
+  }
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
