@@ -6,22 +6,19 @@ import { type Db } from '../db/client';
 import { DRIZZLE } from '../db/db.module';
 import { rules } from '../db/schema';
 
-// TODO: replace with the authenticated user id once the AUTH epic lands.
-const DEV_USER = 'dev-user';
-
 @Injectable()
 export class RulesService {
   constructor(@Inject(DRIZZLE) private readonly db: Db) {}
 
-  list() {
-    return this.db.select().from(rules).where(eq(rules.userId, DEV_USER)).orderBy(rules.sortOrder);
+  list(userId: string) {
+    return this.db.select().from(rules).where(eq(rules.userId, userId)).orderBy(rules.sortOrder);
   }
 
-  async create(input: CreateRuleInput) {
+  async create(userId: string, input: CreateRuleInput) {
     const [row] = await this.db
       .insert(rules)
       .values({
-        userId: DEV_USER,
+        userId,
         name: input.name,
         icon: input.icon,
         palette: input.palette,
