@@ -3,7 +3,9 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/re
 import type {
   ActivityLevel,
   AddWeightInput,
+  AnalyzeMealInput,
   CreateRuleInput,
+  SaveMealInput,
   SetRuleStateInput,
   Sex,
   WeightUnit,
@@ -48,6 +50,22 @@ export function useChallenge() {
 
 export function useNutritionTargets() {
   return useQuery({ queryKey: ['nutrition-targets'], queryFn: api.getNutritionTargets });
+}
+
+export function useMeals(date: string) {
+  return useQuery({ queryKey: ['meals', date], queryFn: () => api.listMeals(date) });
+}
+
+export function useAnalyzeMeal() {
+  return useMutation({ mutationFn: (body: AnalyzeMealInput) => api.analyzeMeal(body) });
+}
+
+export function useSaveMeal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: SaveMealInput) => api.saveMeal(body),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['meals'] }),
+  });
 }
 
 type OnboardingPayload = {

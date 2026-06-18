@@ -1,18 +1,35 @@
 import type {
   AddWeightInput,
+  AnalyzeMealInput,
   Challenge,
   CreateChallengeInput,
   CreateRuleInput,
+  MealAnalysis,
   NutritionTargets,
   Profile,
   Rule,
   RuleLog,
+  SaveMealInput,
   SetRuleStateInput,
   StreaksSummary,
   UpsertProfileInput,
   WeightEntry,
 } from '@process/shared';
 import { authClient } from './auth';
+
+/** Flattened meal row as returned by GET /meals. */
+export type MealRow = {
+  id: string;
+  type: string;
+  eatenAt: string;
+  dishName: string;
+  kcal: number | null;
+  proteinG: number | null;
+  carbsG: number | null;
+  fatG: number | null;
+  score: number | null;
+  band: string | null;
+};
 
 const BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://10.0.2.2:3000';
 
@@ -45,4 +62,7 @@ export const api = {
   getNutritionTargets: () => request<NutritionTargets | null>('/nutrition-targets'),
   getChallenge: () => request<Challenge | null>('/challenge'),
   createChallenge: (body: CreateChallengeInput) => request<Challenge>('/challenge', { method: 'POST', body: JSON.stringify(body) }),
+  analyzeMeal: (body: AnalyzeMealInput) => request<MealAnalysis>('/meals/analyze', { method: 'POST', body: JSON.stringify(body) }),
+  saveMeal: (body: SaveMealInput) => request<{ id: string }>('/meals', { method: 'POST', body: JSON.stringify(body) }),
+  listMeals: (date: string) => request<MealRow[]>(`/meals?date=${date}`),
 };
