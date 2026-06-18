@@ -4,6 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Button, Card, Icon, type IconName } from '@/components/ui';
+import { useOnboarding } from '@/lib/onboarding-store';
 import { colors, radius, ruleIconPalettes, spacing, type RuleIconPalette } from '@/theme';
 
 type Rule = { id: number; name: string; icon: IconName; palette: RuleIconPalette; target: string };
@@ -24,6 +25,7 @@ const SUGGESTIONS: Omit<Rule, 'id' | 'target'>[] = [
 export default function DefineRulesScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const setData = useOnboarding((s) => s.setData);
   const [rules, setRules] = useState<Rule[]>(SEED);
   const idRef = useRef(100);
   const [suggIdx, setSuggIdx] = useState(0);
@@ -114,7 +116,16 @@ export default function DefineRulesScreen() {
       </ScrollView>
 
       <View style={{ paddingHorizontal: 24, paddingBottom: insets.bottom + 16 }}>
-        <Button title="Continue" onPress={() => router.push('/starting-weight')} disabled={rules.length === 0} />
+        <Button
+          title="Continue"
+          disabled={rules.length === 0}
+          onPress={() => {
+            setData({
+              rules: rules.map((r) => ({ name: r.name, icon: r.icon, palette: r.palette, frequency: 'daily' as const })),
+            });
+            router.push('/starting-weight');
+          }}
+        />
       </View>
     </View>
   );

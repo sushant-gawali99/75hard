@@ -6,12 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
 import { AppText, Button, Card, HabitRow, Icon, ProgressRing, type IconName } from '@/components/ui';
-import { useRuleLogs, useRules, useSetRuleState, useStreaks, useWeights } from '@/lib/queries';
+import { useChallenge, useRuleLogs, useRules, useSetRuleState, useStreaks, useWeights } from '@/lib/queries';
 import { colors, gradient, radius, shadows, spacing, type RuleIconPalette } from '@/theme';
-
-// TODO: derive from the persisted challenge (onboarding persistence).
-const PROGRAM_DAY = 41;
-const PROGRAM_TOTAL = 75;
 
 const MOTIVATION = ['You showed up today.', 'One day at a time.', 'Small steps, every day.', "Don't break the chain."];
 
@@ -30,6 +26,7 @@ export default function TodayScreen() {
   const { data: logs = [] } = useRuleLogs(today);
   const { data: streaks } = useStreaks();
   const { data: weights = [] } = useWeights();
+  const { data: challenge } = useChallenge();
   const setState = useSetRuleState();
 
   const [motivIdx, setMotivIdx] = useState(0);
@@ -54,6 +51,10 @@ export default function TodayScreen() {
   const allDone = total > 0 && done === total;
   const doneLabel = `${done} of ${total} done`;
   const dayStreak = streaks?.overall.current ?? 0;
+  const challengeTotal = challenge?.days ?? 75;
+  const challengeDay = challenge
+    ? Math.min(challengeTotal, Math.floor((Date.parse(today) - Date.parse(challenge.startDate)) / 86400000) + 1)
+    : 0;
 
   const latest = weights.length ? weights[weights.length - 1] : undefined;
   const prev = weights.length > 1 ? weights[weights.length - 2] : undefined;
@@ -103,15 +104,15 @@ export default function TodayScreen() {
 
         {/* progress hero */}
         <Card style={{ marginTop: 14, padding: 20, flexDirection: 'row', gap: 18, alignItems: 'center' }}>
-          <ProgressRing progress={PROGRAM_DAY / PROGRAM_TOTAL}>
+          <ProgressRing progress={challengeTotal ? challengeDay / challengeTotal : 0}>
             <AppText variant="label" color={colors.muted}>
               DAY
             </AppText>
             <AppText variant="display" color={colors.ink}>
-              {PROGRAM_DAY}
+              {challengeDay}
             </AppText>
             <AppText variant="caption" color={colors.muted}>
-              of {PROGRAM_TOTAL}
+              of {challengeTotal}
             </AppText>
           </ProgressRing>
           <View style={{ flex: 1, gap: 15 }}>

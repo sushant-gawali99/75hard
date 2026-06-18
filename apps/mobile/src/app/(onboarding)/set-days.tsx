@@ -4,6 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Button, Icon } from '@/components/ui';
+import { useOnboarding } from '@/lib/onboarding-store';
 import { colors, radius, spacing } from '@/theme';
 
 const PRESETS = [21, 30, 60, 75, 90];
@@ -11,6 +12,7 @@ const PRESETS = [21, 30, 60, 75, 90];
 export default function SetDaysScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const setData = useOnboarding((s) => s.setData);
   const [days, setDays] = useState(75);
 
   return (
@@ -90,7 +92,13 @@ export default function SetDaysScreen() {
         <AppText variant="caption" color={colors.mutedSoft} style={{ textAlign: 'center', marginBottom: spacing.lg }}>
           Choose with intention — this sets your whole journey.
         </AppText>
-        <Button title="Continue" onPress={() => router.push('/define-rules')} />
+        <Button
+          title="Continue"
+          onPress={() => {
+            setData({ days });
+            router.push('/define-rules');
+          }}
+        />
       </View>
     </View>
   );

@@ -1,6 +1,13 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { AddWeightInput, SetRuleStateInput } from '@process/shared';
+import type {
+  ActivityLevel,
+  AddWeightInput,
+  CreateRuleInput,
+  SetRuleStateInput,
+  Sex,
+  WeightUnit,
+} from '@process/shared';
 import { api } from './api';
 
 export const queryClient = new QueryClient({
@@ -29,6 +36,53 @@ export function useRuleLogs(date: string) {
 
 export function useStreaks() {
   return useQuery({ queryKey: ['streaks'], queryFn: api.getStreaks });
+}
+
+export function useProfile() {
+  return useQuery({ queryKey: ['profile'], queryFn: api.getProfile });
+}
+
+export function useChallenge() {
+  return useQuery({ queryKey: ['challenge'], queryFn: api.getChallenge });
+}
+
+export function useNutritionTargets() {
+  return useQuery({ queryKey: ['nutrition-targets'], queryFn: api.getNutritionTargets });
+}
+
+type OnboardingPayload = {
+  days: number;
+  rules: CreateRuleInput[];
+  currentKg: number;
+  goalKg: number;
+  unit: WeightUnit;
+  sex?: Sex;
+  age?: number;
+  heightCm?: number;
+  activity?: ActivityLevel;
+};
+
+export function useCompleteOnboarding() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (d: OnboardingPayload) => {
+      await api.createChallenge({ days: d.days });
+      for (const r of d.rules) await api.createRule(r);
+      const today = new Date().toISOString().slice(0, 10);
+      await api.addWeight({ date: today, value: d.currentKg, unit: 'kg' });
+      await api.upsertProfile({
+        sex: d.sex,
+        age: d.age,
+        heightCm: d.heightCm,
+        activity: d.activity,
+        startWeightKg: d.currentKg,
+        goalWeightKg: d.goalKg,
+        unit: d.unit,
+        onboardingCompleted: true,
+      });
+    },
+    onSuccess: () => qc.invalidateQueries(),
+  });
 }
 
 export function useSetRuleState() {

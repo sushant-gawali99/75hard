@@ -1,10 +1,15 @@
 import type {
   AddWeightInput,
+  Challenge,
+  CreateChallengeInput,
   CreateRuleInput,
+  NutritionTargets,
+  Profile,
   Rule,
   RuleLog,
   SetRuleStateInput,
   StreaksSummary,
+  UpsertProfileInput,
   WeightEntry,
 } from '@process/shared';
 import { authClient } from './auth';
@@ -35,4 +40,9 @@ export const api = {
   listWeights: () => request<WeightEntry[]>('/weights'),
   addWeight: (body: AddWeightInput) => request<WeightEntry>('/weights', { method: 'POST', body: JSON.stringify(body) }),
   getStreaks: () => request<StreaksSummary>('/streaks'),
+  getProfile: () => request<Profile | null>('/profile'),
+  upsertProfile: (body: UpsertProfileInput) => request<Profile>('/profile', { method: 'PUT', body: JSON.stringify(body) }),
+  getNutritionTargets: () => request<NutritionTargets | null>('/nutrition-targets'),
+  getChallenge: () => request<Challenge | null>('/challenge'),
+  createChallenge: (body: CreateChallengeInput) => request<Challenge>('/challenge', { method: 'POST', body: JSON.stringify(body) }),
 };

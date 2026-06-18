@@ -1,13 +1,21 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Button, Card, Icon } from '@/components/ui';
+import { useOnboarding } from '@/lib/onboarding-store';
+import { useCompleteOnboarding } from '@/lib/queries';
 import { colors, radius, spacing } from '@/theme';
 
 type Unit = 'kg' | 'lb';
 const ACTIVITIES = ['Sedentary', 'Light', 'Moderate', 'Very active'];
+const ACT_MAP: Record<string, 'sedentary' | 'light' | 'moderate' | 'very_active'> = {
+  Sedentary: 'sedentary',
+  Light: 'light',
+  Moderate: 'moderate',
+  'Very active': 'very_active',
+};
 
 function RoundBtn({ icon, onPress }: { icon: 'remove' | 'add'; onPress: () => void }) {
   return (
@@ -53,6 +61,29 @@ export default function StartingWeightScreen() {
   const [age, setAge] = useState(30);
   const [heightCm, setHeightCm] = useState(175);
   const [activity, setActivity] = useState('Light');
+
+  const days = useOnboarding((s) => s.days);
+  const rules = useOnboarding((s) => s.rules);
+  const complete = useCompleteOnboarding();
+
+  const onStart = async () => {
+    try {
+      await complete.mutateAsync({
+        days,
+        rules,
+        currentKg,
+        goalKg,
+        unit,
+        sex: sex.toLowerCase() as 'male' | 'female',
+        age,
+        heightCm,
+        activity: ACT_MAP[activity],
+      });
+      router.replace('/');
+    } catch (e) {
+      Alert.alert('Could not save', e instanceof Error ? e.message : 'Please try again.');
+    }
+  };
 
   const toLose = Math.max(0, currentKg - goalKg);
   const toLoseDisplay = unit === 'kg' ? toLose.toFixed(1) : (toLose * 2.20462).toFixed(1);
@@ -187,7 +218,7 @@ export default function StartingWeightScreen() {
       </ScrollView>
 
       <View style={{ paddingHorizontal: 24, paddingBottom: insets.bottom + 16 }}>
-        <Button title="Start my challenge" onPress={() => router.replace('/')} />
+        <Button title="Start my challenge" onPress={onStart} disabled={complete.isPending} />
         <AppText variant="caption" color={colors.mutedSoft} style={{ textAlign: 'center', marginTop: spacing.md }}>
           You can edit the extras later in Settings.
         </AppText>
