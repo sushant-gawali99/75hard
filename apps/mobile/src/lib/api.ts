@@ -6,13 +6,19 @@ import type {
   SetRuleStateInput,
   WeightEntry,
 } from '@process/shared';
+import { authClient } from './auth';
 
 const BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://10.0.2.2:3000';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const cookie = authClient.getCookie();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    headers: { 'content-type': 'application/json', ...(init?.headers ?? {}) },
+    headers: {
+      'content-type': 'application/json',
+      ...(cookie ? { Cookie: cookie } : {}),
+      ...(init?.headers ?? {}),
+    },
   });
   if (!res.ok) {
     throw new Error(`API ${res.status}: ${await res.text().catch(() => res.statusText)}`);

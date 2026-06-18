@@ -1,10 +1,12 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
 import { AppText, Icon, type IconName } from '@/components/ui';
+import { signInWithGoogle } from '@/lib/auth';
 import { colors, radius, spacing } from '@/theme';
 
 const SPLIT_AT = appMeta.philosophy.indexOf('the process');
@@ -20,6 +22,19 @@ const VALUES: { icon: IconName; label: string }[] = [
 export default function WelcomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogle = async () => {
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+      router.replace('/');
+    } catch (e) {
+      Alert.alert('Sign-in unavailable', e instanceof Error ? e.message : 'Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
@@ -79,7 +94,8 @@ export default function WelcomeScreen() {
 
         {/* sign in */}
         <Pressable
-          onPress={() => router.push('/set-days')}
+          onPress={handleGoogle}
+          disabled={loading}
           style={{
             height: 54,
             borderRadius: radius.pill,
@@ -90,21 +106,33 @@ export default function WelcomeScreen() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 10,
+            opacity: loading ? 0.6 : 1,
             ...{ shadowColor: '#285037', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
           }}
         >
-          <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2E2E2', alignItems: 'center', justifyContent: 'center' }}>
-            <AppText variant="heading" color="#4285F4" style={{ fontSize: 14 }}>
-              G
-            </AppText>
-          </View>
-          <AppText variant="itemTitle" color={colors.ink} style={{ fontSize: 15.5 }}>
-            Continue with Google
-          </AppText>
+          {loading ? (
+            <ActivityIndicator color={colors.green} />
+          ) : (
+            <>
+              <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2E2E2', alignItems: 'center', justifyContent: 'center' }}>
+                <AppText variant="heading" color="#4285F4" style={{ fontSize: 14 }}>
+                  G
+                </AppText>
+              </View>
+              <AppText variant="itemTitle" color={colors.ink} style={{ fontSize: 15.5 }}>
+                Continue with Google
+              </AppText>
+            </>
+          )}
         </Pressable>
         <AppText variant="caption" color={colors.mutedSoft} style={{ textAlign: 'center', marginTop: spacing.md }}>
           By continuing you agree to our Terms & Privacy.
         </AppText>
+        <Pressable onPress={() => router.push('/set-days')} hitSlop={8} style={{ marginTop: 14, alignSelf: 'center' }}>
+          <AppText variant="caption" color={colors.muted}>
+            Skip for now (dev)
+          </AppText>
+        </Pressable>
       </View>
     </View>
   );
