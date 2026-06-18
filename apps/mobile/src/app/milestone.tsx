@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AppText, Button, Card, Icon } from '@/components/ui';
+import { AppText, Button, Card, Confetti, Icon } from '@/components/ui';
 import { colors, gradient, radius, shadows } from '@/theme';
 
 const STATS = [
@@ -13,17 +13,6 @@ const STATS = [
   { label: 'WEIGHT LOST', value: '8.6 kg' },
 ];
 
-const PALETTE = ['#21B96B', '#16C2A6', '#E0A33A', '#2BC56F', '#7FD9B0'];
-// Deterministic decorative confetti (animated fall is a later refinement).
-const CONFETTI = Array.from({ length: 20 }, (_, i) => ({
-  left: `${((i * 53) % 94) + 3}%`,
-  top: (i % 7) * 34 + 12,
-  color: PALETTE[i % PALETTE.length]!,
-  size: 7 + (i % 3) * 3,
-  rot: `${(i * 37) % 360}deg`,
-  round: i % 2 === 0,
-}));
-
 export default function MilestoneScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -32,23 +21,8 @@ export default function MilestoneScreen() {
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
       <LinearGradient colors={['#D7F1E1', '#EAF7EF', colors.appBg]} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '55%' }} />
 
-      {/* confetti */}
-      {CONFETTI.map((c, i) => (
-        <View
-          key={i}
-          style={{
-            position: 'absolute',
-            left: c.left as `${number}%`,
-            top: c.top,
-            width: c.size,
-            height: c.size,
-            borderRadius: c.round ? c.size / 2 : 2,
-            backgroundColor: c.color,
-            transform: [{ rotate: c.rot }],
-            opacity: 0.9,
-          }}
-        />
-      ))}
+      {/* celebratory confetti */}
+      <Confetti count={90} />
 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, paddingTop: insets.top, paddingBottom: insets.bottom + 16 }}>
         {/* medal */}

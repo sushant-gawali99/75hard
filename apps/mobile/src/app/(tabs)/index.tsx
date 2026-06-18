@@ -1,11 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
-import { AppText, Button, Card, HabitRow, Icon, ProgressRing, type IconName } from '@/components/ui';
+import { AppText, Button, Card, Confetti, HabitRow, Icon, ProgressRing, type IconName } from '@/components/ui';
 import { useChallenge, useRuleLogs, useRules, useSetRuleState, useStreaks, useWeights } from '@/lib/queries';
 import { colors, gradient, radius, shadows, spacing, type RuleIconPalette } from '@/theme';
 
@@ -30,6 +30,8 @@ export default function TodayScreen() {
   const setState = useSetRuleState();
 
   const [motivIdx, setMotivIdx] = useState(0);
+  const [celebrate, setCelebrate] = useState(false);
+  const celebratedRef = useRef(false);
   useEffect(() => {
     const t = setInterval(() => setMotivIdx((i) => (i + 1) % MOTIVATION.length), 4200);
     return () => clearInterval(t);
@@ -49,6 +51,15 @@ export default function TodayScreen() {
   const done = habits.filter((h) => h.done).length;
   const total = habits.length;
   const allDone = total > 0 && done === total;
+  useEffect(() => {
+    if (allDone && !celebratedRef.current) {
+      celebratedRef.current = true;
+      setCelebrate(true);
+      const t = setTimeout(() => setCelebrate(false), 3500);
+      return () => clearTimeout(t);
+    }
+    if (!allDone) celebratedRef.current = false;
+  }, [allDone]);
   const doneLabel = `${done} of ${total} done`;
   const dayStreak = streaks?.overall.current ?? 0;
   const challengeTotal = challenge?.days ?? 75;
@@ -240,6 +251,7 @@ export default function TodayScreen() {
           </AppText>
         </View>
       </ScrollView>
+      {celebrate ? <Confetti count={80} /> : null}
     </View>
   );
 }
