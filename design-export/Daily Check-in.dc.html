@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    textarea{ font-family:'Inter',sans-serif; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    .pscroll{ scrollbar-width:none; }
+    @keyframes ciRise{ 0%{ opacity:0; transform:translateY(13px); } 100%{ opacity:1; transform:translateY(0); } }
+    .ci-rise{ animation:ciRise .7s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes ciConfetti{
+      0%{ transform:translateY(-10px) rotate(0deg); opacity:0; }
+      12%{ opacity:1; }
+      100%{ transform:translateY(760px) rotate(680deg); opacity:0; }
+    }
+    @keyframes ciPop{
+      0%{ transform:scale(.5); opacity:0; }
+      55%{ transform:scale(1.12); }
+      100%{ transform:scale(1); opacity:1; }
+    }
+    @keyframes ciScrim{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes ciDraw{ 0%{ stroke-dashoffset:60; } 100%{ stroke-dashoffset:0; } }
+    @keyframes ciRing2{ 0%{ transform:scale(.7); opacity:.5; } 100%{ transform:scale(1.55); opacity:0; } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- soft glow -->
+      <div style="position:absolute; top:-170px; left:50%; transform:translateX(-50%); width:520px; height:520px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.20) 0%, rgba(22,194,166,.13) 40%, rgba(14,143,224,0) 72%); filter:blur(8px); pointer-events:none;"></div>
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- TOP APP BAR -->
+      <div style="position:relative; z-index:3; flex:none; display:flex; align-items:center; gap:10px; padding:4px 16px 6px;">
+        <button onClick="{{ close }}" aria-label="Close" style="width:44px; height:44px; flex:none; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#23332A;" style-hover="background:rgba(35,51,42,.06);" style-active="transform:scale(.92);">
+          <span style="font-family:'Material Symbols Rounded'; font-size:26px; font-variation-settings:'wght' 500;">close</span>
+        </button>
+        <div style="flex:1; min-width:0; text-align:center;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16.5px; letter-spacing:-.01em; color:#23332A;">Today · {{ headerDate }}</div>
+        </div>
+        <div style="flex:none; display:flex; align-items:center; gap:5px; height:34px; padding:0 12px; border-radius:100px; background:#EAF3E7; border:1px solid #DCEBD6;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:15px; font-variation-settings:'FILL' 1,'wght' 600; color:#21B96B;">bolt</span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; letter-spacing:-.01em; color:#1E8A4C;">Day 41</span>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="position:relative; z-index:2; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:8px 20px 20px;">
+
+        <!-- HERO -->
+        <div class="ci-rise" style="display:flex; align-items:center; gap:16px; padding:6px 4px 2px;">
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C9080;">DAILY CHECK-IN</div>
+            <h1 style="margin:6px 0 0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:27px; line-height:1.15; letter-spacing:-.025em; color:#23332A; text-wrap:balance;">How did today go?</h1>
+            <p style="margin:7px 0 0; font-size:13.5px; font-weight:500; line-height:1.45; color:#7C9080;">{{ heroSub }}</p>
+          </div>
+
+          <sc-if value="{{ showRing }}" hint-placeholder-val="{{ true }}">
+            <div ref="{{ setRingRef }}" style="position:relative; width:88px; height:88px; flex:none;">
+              <svg width="88" height="88" viewBox="0 0 88 88" style="transform:rotate(-90deg);">
+                <defs>
+                  <linearGradient id="ciRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#2BC56F"></stop>
+                    <stop offset="100%" stop-color="#16C2A6"></stop>
+                  </linearGradient>
+                </defs>
+                <circle cx="44" cy="44" r="37" fill="none" stroke="#DBEBD6" stroke-width="9"></circle>
+                <circle cx="44" cy="44" r="37" fill="none" stroke="url(#ciRingGrad)" stroke-width="9" stroke-linecap="round" style="stroke-dasharray:{{ ringC }}; stroke-dashoffset:{{ ringOffset }}; transition:stroke-dashoffset .7s cubic-bezier(.34,1.4,.5,1);"></circle>
+              </svg>
+              <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:21px; line-height:1; letter-spacing:-.02em; color:#23332A; font-variant-numeric:tabular-nums;">{{ doneCount }}</span>
+                <span style="font-size:11px; font-weight:600; color:#7C9080; font-variant-numeric:tabular-nums;">of {{ total }}</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- RULE CARDS -->
+        <div style="display:flex; flex-direction:column; gap:13px; margin-top:20px;">
+          <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+            <div class="ci-rise" style="border-radius:24px; background:{{ r.cardBg }}; box-shadow:0 8px 22px -6px rgba(40,80,55,.10), 0 1px 2px rgba(40,80,55,.05); border:1.5px solid {{ r.cardBorder }}; padding:15px 15px 13px; transition:background .25s, border-color .25s;">
+
+              <!-- top row -->
+              <div style="display:flex; align-items:center; gap:13px;">
+                <div style="width:50px; height:50px; flex:none; border-radius:16px; background:{{ r.chipBg }}; display:flex; align-items:center; justify-content:center;">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:26px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ r.iconColor }};">{{ r.icon }}</span>
+                </div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16.5px; letter-spacing:-.01em; color:#23332A;">{{ r.name }}</div>
+                  <div style="font-size:13px; font-weight:600; color:#8AA08E; margin-top:2px;">{{ r.target }}</div>
+                </div>
+                <!-- BIG CHECK TOGGLE -->
+                <button ref="{{ r.setRef }}" onClick="{{ r.markDone }}" aria-label="Mark done" style="width:60px; height:60px; flex:none; border:none; cursor:pointer; border-radius:50%; display:flex; align-items:center; justify-content:center; background:{{ r.toggleBg }}; box-shadow:{{ r.toggleShadow }}; transition:background .25s; outline:2px solid {{ r.toggleRing }}; outline-offset:-2px;" style-active="transform:scale(.9);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:30px; font-variation-settings:'FILL' 1,'wght' 700; color:{{ r.toggleIconColor }};">{{ r.toggleIcon }}</span>
+                </button>
+              </div>
+
+              <!-- bottom row: streak + skip/miss -->
+              <div style="display:flex; align-items:center; gap:8px; margin-top:13px; padding-top:12px; border-top:1px solid {{ r.dividerColor }};">
+                <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ r.fireColor }}; flex:none;">{{ r.fireIcon }}</span>
+                <span style="flex:1; min-width:0; font-size:12.5px; font-weight:600; letter-spacing:-.005em; color:{{ r.streakColor }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.streakText }}</span>
+                <button onClick="{{ r.markMiss }}" style="flex:none; height:32px; padding:0 13px; border-radius:100px; cursor:pointer; border:{{ r.missBorder }}; background:{{ r.missBg }}; color:{{ r.missColor }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:12.5px; letter-spacing:-.005em; transition:all .18s;" style-active="transform:scale(.94);">Miss</button>
+              </div>
+
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- MOOD -->
+        <sc-if value="{{ showMood }}" hint-placeholder-val="{{ true }}">
+          <div class="ci-rise" style="margin-top:20px; padding:17px 18px 15px; border-radius:24px; background:#fff; box-shadow:0 8px 22px -6px rgba(40,80,55,.10), 0 1px 2px rgba(40,80,55,.05);">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">How are you feeling?</div>
+            <div style="display:flex; justify-content:space-between; gap:8px; margin-top:14px;">
+              <sc-for list="{{ moods }}" as="m" hint-placeholder-count="5">
+                <button onClick="{{ m.select }}" aria-label="{{ m.name }}" style="flex:1; aspect-ratio:1; border:none; border-radius:18px; cursor:pointer; background:{{ m.bg }}; display:flex; align-items:center; justify-content:center; transition:background .18s, transform .18s; transform:{{ m.scale }};" style-active="transform:scale(.9);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:30px; font-variation-settings:'FILL' {{ m.fill }},'wght' 500; color:{{ m.color }};">{{ m.icon }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- REFLECTION -->
+        <div class="ci-rise" style="margin-top:16px;">
+          <div style="display:flex; align-items:center; gap:7px; margin:0 4px 9px;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 0,'wght' 500; color:#8AA08E;">edit_note</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; letter-spacing:-.01em; color:#3A4A40;">Reflection</span>
+            <span style="font-size:12.5px; font-weight:600; color:#B7C9B8;">· optional</span>
+          </div>
+          <textarea ref="{{ setNoteRef }}" value="{{ note }}" onInput="{{ onNote }}" placeholder="How are you feeling? What helped today?" rows="3" style="width:100%; resize:none; border-radius:20px; border:1.5px solid #DCE8D7; background:#fff; padding:15px 16px; font-size:14.5px; font-weight:500; line-height:1.5; color:#23332A; outline:none; transition:border-color .2s, box-shadow .2s;" style-focus="border-color:#2BC56F; box-shadow:0 0 0 4px rgba(43,197,111,.12);"></textarea>
+        </div>
+
+      </div>
+
+      <!-- STICKY SAVE -->
+      <div style="position:relative; z-index:2; flex:none; padding:14px 22px 28px; background:linear-gradient(to top,#F4F8F1 62%,rgba(244,248,241,0));">
+        <button onClick="{{ save }}" style="width:100%; height:58px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 14px 30px -8px rgba(22,194,166,.6);" style-hover="box-shadow:0 18px 36px -8px rgba(22,194,166,.7); transform:translateY(-1px);" style-active="transform:scale(.99);">
+          <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 700;">check_circle</span>
+          Save today
+        </button>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+      <!-- SUCCESS OVERLAY -->
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 36px; text-align:center; background:radial-gradient(120% 80% at 50% 30%, #F2FBF0 0%, #E6F4E2 55%, #DCEED6 100%); animation:ciScrim .3s ease both;">
+
+          <!-- confetti -->
+          <sc-if value="{{ celebrate }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+              <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
+                <div style="position:absolute; top:90px; left:{{ c.left }}; width:{{ c.size }}; height:{{ c.size }}; border-radius:{{ c.radius }}; background:{{ c.color }}; animation:ciConfetti {{ c.dur }} cubic-bezier(.3,.5,.6,1) {{ c.delay }} forwards;"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- check medallion -->
+          <div style="position:relative; width:128px; height:128px; display:flex; align-items:center; justify-content:center; margin-bottom:30px;">
+            <div style="position:absolute; inset:0; border-radius:50%; border:2px solid rgba(43,197,111,.5); animation:ciRing2 1.1s ease-out .15s both;"></div>
+            <div style="width:108px; height:108px; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 18px 40px -10px rgba(22,194,166,.6); animation:ciPop .55s cubic-bezier(.34,1.56,.64,1) both;">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:60; animation:ciDraw .5s cubic-bezier(.65,0,.35,1) .35s both;"></path>
+              </svg>
+            </div>
+          </div>
+
+          <h2 style="margin:0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:30px; letter-spacing:-.025em; color:#23332A;">{{ successTitle }}</h2>
+          <p style="margin:11px 0 0; font-size:16px; font-weight:600; line-height:1.5; color:#5C7163; max-width:280px; text-wrap:pretty;">{{ successSub }}</p>
+
+          <div style="display:flex; align-items:center; gap:8px; margin-top:22px; padding:9px 16px; border-radius:100px; background:rgba(255,255,255,.7); border:1px solid #CFE2C8;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 600; color:#E0A33A;">local_fire_department</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:14.5px; letter-spacing:-.01em; color:#1E6B3C;">{{ successStat }}</span>
+          </div>
+
+          <button onClick="{{ backToToday }}" style="position:absolute; bottom:34px; left:36px; right:36px; height:54px; border:none; border-radius:100px; cursor:pointer; background:#fff; color:#1E8A4C; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; letter-spacing:-.01em; box-shadow:0 8px 22px -8px rgba(40,80,55,.25);" style-active="transform:scale(.99);">Back to Today</button>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;showTodayRing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showMoodSelector&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;confettiOnAllDone&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this._boxes = [];
+    this._ringEl = null;
+    this._noteEl = null;
+    const palette = ['#21B96B','#16C2A6','#E0A33A','#2BC56F','#7FD9B0','#0E8FE0'];
+    this.confetti = Array.from({length:26}, (_,i)=>{
+      const seed = (i*73)%100;
+      return {
+        left: (3 + seed*0.92).toFixed(1) + '%',
+        size: (7 + (i%4)*2) + 'px',
+        radius: i%3===0 ? '2px' : '50%',
+        color: palette[i%palette.length],
+        dur: (1.5 + (i%5)*0.22).toFixed(2) + 's',
+        delay: ((i%7)*0.08).toFixed(2) + 's',
+      };
+    });
+    this.MOODS = [
+      { icon:'sentiment_very_dissatisfied', color:'#EB5757', name:'Rough' },
+      { icon:'sentiment_dissatisfied',      color:'#F0992A', name:'Meh' },
+      { icon:'sentiment_neutral',           color:'#E0A33A', name:'Okay' },
+      { icon:'sentiment_satisfied',         color:'#2BC56F', name:'Good' },
+      { icon:'sentiment_very_satisfied',    color:'#16A085', name:'Great' },
+    ];
+    this.state = {
+      ringReady: false,
+      note: '',
+      mood: null,
+      saved: false,
+      celebrate: false,
+      rules: [
+        { name:'Drink 3L of water',  target:'3 L target',       icon:'water_drop',      streak:41, state:'none',
+          iconColor:'#0E8FE0', chipBg:'#DCEEFC', grad:'linear-gradient(135deg,#36C0F5,#0E8FE0)', glow:'rgba(14,143,224,.5)' },
+        { name:'Walk 30 minutes',    target:'30 min target',    icon:'directions_walk', streak:28, state:'none',
+          iconColor:'#13B85F', chipBg:'#DFF4E5', grad:'linear-gradient(135deg,#1FD976,#08C2A0)', glow:'rgba(16,200,150,.5)' },
+        { name:'No sugar after 7pm', target:'All evening',      icon:'no_meals',        streak:12, state:'none',
+          iconColor:'#F0992A', chipBg:'#FDEBCF', grad:'linear-gradient(135deg,#FFB23E,#F2715A)', glow:'rgba(240,140,42,.5)' },
+        { name:'Lights out by 11pm', target:'By 11:00 PM',      icon:'bedtime',         streak:41, state:'none',
+          iconColor:'#6A5CF0', chipBg:'#E8E6FD', grad:'linear-gradient(135deg,#8A78FF,#6A5CF0)', glow:'rgba(106,92,240,.5)' },
+      ],
+    };
+  }
+
+  componentDidMount(){ setTimeout(()=> this.setState({ ringReady:true }), 90); }
+
+  setRingRef = (el)=>{ this._ringEl = el; };
+  setNoteRef = (el)=>{ this._noteEl = el; };
+  onNote = (e)=> this.setState({ note:e.target.value });
+
+  haptic(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(_){} }
+
+  bounce(i){
+    const el = this._boxes[i];
+    if(el) el.animate(
+      [{transform:'scale(1)'},{transform:'scale(1.26)'},{transform:'scale(.9)'},{transform:'scale(1)'}],
+      {duration:430, easing:'cubic-bezier(.34,1.56,.64,1)'}
+    );
+  }
+
+  setRuleState(i, target){
+    this.haptic(target==='done' ? 14 : 8);
+    this.bounce(i);
+    this.setState(s=>({
+      rules: s.rules.map((r,idx)=> idx===i ? {...r, state: r.state===target ? 'none' : target} : r)
+    }));
+  }
+  markDone(i){ this.setRuleState(i,'done'); }
+  markSkip(i){ this.setRuleState(i,'skipped'); }
+  markMiss(i){ this.setRuleState(i,'missed'); }
+
+  selectMood(i){
+    this.haptic(8);
+    this.setState(s=>({ mood: s.mood===i ? null : i }));
+  }
+
+  save = ()=>{
+    const allDone = this.state.rules.every(r=>r.state==='done');
+    const celebrate = allDone && (this.props.confettiOnAllDone ?? true);
+    this.haptic(allDone ? 26 : 14);
+    this.setState({ saved:true, celebrate });
+  };
+  backToToday = ()=>{ this.setState({ saved:false, celebrate:false }); };
+  close = ()=>{};
+
+  renderVals(){
+    const rules = this.state.rules;
+    const total = rules.length;
+    const doneCount = rules.filter(r=>r.state==='done').length;
+    const loggedCount = rules.filter(r=>r.state!=='none').length;
+    const allDone = doneCount === total;
+
+    const ringC = 2 * Math.PI * 37;
+    const ringOffset = this.state.ringReady ? ringC * (1 - doneCount/total) : ringC;
+
+    const items = rules.map((r,i)=>{
+      const st = r.state;
+      let cardBg='#fff', cardBorder='rgba(0,0,0,0)', dividerColor='#EEF3EA';
+      let toggleBg='#fff', toggleRing='#CFE2C8', toggleShadow='none', toggleIcon='check', toggleIconColor='#C2D2C0';
+      let fireIcon='local_fire_department', fireColor='#E0A33A', streakColor='#8AA08E';
+      let streakText = r.streak + ' day streak — keep it alive';
+
+      if(st==='done'){
+        toggleBg=r.grad; toggleRing='rgba(0,0,0,0)'; toggleShadow='0 8px 18px -4px '+r.glow; toggleIcon='check'; toggleIconColor='#fff';
+        cardBorder='rgba(33,185,107,.28)';
+      } else if(st==='skipped'){
+        cardBg='#FEF8EE'; dividerColor='#F3E6CC'; cardBorder='rgba(224,163,58,.3)';
+        toggleBg='#FBEFD6'; toggleRing='rgba(0,0,0,0)'; toggleIcon='remove'; toggleIconColor='#D69A2A';
+        fireColor='#C98A1E'; streakColor='#B07F2A'; streakText='Streak paused — it won\u2019t break';
+      } else if(st==='missed'){
+        cardBg='#FDF2F2'; dividerColor='#F5DCDC'; cardBorder='rgba(235,87,87,.28)';
+        toggleBg='#FBE0E0'; toggleRing='rgba(0,0,0,0)'; toggleIcon='close'; toggleIconColor='#E15858';
+        fireIcon='heart_broken'; fireColor='#E15858'; streakColor='#C84747'; streakText='Streak at risk — log to save it';
+      }
+
+      const skipOn = st==='skipped';
+      const missOn = st==='missed';
+      return {
+        name:r.name, target:r.target, icon:r.icon, iconColor:r.iconColor, chipBg:r.chipBg,
+        cardBg, cardBorder, dividerColor,
+        toggleBg, toggleRing, toggleShadow, toggleIcon, toggleIconColor,
+        fireIcon, fireColor, streakColor, streakText,
+        skipBg: skipOn ? '#FBEFD6' : '#F2F6EF', skipColor: skipOn ? '#C98A1E' : '#9DB2A2',
+        skipBorder: skipOn ? '1px solid #EAD3A0' : '1px solid transparent',
+        missBg: missOn ? '#FBE0E0' : '#F2F6EF', missColor: missOn ? '#D14343' : '#9DB2A2',
+        missBorder: missOn ? '1px solid #F0C4C4' : '1px solid transparent',
+        markDone: ()=> this.markDone(i),
+        markSkip: ()=> this.markSkip(i),
+        markMiss: ()=> this.markMiss(i),
+        setRef: (el)=>{ this._boxes[i]=el; },
+      };
+    });
+
+    const moods = this.MOODS.map((m,i)=>{
+      const sel = this.state.mood===i;
+      return {
+        ...m,
+        select: ()=> this.selectMood(i),
+        bg: sel ? 'rgba(43,197,111,.13)' : '#F2F6EF',
+        color: sel ? m.color : '#A6BBA8',
+        fill: sel ? 1 : 0,
+        scale: sel ? 'scale(1.08)' : 'scale(1)',
+      };
+    });
+
+    return {
+      headerDate: 'Jun 18',
+      heroSub: loggedCount===0 ? 'Log each rule below. Be honest — every day counts.'
+             : (allDone ? 'Perfect day. Tap save to lock it in.' : loggedCount + ' of ' + total + ' logged so far'),
+      showRing: this.props.showTodayRing ?? true,
+      showMood: this.props.showMoodSelector ?? true,
+      ringC, ringOffset, doneCount, total,
+      rules: items,
+      moods,
+      note: this.state.note,
+      onNote: this.onNote,
+      setNoteRef: this.setNoteRef,
+      setRingRef: this.setRingRef,
+      save: this.save,
+      close: this.close,
+      backToToday: this.backToToday,
+      saved: this.state.saved,
+      celebrate: this.state.celebrate,
+      successTitle: 'Logged.',
+      successSub: allDone ? 'A perfect day. One day at a time.' : 'One day at a time. Tomorrow is a fresh page.',
+      successStat: allDone ? 'All 4 rules done · Day 41 streak' : doneCount + ' of ' + total + ' done · Day 41',
+      confetti: this.confetti,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll{ scrollbar-width:none; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    .capInput{ font-family:'Inter',sans-serif; }
+    .capInput::placeholder{ color:#A9BBAC; font-weight:500; }
+    @keyframes flashPop{ 0%{ opacity:0; } 8%{ opacity:.92; } 100%{ opacity:0; } }
+    @keyframes sheetUp{ 0%{ transform:translateY(101%); } 100%{ transform:translateY(0); } }
+    @keyframes scrimIn{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes scanSweep{ 0%{ transform:translateY(-12%); } 50%{ transform:translateY(112%); } 100%{ transform:translateY(-12%); } }
+    @keyframes sheen{ 0%{ transform:translateX(-120%) skewX(-12deg); } 100%{ transform:translateX(220%) skewX(-12deg); } }
+    @keyframes aiPulse{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(43,197,111,.45); } 50%{ transform:scale(1.06); box-shadow:0 0 0 16px rgba(43,197,111,0); } }
+    @keyframes ringSpin{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+    @keyframes hintFloat{ 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,-4px); } }
+    @keyframes msgIn{ 0%{ opacity:0; transform:translateY(7px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes focusPulse{ 0%{ opacity:.35; transform:scale(.96); } 50%{ opacity:.85; transform:scale(1); } 100%{ opacity:.35; transform:scale(.96); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div data-screen-label="Capture Meal" data-comment-anchor="capture-screen" style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#0f0b08; display:flex; flex-direction:column; font-family:'Inter',sans-serif;">
+
+      <!-- ============ PHOTO / VIEWFINDER (always present base layer) ============ -->
+      <div style="position:absolute; inset:0; z-index:0;">
+        <div style="position:absolute; inset:0; background:radial-gradient(120% 110% at 50% 20%, #4a3a2c 0%, #2c2118 54%, #161009 100%);"></div>
+        <div style="position:absolute; inset:0; background:repeating-linear-gradient(116deg, rgba(255,255,255,.018) 0 16px, rgba(0,0,0,.05) 16px 33px); opacity:.55;"></div>
+        <!-- plate -->
+        <div style="position:absolute; left:50%; top:53%; transform:translate(-50%,-50%); width:86%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 35%, #fdf9f1 0%, #f0e8d9 56%, #dccfbb 100%); box-shadow:0 34px 64px -10px rgba(0,0,0,.55), inset 0 -10px 26px rgba(150,118,78,.20);">
+          <div style="position:absolute; inset:10.5%; border-radius:50%; background:radial-gradient(circle at 44% 40%, #fffdf8, #f2ebdd 72%); box-shadow:inset 0 2px 12px rgba(122,92,55,.20);"></div>
+          <!-- greens -->
+          <div style="position:absolute; left:27%; top:30%; width:36%; height:32%; border-radius:48% 52% 56% 44%; background:radial-gradient(circle at 40% 34%, #93C76C, #4E9A43 72%); filter:blur(2.2px); box-shadow:0 6px 14px rgba(40,70,30,.3);"></div>
+          <!-- protein -->
+          <div style="position:absolute; left:47%; top:45%; width:38%; height:36%; border-radius:52% 48% 50% 50%; background:radial-gradient(circle at 42% 36%, #DD8E50, #A8592A 76%); filter:blur(2.2px); box-shadow:0 8px 16px rgba(80,40,15,.35);"></div>
+          <!-- grains -->
+          <div style="position:absolute; left:30%; top:53%; width:32%; height:26%; border-radius:50% 50% 48% 52%; background:radial-gradient(circle at 40% 34%, #F4D98C, #E0B95B 76%); filter:blur(2.2px);"></div>
+          <!-- tomato -->
+          <div style="position:absolute; left:57%; top:33%; width:12%; height:11%; border-radius:50%; background:radial-gradient(circle at 38% 34%, #EC6A50, #C23A2A); filter:blur(.6px); box-shadow:0 4px 8px rgba(90,20,15,.4);"></div>
+          <!-- herb dot -->
+          <div style="position:absolute; left:44%; top:62%; width:7%; height:7%; border-radius:50%; background:radial-gradient(circle at 40% 34%, #7FBE56, #3E7A33);"></div>
+        </div>
+        <!-- vignette -->
+        <div style="position:absolute; inset:0; background:radial-gradient(118% 100% at 50% 46%, transparent 52%, rgba(0,0,0,.5) 100%);"></div>
+      </div>
+
+      <!-- ============ STATUS BAR (light, over photo) ============ -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:30;">
+        <span style="font-size:14px; font-weight:600; color:#fff; font-variant-numeric:tabular-nums; letter-spacing:.2px; text-shadow:0 1px 4px rgba(0,0,0,.4);">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#000;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#fff;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500; text-shadow:0 1px 4px rgba(0,0,0,.4);">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500; text-shadow:0 1px 4px rgba(0,0,0,.4);">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; text-shadow:0 1px 4px rgba(0,0,0,.4);">battery_full</span>
+        </div>
+      </div>
+
+      <!-- ============ CAMERA STAGE ============ -->
+      <sc-if value="{{ isCamera }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute; inset:0; z-index:20;">
+
+          <!-- top scrim -->
+          <div style="position:absolute; top:0; left:0; right:0; height:130px; background:linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,0));"></div>
+
+          <!-- top bar -->
+          <div style="position:absolute; top:52px; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:0 18px;">
+            <button onClick="{{ close }}" style="width:42px; height:42px; flex:none; border:none; cursor:pointer; border-radius:50%; background:rgba(20,16,12,.42); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center;" style-active="transform:scale(.9);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'wght' 500; color:#fff;">close</span>
+            </button>
+            <div style="display:flex; align-items:center; gap:7px; height:36px; padding:0 16px; border-radius:100px; background:rgba(20,16,12,.42); backdrop-filter:blur(8px);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; color:#5FE0A0;">photo_camera</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; letter-spacing:-.01em; color:#fff;">Add meal</span>
+            </div>
+            <button onClick="{{ toggleFlash }}" style="width:42px; height:42px; flex:none; border:none; cursor:pointer; border-radius:50%; background:{{ flashBg }}; backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center;" style-active="transform:scale(.9);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ flashColor }};">{{ flashIcon }}</span>
+            </button>
+          </div>
+
+          <!-- framing guide -->
+          <sc-if value="{{ guideVisible }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute; left:50%; top:47%; transform:translate(-50%,-50%); width:300px; height:300px;">
+              <!-- focus ring breathing -->
+              <div style="position:absolute; inset:0; border-radius:34px; border:1.5px solid rgba(255,255,255,.32); animation:focusPulse 3.4s ease-in-out infinite;"></div>
+              <!-- corners -->
+              <div style="position:absolute; top:0; left:0; width:34px; height:34px; border-top:3px solid rgba(255,255,255,.92); border-left:3px solid rgba(255,255,255,.92); border-top-left-radius:18px;"></div>
+              <div style="position:absolute; top:0; right:0; width:34px; height:34px; border-top:3px solid rgba(255,255,255,.92); border-right:3px solid rgba(255,255,255,.92); border-top-right-radius:18px;"></div>
+              <div style="position:absolute; bottom:0; left:0; width:34px; height:34px; border-bottom:3px solid rgba(255,255,255,.92); border-left:3px solid rgba(255,255,255,.92); border-bottom-left-radius:18px;"></div>
+              <div style="position:absolute; bottom:0; right:0; width:34px; height:34px; border-bottom:3px solid rgba(255,255,255,.92); border-right:3px solid rgba(255,255,255,.92); border-bottom-right-radius:18px;"></div>
+            </div>
+          </sc-if>
+
+          <!-- hint pill -->
+          <div style="position:absolute; left:50%; top:calc(47% + 168px); transform:translateX(-50%); display:flex; align-items:center; gap:7px; height:38px; padding:0 16px; border-radius:100px; background:rgba(20,16,12,.5); backdrop-filter:blur(10px); white-space:nowrap; animation:hintFloat 3.6s ease-in-out infinite;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500; color:#5FE0A0;">crop_free</span>
+            <span style="font-family:'Plus Jakarta Sans'; font-weight:600; font-size:13.5px; letter-spacing:-.01em; color:#fff;">Fit your whole plate in frame</span>
+          </div>
+
+          <!-- bottom scrim + controls -->
+          <div style="position:absolute; bottom:0; left:0; right:0; padding:0 0 40px; background:linear-gradient(0deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.32) 56%, rgba(0,0,0,0) 100%);">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:30px 40px 0;">
+
+              <!-- gallery thumb -->
+              <button onClick="{{ pickGallery }}" style="width:52px; height:52px; flex:none; border:2px solid rgba(255,255,255,.85); cursor:pointer; border-radius:15px; overflow:hidden; padding:0; position:relative; box-shadow:0 6px 16px rgba(0,0,0,.35);" style-active="transform:scale(.92);">
+                <div style="position:absolute; inset:0; background:radial-gradient(circle at 42% 38%, #4a3a2c, #1c1610);"></div>
+                <div style="position:absolute; left:50%; top:54%; transform:translate(-50%,-50%); width:74%; height:74%; border-radius:50%; background:radial-gradient(circle at 42% 38%, #f4ecdd, #d8cab2);"></div>
+                <div style="position:absolute; left:42%; top:46%; width:34%; height:30%; border-radius:50%; background:#5E9E48; filter:blur(1px);"></div>
+                <div style="position:absolute; left:54%; top:56%; width:26%; height:24%; border-radius:50%; background:#C97A3E; filter:blur(1px);"></div>
+              </button>
+
+              <!-- shutter -->
+              <button ref="{{ setShutterRef }}" onClick="{{ capture }}" style="width:84px; height:84px; flex:none; border:none; cursor:pointer; border-radius:50%; padding:0; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px -6px rgba(22,194,166,.7);" style-active="transform:scale(.93);">
+                <div style="width:68px; height:68px; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 2px rgba(43,197,111,.18);"></div>
+              </button>
+
+              <!-- flip camera -->
+              <button onClick="{{ flip }}" style="width:52px; height:52px; flex:none; border:none; cursor:pointer; border-radius:50%; background:rgba(20,16,12,.42); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(0,0,0,.3);" style-active="transform:scale(.9) rotate(180deg); transition:transform .3s;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:25px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">cameraswitch</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ ANALYZING STAGE ============ -->
+      <sc-if value="{{ isAnalyzing }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:22;">
+          <!-- darken -->
+          <div style="position:absolute; inset:0; background:rgba(12,9,6,.5);"></div>
+          <!-- scanning band -->
+          <div style="position:absolute; left:0; right:0; top:0; height:160px; background:linear-gradient(180deg, rgba(43,197,111,0), rgba(43,197,111,.28) 60%, rgba(95,224,160,.55)); box-shadow:0 0 30px 6px rgba(43,197,111,.35); animation:scanSweep 2.6s cubic-bezier(.45,0,.55,1) infinite;"></div>
+          <!-- scan line -->
+          <div style="position:absolute; left:0; right:0; top:0; height:2px; background:linear-gradient(90deg, transparent, #8FF0BE 20%, #fff 50%, #8FF0BE 80%, transparent); box-shadow:0 0 12px 2px rgba(143,240,190,.8); animation:scanSweep 2.6s cubic-bezier(.45,0,.55,1) infinite;"></div>
+          <!-- shimmer sheen -->
+          <div style="position:absolute; inset:0; overflow:hidden;">
+            <div style="position:absolute; top:0; bottom:0; width:46%; background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent); animation:sheen 2.8s ease-in-out infinite;"></div>
+          </div>
+
+          <!-- close -->
+          <button onClick="{{ retake }}" style="position:absolute; top:52px; left:18px; width:42px; height:42px; border:none; cursor:pointer; border-radius:50%; background:rgba(20,16,12,.5); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center;" style-active="transform:scale(.9);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'wght' 500; color:#fff;">close</span>
+          </button>
+
+          <!-- center status -->
+          <div style="position:absolute; left:0; right:0; bottom:118px; display:flex; flex-direction:column; align-items:center; padding:0 36px; text-align:center;">
+            <div style="position:relative; width:74px; height:74px; margin-bottom:22px;">
+              <div style="position:absolute; inset:-7px; border-radius:50%; border:2.5px solid rgba(143,240,190,.25); border-top-color:#8FF0BE; animation:ringSpin 1.1s linear infinite;"></div>
+              <div style="position:absolute; inset:0; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; animation:aiPulse 2s ease-in-out infinite; box-shadow:0 10px 26px -6px rgba(22,194,166,.7);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:34px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">auto_awesome</span>
+              </div>
+            </div>
+            <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:21px; letter-spacing:-.02em; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.5);">Reading your plate…</div>
+            <div ref="{{ setMsgRef }}" style="margin-top:8px; font-family:'Plus Jakarta Sans'; font-weight:600; font-size:14.5px; letter-spacing:-.01em; color:#BFF2D6; min-height:20px; text-shadow:0 1px 6px rgba(0,0,0,.45);">{{ microMsg }}</div>
+            <!-- step dots -->
+            <div style="display:flex; gap:7px; margin-top:18px;">
+              <sc-for list="{{ stepDots }}" as="dot" hint-placeholder-count="4">
+                <div style="width:7px; height:7px; border-radius:50%; background:{{ dot.bg }}; transition:background .3s, transform .3s; transform:scale({{ dot.scale }});"></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ DETAILS SHEET STAGE ============ -->
+      <sc-if value="{{ isDetails }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:24;">
+          <!-- dim + tap-to-retake scrim -->
+          <div onClick="{{ retake }}" style="position:absolute; inset:0; background:rgba(12,9,6,.55); backdrop-filter:blur(2px); animation:scrimIn .3s ease both;"></div>
+
+          <!-- sheet -->
+          <div style="position:absolute; left:0; right:0; bottom:0; top:64px; background:#F4F8F1; border-radius:30px 30px 0 0; box-shadow:0 -16px 50px -10px rgba(0,0,0,.45); display:flex; flex-direction:column; overflow:hidden; animation:sheetUp .42s cubic-bezier(.22,1,.36,1) both;">
+
+            <!-- drag handle -->
+            <div style="flex:none; display:flex; justify-content:center; padding:11px 0 4px;">
+              <div style="width:42px; height:5px; border-radius:3px; background:#CFDCC9;"></div>
+            </div>
+
+            <div class="pscroll" style="flex:1; min-height:0; overflow-y:auto; padding:6px 20px 22px;">
+
+              <!-- photo preview -->
+              <div style="position:relative; width:100%; height:184px; border-radius:22px; overflow:hidden; box-shadow:0 10px 26px -8px rgba(40,80,55,.28);">
+                <div style="position:absolute; inset:0; background:radial-gradient(120% 120% at 50% 26%, #4a3a2c 0%, #2c2118 56%, #161009 100%);"></div>
+                <div style="position:absolute; left:50%; top:56%; transform:translate(-50%,-50%); width:170px; height:170px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #fdf9f1 0%, #f0e8d9 56%, #dccfbb 100%); box-shadow:0 18px 36px -8px rgba(0,0,0,.5), inset 0 -8px 20px rgba(150,118,78,.2);">
+                  <div style="position:absolute; inset:10.5%; border-radius:50%; background:radial-gradient(circle at 44% 40%, #fffdf8, #f2ebdd 72%); box-shadow:inset 0 2px 10px rgba(122,92,55,.2);"></div>
+                  <div style="position:absolute; left:27%; top:30%; width:36%; height:32%; border-radius:48% 52% 56% 44%; background:radial-gradient(circle at 40% 34%, #93C76C, #4E9A43 72%); filter:blur(1.6px);"></div>
+                  <div style="position:absolute; left:47%; top:45%; width:38%; height:36%; border-radius:52% 48% 50% 50%; background:radial-gradient(circle at 42% 36%, #DD8E50, #A8592A 76%); filter:blur(1.6px);"></div>
+                  <div style="position:absolute; left:30%; top:53%; width:32%; height:26%; border-radius:50%; background:radial-gradient(circle at 40% 34%, #F4D98C, #E0B95B 76%); filter:blur(1.6px);"></div>
+                  <div style="position:absolute; left:57%; top:33%; width:12%; height:11%; border-radius:50%; background:radial-gradient(circle at 38% 34%, #EC6A50, #C23A2A);"></div>
+                </div>
+                <div style="position:absolute; inset:0; background:radial-gradient(118% 100% at 50% 46%, transparent 56%, rgba(0,0,0,.4) 100%);"></div>
+                <!-- retake -->
+                <button onClick="{{ retake }}" style="position:absolute; top:11px; right:11px; display:flex; align-items:center; gap:6px; height:34px; padding:0 13px 0 11px; border:none; cursor:pointer; border-radius:100px; background:rgba(15,11,8,.55); backdrop-filter:blur(8px);" style-active="transform:scale(.94);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'wght' 500; color:#fff;">refresh</span>
+                  <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13px; color:#fff; letter-spacing:-.01em;">Retake</span>
+                </button>
+              </div>
+
+              <!-- meal type -->
+              <div style="margin-top:22px;">
+                <div style="display:flex; align-items:center; gap:7px; margin:0 2px 11px;">
+                  <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; letter-spacing:.02em; color:#3A4A40;">Meal type</span>
+                  <span style="display:inline-flex; align-items:center; gap:3px; height:20px; padding:0 8px; border-radius:100px; background:#EAF3E7;">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:13px; font-variation-settings:'FILL' 1,'wght' 600; color:#21B96B;">auto_awesome</span>
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:10.5px; letter-spacing:.02em; color:#1E8A4C;">Guessed from time</span>
+                  </span>
+                </div>
+                <div style="display:flex; gap:8px;">
+                  <sc-for list="{{ mealTypes }}" as="mt" hint-placeholder-count="4">
+                    <button onClick="{{ mt.select }}" style="flex:1; min-width:0; height:54px; border:1.5px solid {{ mt.border }}; cursor:pointer; border-radius:17px; background:{{ mt.bg }}; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; transition:background .18s, border-color .18s;" style-active="transform:scale(.95);">
+                      <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' {{ mt.fill }},'wght' 500; color:{{ mt.color }};">{{ mt.icon }}</span>
+                      <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11.5px; letter-spacing:-.01em; color:{{ mt.color }};">{{ mt.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- meal name -->
+              <div style="margin-top:18px;">
+                <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; letter-spacing:.02em; color:#3A4A40; margin:0 2px 8px;">Meal name <span style="font-weight:600; color:#A9BBAC;">· optional</span></div>
+                <input class="capInput" type="text" placeholder="e.g. Grilled chicken bowl" style="width:100%; height:52px; border:1.5px solid #DCE7D6; border-radius:16px; background:#fff; padding:0 16px; font-size:15px; font-weight:500; color:#23332A; outline:none; box-shadow:0 2px 8px rgba(40,80,55,.04);" style-focus="border-color:#21B96B; box-shadow:0 0 0 3px rgba(43,197,111,.13);">
+              </div>
+
+              <!-- portion -->
+              <div style="margin-top:14px;">
+                <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; letter-spacing:.02em; color:#3A4A40; margin:0 2px 8px;">Portion size <span style="font-weight:600; color:#A9BBAC;">· optional</span></div>
+                <div style="position:relative;">
+                  <input class="capInput" type="text" placeholder="e.g. 1 plate" style="width:100%; height:52px; border:1.5px solid #DCE7D6; border-radius:16px; background:#fff; padding:0 16px; font-size:15px; font-weight:500; color:#23332A; outline:none; box-shadow:0 2px 8px rgba(40,80,55,.04);" style-focus="border-color:#21B96B; box-shadow:0 0 0 3px rgba(43,197,111,.13);">
+                  <span style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 500; color:#B3C3B4;">restaurant</span>
+                </div>
+                <div style="display:flex; gap:7px; margin-top:9px;">
+                  <sc-for list="{{ portionChips }}" as="pc" hint-placeholder-count="4">
+                    <button onClick="{{ pc.select }}" style="flex:none; height:32px; padding:0 13px; border:1px solid #D7E4D1; cursor:pointer; border-radius:100px; background:#fff; font-family:'Plus Jakarta Sans'; font-weight:600; font-size:12.5px; letter-spacing:-.01em; color:#5E7763;" style-active="transform:scale(.94);" style-hover="background:#EFF6EC;">{{ pc.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- notes -->
+              <div style="margin-top:14px;">
+                <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:13px; letter-spacing:.02em; color:#3A4A40; margin:0 2px 8px;">Notes <span style="font-weight:600; color:#A9BBAC;">· optional</span></div>
+                <textarea class="capInput" placeholder="Anything to remember about this meal?" rows="2" style="width:100%; border:1.5px solid #DCE7D6; border-radius:16px; background:#fff; padding:13px 16px; font-size:15px; font-weight:500; color:#23332A; outline:none; resize:none; line-height:1.45; box-shadow:0 2px 8px rgba(40,80,55,.04);" style-focus="border-color:#21B96B; box-shadow:0 0 0 3px rgba(43,197,111,.13);"></textarea>
+              </div>
+
+              <!-- actions -->
+              <button onClick="{{ analyze }}" style="margin-top:22px; width:100%; height:56px; border:none; cursor:pointer; border-radius:100px; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:16px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 12px 26px -6px rgba(22,194,166,.6);" style-active="transform:scale(.98);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 500;">auto_awesome</span>
+                Analyze with AI
+              </button>
+              <button onClick="{{ saveOnly }}" style="margin-top:6px; width:100%; height:48px; border:none; cursor:pointer; border-radius:100px; background:transparent; color:#7C9080; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; letter-spacing:-.01em;" style-active="transform:scale(.98);" style-hover="background:#EAF1E6;">Save without analysis</button>
+
+              <div style="height:14px;"></div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ CAPTURE FLASH ============ -->
+      <sc-if value="{{ flashing }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:40; background:#fff; pointer-events:none; animation:flashPop .42s ease-out both;"></div>
+      </sc-if>
+
+      <!-- toast (save without analysis) -->
+      <sc-if value="{{ savedToast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; left:50%; bottom:46px; transform:translateX(-50%); z-index:42; display:flex; align-items:center; gap:9px; height:46px; padding:0 18px; border-radius:100px; background:#23332A; box-shadow:0 14px 30px -8px rgba(0,0,0,.5); animation:msgIn .3s ease both;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'FILL' 1,'wght' 500; color:#5FE0A0;">check_circle</span>
+          <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:#fff; letter-spacing:-.01em;">Meal saved</span>
+        </div>
+      </sc-if>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:{{ pillColor }}; opacity:.5; z-index:45;"></div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;initialStage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;camera&quot;,&quot;options&quot;:[&quot;camera&quot;,&quot;details&quot;,&quot;analyzing&quot;],&quot;tsType&quot;:&quot;'camera'|'details'|'analyzing'&quot;},&quot;guideVisible&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;flashDefault&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this._shutter = null;
+    this._msgEl = null;
+
+    this.micro = [
+      'Identifying ingredients…',
+      'Estimating portions…',
+      'Calculating macros…',
+      'Scoring nutrition…',
+    ];
+
+    this.types = [
+      { value:'Breakfast', label:'Breakfast', icon:'bakery_dining' },
+      { value:'Lunch',     label:'Lunch',     icon:'lunch_dining' },
+      { value:'Dinner',    label:'Dinner',    icon:'dinner_dining' },
+      { value:'Snack',     label:'Snack',     icon:'cookie' },
+    ];
+
+    // auto-guess from 9:30am -> Breakfast
+    const guess = this.guessMeal(9);
+
+    const stage = props.initialStage || 'camera';
+    this.state = {
+      stage,
+      mealType: guess,
+      flash: props.flashDefault ? 'on' : 'off',
+      flashing: false,
+      msgIdx: 0,
+      savedToast: false,
+    };
+  }
+
+  guessMeal(hour){
+    if(hour < 11) return 'Breakfast';
+    if(hour < 15) return 'Lunch';
+    if(hour < 18) return 'Snack';
+    return 'Dinner';
+  }
+
+  componentDidMount(){
+    this._timer = setInterval(()=>{
+      if(this.state.stage !== 'analyzing') return;
+      this.setState(s=>({ msgIdx:(s.msgIdx+1)%this.micro.length }));
+      if(this._msgEl){
+        this._msgEl.animate(
+          [{opacity:0, transform:'translateY(7px)'},{opacity:1, transform:'translateY(0)'}],
+          {duration:420, easing:'cubic-bezier(.22,1,.36,1)'}
+        );
+      }
+    }, 1700);
+  }
+  componentWillUnmount(){ clearInterval(this._timer); clearTimeout(this._flashT); clearTimeout(this._toastT); }
+
+  setShutterRef = (el)=>{ this._shutter = el; };
+  setMsgRef = (el)=>{ this._msgEl = el; };
+
+  capture = ()=>{
+    if(this._shutter){
+      this._shutter.animate(
+        [{transform:'scale(1)'},{transform:'scale(.84)'},{transform:'scale(1)'}],
+        {duration:260, easing:'cubic-bezier(.34,1.56,.64,1)'}
+      );
+    }
+    this.setState({ flashing:true });
+    clearTimeout(this._flashT);
+    this._flashT = setTimeout(()=> this.setState({ flashing:false, stage:'details' }), 240);
+  };
+
+  retake = ()=> this.setState({ stage:'camera' });
+  analyze = ()=> this.setState({ stage:'analyzing', msgIdx:0 });
+
+  saveOnly = ()=>{
+    this.setState({ savedToast:true });
+    clearTimeout(this._toastT);
+    this._toastT = setTimeout(()=> this.setState({ savedToast:false, stage:'camera' }), 1500);
+  };
+
+  close = ()=>{ window.location.href = 'Meals.dc.html'; };
+  selectType = (v)=> this.setState({ mealType:v });
+  toggleFlash = ()=> this.setState(s=>({ flash: s.flash==='on' ? 'off' : (s.flash==='off' ? 'auto' : 'on') }));
+  flip = ()=>{};
+  pickGallery = ()=>{};
+
+  renderVals(){
+    const s = this.state;
+
+    const mealTypes = this.types.map(t=>{
+      const sel = t.value === s.mealType;
+      return {
+        label:t.label, icon:t.icon, fill: sel ? 1 : 0,
+        select: ()=> this.selectType(t.value),
+        bg: sel ? 'linear-gradient(135deg,#DCF0D8,#D2EFE6)' : '#fff',
+        border: sel ? '#9FD7B4' : '#DCE7D6',
+        color: sel ? '#1E8A4C' : '#7C9080',
+      };
+    });
+
+    const portionChips = ['Small','1 plate','Large','2 servings'].map(l=>({
+      label:l, select: ()=>{},
+    }));
+
+    const flashMap = {
+      on:  { icon:'flash_on',  color:'#FFD54A', bg:'rgba(255,200,60,.22)' },
+      off: { icon:'flash_off', color:'#fff',    bg:'rgba(20,16,12,.42)' },
+      auto:{ icon:'flash_auto', color:'#5FE0A0', bg:'rgba(20,16,12,.42)' },
+    };
+    const fl = flashMap[s.flash];
+
+    const stepDots = this.micro.map((_,i)=>({
+      bg: i === s.msgIdx ? '#8FF0BE' : 'rgba(255,255,255,.3)',
+      scale: i === s.msgIdx ? 1.25 : 1,
+    }));
+
+    return {
+      isCamera: s.stage === 'camera',
+      isDetails: s.stage === 'details',
+      isAnalyzing: s.stage === 'analyzing',
+      flashing: s.flashing,
+      savedToast: s.savedToast,
+      guideVisible: this.props.guideVisible ?? true,
+      pillColor: s.stage === 'details' ? '#23332A' : '#fff',
+
+      flashIcon: fl.icon, flashColor: fl.color, flashBg: fl.bg,
+
+      mealTypes, portionChips,
+      microMsg: this.micro[s.msgIdx],
+      stepDots,
+
+      close: this.close,
+      capture: this.capture,
+      retake: this.retake,
+      analyze: this.analyze,
+      saveOnly: this.saveOnly,
+      toggleFlash: this.toggleFlash,
+      flip: this.flip,
+      pickGallery: this.pickGallery,
+      setShutterRef: this.setShutterRef,
+      setMsgRef: this.setMsgRef,
+    };
+  }
+}
+</script>
+</body>
+</html>

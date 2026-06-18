@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Roboto:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    @keyframes wlRise{ 0%{ opacity:0; transform:translateY(16px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes wlBreathe{ 0%,100%{ transform:scale(1); opacity:.85; } 50%{ transform:scale(1.12); opacity:1; } }
+    @keyframes wlBreatheSlow{ 0%,100%{ transform:scale(1.05); opacity:.5; } 50%{ transform:scale(.92); opacity:.75; } }
+    @keyframes wlBreatheMark{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
+    @keyframes wlSpin{ 100%{ transform:rotate(360deg); } }
+    @keyframes wlDash{ 0%{ stroke-dasharray:1 120; stroke-dashoffset:0; } 50%{ stroke-dasharray:80 120; stroke-dashoffset:-22; } 100%{ stroke-dasharray:80 120; stroke-dashoffset:-100; } }
+    @keyframes wlScreenIn{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes wlErrIn{ 0%{ opacity:0; transform:translateY(-4px); } 100%{ opacity:1; transform:translateY(0); } }
+    .wl-rise{ animation:wlRise .9s cubic-bezier(.22,1,.36,1) both; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; flex-direction:column; align-items:center; gap:22px; padding:40px 20px 56px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- DEMO STATE STRIP -->
+  <div style="display:flex; align-items:center; gap:6px; padding:6px; border-radius:100px; background:rgba(255,255,255,.7); border:1px solid #D7E5D1; box-shadow:0 4px 14px rgba(40,80,55,.08); backdrop-filter:blur(8px);">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+      <button onClick="{{ t.go }}" style="border:none; cursor:pointer; height:34px; padding:0 16px; border-radius:100px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:-.01em; background:{{ t.bg }}; color:{{ t.fg }}; box-shadow:{{ t.shadow }}; transition:all .2s;">{{ t.label }}</button>
+    </sc-for>
+  </div>
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- BACKGROUND GLOWS (multi-hue) -->
+      <div style="position:absolute; top:-170px; left:50%; transform:translateX(-50%); width:540px; height:540px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.34) 0%, rgba(22,194,166,.24) 34%, rgba(14,143,224,.16) 58%, rgba(14,143,224,0) 74%); filter:blur(8px); animation:wlBreathe 7s ease-in-out infinite; pointer-events:none;"></div>
+      <div style="position:absolute; top:10px; right:-130px; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(106,92,240,.18) 0%, rgba(22,194,166,.14) 50%, rgba(22,194,166,0) 72%); filter:blur(12px); animation:wlBreatheSlow 9s ease-in-out infinite; pointer-events:none;"></div>
+      <div style="position:absolute; top:90px; left:-120px; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle at 50% 50%, rgba(240,153,42,.16) 0%, rgba(43,197,111,.12) 52%, rgba(43,197,111,0) 72%); filter:blur(12px); animation:wlBreathe 8.5s ease-in-out .8s infinite; pointer-events:none;"></div>
+
+      <!-- ORGANIC TOPOGRAPHIC MOTIF -->
+      <svg viewBox="0 0 390 812" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0; width:100%; height:100%; opacity:.06; pointer-events:none;">
+        <g fill="none" stroke="#1E6B3C" stroke-width="1.4">
+          <path d="M-40 250 C 80 180, 180 320, 300 250 S 460 320, 520 250"></path>
+          <path d="M-40 300 C 80 230, 180 370, 300 300 S 460 370, 520 300"></path>
+          <path d="M-40 360 C 90 290, 190 430, 310 360 S 470 430, 520 360"></path>
+          <path d="M-40 430 C 100 360, 200 500, 320 430 S 480 500, 520 430"></path>
+          <path d="M-40 520 C 110 450, 210 590, 330 520 S 490 590, 540 520"></path>
+          <ellipse cx="300" cy="120" rx="64" ry="100" transform="rotate(38 300 120)"></ellipse>
+          <path d="M268 60 C 300 95, 312 150, 312 180"></path>
+          <ellipse cx="70" cy="640" rx="50" ry="80" transform="rotate(-32 70 640)"></ellipse>
+        </g>
+      </svg>
+
+      <!-- status bar (transparent) -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- ===== LAUNCH SPLASH ===== -->
+      <sc-if value="{{ isLaunch }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute; inset:0; z-index:4; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; animation:wlScreenIn .5s ease both;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:18px; animation:wlBreatheMark 4.5s ease-in-out infinite;">
+            <div style="width:84px; height:84px; border-radius:24px; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 20px 44px -12px rgba(22,194,166,.7), inset 0 1px 0 rgba(255,255,255,.3);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:46px; font-variation-settings:'FILL' 1,'wght' 600; color:#fff;">eco</span>
+            </div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:30px; letter-spacing:-.02em; color:#23332A;">Process</span>
+          </div>
+          <span style="font-size:13.5px; font-weight:500; color:#9CADA0; letter-spacing:.01em;">{{ launchNote }}</span>
+        </div>
+      </sc-if>
+
+      <!-- ===== WELCOME (idle / signing / error) ===== -->
+      <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+      <div style="position:relative; z-index:2; flex:1; min-height:0; display:flex; flex-direction:column; padding:0 32px 44px; opacity:{{ contentOpacity }}; transition:opacity .35s ease;">
+
+        <!-- wordmark -->
+        <div class="wl-rise" style="display:flex; align-items:center; justify-content:center; gap:9px; margin-top:26px;">
+          <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 14px -4px rgba(22,194,166,.6);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 600; color:#fff;">eco</span>
+          </div>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:19px; letter-spacing:-.01em; color:#23332A;">Process</span>
+        </div>
+
+        <!-- HERO -->
+        <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+          <h1 class="wl-rise" style="margin:0; animation-delay:.12s; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:35px; line-height:1.22; letter-spacing:-.03em; color:#23332A; text-wrap:balance; max-width:330px;">Real change happens only by following <span style="background:linear-gradient(110deg,#2BC56F 0%,#16C2A6 42%,#0E8FE0 78%,#6A5CF0 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">the process daily.</span></h1>
+          <p class="wl-rise" style="margin:20px 0 0; animation-delay:.26s; font-size:16px; font-weight:500; line-height:1.55; color:#7C9080; max-width:280px; text-wrap:pretty;">Pick your days. Set your rules. Show up every day.</p>
+
+          <div class="wl-rise" style="display:flex; align-items:center; justify-content:center; gap:9px; margin-top:34px; flex-wrap:wrap; animation-delay:.4s;">
+            <div style="display:flex; align-items:center; gap:6px; height:36px; padding:0 14px 0 12px; border-radius:100px; background:rgba(220,240,216,.85); border:1px solid #C6E6C0; box-shadow:0 2px 8px rgba(40,80,55,.05);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; color:#21B96B;">favorite</span>
+              <span style="font-size:13.5px; font-weight:700; color:#1E6B3C; letter-spacing:-.01em;">Commit</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; height:36px; padding:0 14px 0 12px; border-radius:100px; background:rgba(220,238,252,.85); border:1px solid #C3E2F8; box-shadow:0 2px 8px rgba(40,80,55,.05);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 0,'wght' 500; color:#0E8FE0;">tune</span>
+              <span style="font-size:13.5px; font-weight:700; color:#1F5E86; letter-spacing:-.01em;">Your rules</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; height:36px; padding:0 14px 0 12px; border-radius:100px; background:rgba(232,230,253,.85); border:1px solid #D6D2F8; box-shadow:0 2px 8px rgba(40,80,55,.05);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 0,'wght' 500; color:#7A57F0;">trending_up</span>
+              <span style="font-size:13.5px; font-weight:700; color:#5240B8; letter-spacing:-.01em;">See change</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="wl-rise" style="animation-delay:.54s;">
+
+          <!-- error message -->
+          <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; align-items:center; gap:9px; justify-content:center; margin-bottom:16px; padding:11px 16px; border-radius:16px; background:rgba(217,128,106,.1); border:1px solid rgba(217,128,106,.28); animation:wlErrIn .35s ease both;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 500; color:#D9806A;">sentiment_dissatisfied</span>
+              <span style="font-size:14px; font-weight:600; color:#C26B54; letter-spacing:-.01em;">Couldn't sign you in. Please try again.</span>
+            </div>
+          </sc-if>
+
+          <!-- button: idle vs signing -->
+          <sc-if value="{{ isSigning }}" hint-placeholder-val="{{ false }}">
+            <div style="width:100%; height:56px; border:1px solid #DBE2DA; border-radius:100px; background:#FFFFFF; color:#5B6B5F; font-family:'Roboto','Inter',sans-serif; font-weight:500; font-size:16px; letter-spacing:.1px; display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:0 6px 18px -8px rgba(40,80,55,.18); opacity:.85; cursor:default;">
+              <svg width="22" height="22" viewBox="0 0 44 44" style="flex:none; animation:wlSpin 1s linear infinite;">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#16C2A6" stroke-width="4" stroke-linecap="round" style="animation:wlDash 1.4s ease-in-out infinite;"></circle>
+              </svg>
+              Signing you in…
+            </div>
+          </sc-if>
+          <sc-if value="{{ showButton }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ signIn }}" style="width:100%; height:56px; border:1px solid #DBE2DA; border-radius:100px; cursor:pointer; background:#FFFFFF; color:#3C4043; font-family:'Roboto','Inter',sans-serif; font-weight:500; font-size:16px; letter-spacing:.1px; display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:0 6px 18px -8px rgba(40,80,55,.18);" style-hover="border-color:#C7D2C4; box-shadow:0 10px 24px -10px rgba(40,80,55,.26); transform:translateY(-1px);" style-active="transform:translateY(1px) scale(.99);">
+              <svg width="20" height="20" viewBox="0 0 48 48" style="flex:none;">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+              </svg>
+              Continue with Google
+            </button>
+          </sc-if>
+
+          <p style="margin:14px 0 0; text-align:center; font-family:'Inter',sans-serif; font-size:12px; line-height:1.5; font-weight:500; color:#9CADA0;">By continuing you agree to our <span style="color:#7C9080; font-weight:600;">Terms</span> &amp; <span style="color:#7C9080; font-weight:600;">Privacy</span>.</p>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== SUCCESS FLASH ===== -->
+      <sc-if value="{{ isSuccess }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; background:rgba(244,248,241,.6); backdrop-filter:blur(2px); animation:wlScreenIn .4s ease both;">
+          <div style="width:78px; height:78px; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 18px 40px -10px rgba(22,194,166,.7);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:42px; font-variation-settings:'FILL' 1,'wght' 600; color:#fff;">check</span>
+          </div>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:19px; color:#23332A; letter-spacing:-.01em;">{{ successNote }}</span>
+        </div>
+      </sc-if>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:7;"></div>
+
+    </div>
+  </div>
+
+  <!-- caption -->
+  <div style="max-width:418px; text-align:center; font-size:13.5px; line-height:1.6; color:#6E8472; font-weight:500;">{{ caption }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:1010}}">
+class Component extends DCLogic {
+  // state: 'launch' | 'idle' | 'signing' | 'error' | 'success'
+  // userType: 'new' | 'returning'  (drives the success copy)
+  state = { state: 'launch', userType: 'new' };
+  _timers = [];
+
+  componentDidMount(){
+    // Cold start: splash holds briefly, then resolves. Demo: no session -> Welcome.
+    this._timers.push(setTimeout(()=> {
+      if (this.state.state === 'launch') this.setState({ state: 'idle' });
+    }, 1100));
+  }
+  componentWillUnmount(){ this._timers.forEach(clearTimeout); }
+
+  _clear(){ this._timers.forEach(clearTimeout); this._timers = []; }
+
+  go = (s)=> { this._clear(); this.setState({ state: s }); };
+
+  signIn = ()=> {
+    // Native Google picker would appear here; on account pick -> signing.
+    this.setState({ state: 'signing' });
+    this._clear();
+    // backend token verify + session create
+    this._timers.push(setTimeout(()=> this.setState({ state: 'success' }), 1700));
+  };
+
+  renderVals(){
+    const s = this.state.state;
+    const launchNotes = { };
+    return {
+      isLaunch: s === 'launch',
+      isWelcome: s === 'idle' || s === 'signing' || s === 'error',
+      isSigning: s === 'signing',
+      isError: s === 'error',
+      isSuccess: s === 'success',
+      showButton: s === 'idle' || s === 'error',
+      contentOpacity: s === 'signing' ? 0.55 : 1,
+      launchNote: 'Checking your session…',
+      successNote: this.state.userType === 'returning' ? 'Welcome back' : "Let's set you up",
+      caption: this._caption(s),
+      signIn: this.signIn,
+      tabs: [
+        this._tab('Launch', 'launch', s),
+        this._tab('Welcome', 'idle', s),
+        this._tab('Signing in', 'signing', s),
+        this._tab('Error', 'error', s),
+      ],
+    };
+  }
+
+  _tab(label, key, active){
+    const on = key === active || (key==='idle' && active==='success');
+    return {
+      label, go: ()=> this.go(key),
+      bg: on ? 'linear-gradient(135deg,#2BC56F,#16C2A6)' : 'transparent',
+      fg: on ? '#fff' : '#5B6B5F',
+      shadow: on ? '0 6px 14px -4px rgba(22,194,166,.55)' : 'none',
+    };
+  }
+
+  _caption(s){
+    switch(s){
+      case 'launch': return 'Cold start — branded splash while the app checks for an existing session. Valid session → Today; none → fades into Welcome. Under a second, no spinner.';
+      case 'signing': return 'After the native Google account picker, the button becomes a disabled Material progress with “Signing you in…” and the screen dims while the token is verified.';
+      case 'error': return 'Sign-in failed or was cancelled — a soft inline message in clay (#D9806A); the button resets so the user can retry. Tap “Continue with Google” to try the flow.';
+      case 'success': return 'Verified — gentle transition to onboarding (new user) or Today (returning). Tap “Welcome” to reset.';
+      default: return 'Welcome screen, idle. Tap “Continue with Google” to run the full sign-in flow, or use the strip above to jump to any state.';
+    }
+  }
+}
+</script>
+</body>
+</html>

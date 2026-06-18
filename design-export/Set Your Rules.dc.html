@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    @keyframes scRise{ 0%{ opacity:0; transform:translateY(14px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scScrim{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes scSheet{ 0%{ transform:translateY(104%); } 100%{ transform:translateY(0); } }
+    @keyframes scSnack{ 0%{ opacity:0; transform:translate(-50%,16px); } 100%{ opacity:1; transform:translate(-50%,0); } }
+    .sc-rise{ animation:scRise .8s cubic-bezier(.22,1,.36,1) both; }
+    .sc-scroll{ scrollbar-width:none; }
+    .sc-scroll::-webkit-scrollbar{ display:none; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- soft glow -->
+      <div style="position:absolute; top:-160px; left:50%; transform:translateX(-50%); width:520px; height:520px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.22) 0%, rgba(22,194,166,.15) 38%, rgba(14,143,224,.08) 62%, rgba(14,143,224,0) 76%); filter:blur(8px); pointer-events:none;"></div>
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- TOP APP BAR -->
+      <div style="position:relative; z-index:3; flex:none; padding:6px 20px 0;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <button onClick="{{ back }}" style="width:44px; height:44px; flex:none; margin-left:-10px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#23332A;" style-hover="background:rgba(35,51,42,.06);" style-active="transform:scale(.92);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:25px; font-variation-settings:'wght' 500;">arrow_back</span>
+          </button>
+          <div style="flex:1; min-width:0;">
+            <div style="height:6px; border-radius:100px; background:#DBEBD6; overflow:hidden;">
+              <div style="height:100%; width:66.6%; border-radius:100px; background:linear-gradient(110deg,#2BC56F 0%,#16C2A6 55%,#0E8FE0 100%); transition:width .6s cubic-bezier(.22,1,.36,1);"></div>
+            </div>
+          </div>
+          <span style="flex:none; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:#7C9080; font-variant-numeric:tabular-nums;">Step 2 of 3</span>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div style="position:relative; z-index:2; flex:1; min-height:0; display:flex; flex-direction:column; padding:22px 24px 0;">
+
+        <!-- heading -->
+        <h1 class="sc-rise" style="margin:0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:27px; line-height:1.2; letter-spacing:-.025em; color:#23332A; text-wrap:balance; max-width:300px;">Set your daily rules</h1>
+        <p class="sc-rise" style="margin:10px 0 0; animation-delay:.07s; font-size:14.5px; font-weight:500; line-height:1.5; color:#7C9080; max-width:300px; text-wrap:pretty;">These are the non-negotiables you'll follow every day.</p>
+
+        <!-- counter -->
+        <div class="sc-rise" style="animation-delay:.13s; display:flex; align-items:center; gap:7px; margin:20px 0 11px;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:16px; font-variation-settings:'FILL' 1,'wght' 600; color:#21B96B;">checklist</span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#7C9080;">Your process</span>
+          <span style="width:3px; height:3px; border-radius:50%; background:#B7C9B8;"></span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; font-weight:700; color:#3A4A40; font-variant-numeric:tabular-nums;">{{ countLabel }}</span>
+        </div>
+
+        <!-- SCROLL LIST -->
+        <div class="sc-scroll" style="flex:1; min-height:0; overflow-y:auto; margin:0 -24px; padding:2px 24px 0;">
+          <div ref="{{ setListRef }}" style="display:flex; flex-direction:column; gap:12px;">
+
+            <sc-for list="{{ rules }}" as="rule" hint-placeholder-count="2">
+              <div class="sc-rise" style="position:relative; border-radius:20px;">
+                <!-- delete affordance behind -->
+                <div style="position:absolute; inset:0; border-radius:20px; background:linear-gradient(90deg,#F2A0A0,#EB5757); display:flex; align-items:center; justify-content:flex-end; padding-right:26px; color:#fff;">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'FILL' 1,'wght' 600;">delete</span>
+                </div>
+                <!-- card -->
+                <div ref="{{ rule.setRef }}" onPointerDown="{{ rule.onDown }}" onPointerMove="{{ onCardMove }}" onPointerUp="{{ onCardUp }}" onPointerCancel="{{ onCardUp }}" style="position:relative; display:flex; align-items:center; gap:13px; padding:13px 12px 13px 13px; border-radius:20px; background:#fff; box-shadow:0 6px 18px -8px rgba(40,80,55,.18), 0 1px 2px rgba(40,80,55,.05); touch-action:pan-y; will-change:transform;">
+                  <!-- icon tile -->
+                  <div style="width:48px; height:48px; flex:none; border-radius:15px; display:flex; align-items:center; justify-content:center; background:{{ rule.iconBg }};">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:25px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ rule.iconColor }};">{{ rule.sym }}</span>
+                  </div>
+                  <!-- text -->
+                  <div onClick="{{ rule.onEdit }}" style="flex:1; min-width:0; cursor:pointer;">
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15.5px; letter-spacing:-.01em; color:#23332A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ rule.label }}</div>
+                    <div style="display:flex; align-items:center; gap:4px; margin-top:3px;">
+                      <span style="font-family:'Material Symbols Rounded'; font-size:13px; font-variation-settings:'wght' 500; color:#9DB2A2;">event_repeat</span>
+                      <span style="font-size:12px; font-weight:600; color:#9DB2A2; letter-spacing:-.005em;">{{ rule.freq }}</span>
+                    </div>
+                  </div>
+                  <!-- target chip -->
+                  <sc-if value="{{ rule.hasTarget }}" hint-placeholder-val="{{ true }}">
+                    <span style="flex:none; height:30px; display:flex; align-items:center; padding:0 12px; border-radius:100px; background:rgba(43,197,111,.11); color:#268C53; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; white-space:nowrap;">{{ rule.chipText }}</span>
+                  </sc-if>
+                  <!-- drag handle -->
+                  <sc-if value="{{ showHandles }}" hint-placeholder-val="{{ true }}">
+                    <button onPointerDown="{{ rule.onHandleDown }}" onPointerMove="{{ onHandleMove }}" onPointerUp="{{ onHandleUp }}" onPointerCancel="{{ onHandleUp }}" aria-label="Drag to reorder" style="flex:none; width:30px; height:44px; margin-right:-4px; border:none; background:none; cursor:grab; display:flex; align-items:center; justify-content:center; color:#C2D2C0; touch-action:none;" style-active="cursor:grabbing;">
+                      <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 500;">drag_indicator</span>
+                    </button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+
+            <!-- ADD TILE -->
+            <button class="sc-rise" onClick="{{ openAdd }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:9px; height:64px; border-radius:20px; cursor:pointer; border:2px dashed #A9CBA0; background:rgba(170,203,160,.14); color:#3E7C4E; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; letter-spacing:-.01em; transition:background .2s, border-color .2s;" style-hover="background:rgba(170,203,160,.24); border-color:#8FBC84;" style-active="transform:scale(.985);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 600;">add</span>
+              Add a rule
+            </button>
+
+            <!-- helper -->
+            <div style="display:flex; align-items:flex-start; gap:8px; margin-top:4px; padding:0 6px 8px;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500; color:#A6BBA8; margin-top:1px;">tips_and_updates</span>
+              <span style="font-size:12.5px; font-weight:500; line-height:1.45; color:#9DB2A2; letter-spacing:-.005em; text-wrap:pretty;">{{ helperText }}</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div style="position:relative; z-index:2; flex:none; padding:14px 24px 30px; background:linear-gradient(to top,#F4F8F1 60%,rgba(244,248,241,0));">
+        <button onClick="{{ cont }}" disabled="{{ continueDisabled }}" style="width:100%; height:58px; border:none; border-radius:100px; cursor:{{ continueCursor }}; background:{{ continueBg }}; color:{{ continueColor }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:{{ continueShadow }}; transition:background .25s, box-shadow .25s, color .25s;" style-hover="{{ continueHover }}" style-active="transform:scale(.99);">
+          Continue
+          <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'wght' 600;">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+      <!-- SNACKBAR (undo) -->
+      <sc-if value="{{ snackOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; bottom:96px; left:50%; transform:translateX(-50%); z-index:30; width:330px; max-width:88%; display:flex; align-items:center; gap:12px; padding:0 8px 0 18px; height:50px; border-radius:16px; background:#26312B; box-shadow:0 16px 30px -8px rgba(20,30,24,.5); animation:scSnack .32s cubic-bezier(.22,1,.36,1) both;">
+          <span style="flex:1; font-size:13.5px; font-weight:600; color:#EAF3E7; letter-spacing:-.01em;">Rule removed</span>
+          <button onClick="{{ undo }}" style="flex:none; height:36px; padding:0 16px; border:none; border-radius:100px; cursor:pointer; background:transparent; color:#7BE0A8; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; letter-spacing:.01em;" style-hover="background:rgba(123,224,168,.14);" style-active="transform:scale(.95);">UNDO</button>
+        </div>
+      </sc-if>
+
+      <!-- BOTTOM SHEET -->
+      <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; z-index:40; display:flex; flex-direction:column; justify-content:flex-end;">
+          <!-- scrim -->
+          <div onClick="{{ closeSheet }}" style="position:absolute; inset:0; background:rgba(24,38,28,.42); backdrop-filter:blur(2px); animation:scScrim .25s ease both;"></div>
+
+          <!-- sheet -->
+          <div style="position:relative; z-index:2; max-height:86%; display:flex; flex-direction:column; border-radius:30px 30px 0 0; background:#FBFDFA; box-shadow:0 -16px 40px -10px rgba(20,30,24,.3); animation:scSheet .42s cubic-bezier(.22,1,.36,1) both;">
+
+            <!-- handle -->
+            <div style="flex:none; padding:11px 0 4px; display:flex; justify-content:center;">
+              <div style="width:42px; height:5px; border-radius:3px; background:#D2E0CE;"></div>
+            </div>
+
+            <!-- title -->
+            <div style="flex:none; display:flex; align-items:center; justify-content:space-between; padding:6px 22px 14px;">
+              <h2 style="margin:0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:21px; letter-spacing:-.02em; color:#23332A;">{{ sheetTitle }}</h2>
+              <button onClick="{{ closeSheet }}" style="width:36px; height:36px; flex:none; border:none; border-radius:50%; cursor:pointer; background:#EDF3EB; display:flex; align-items:center; justify-content:center; color:#5C7163;" style-hover="background:#E2ECDF;" style-active="transform:scale(.92);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">close</span>
+              </button>
+            </div>
+
+            <!-- scroll body -->
+            <div class="sc-scroll" style="flex:1; min-height:0; overflow-y:auto; padding:2px 22px 0;">
+
+              <!-- icon picker -->
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8AA08E; margin-bottom:10px;">Choose an icon</div>
+              <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:22px;">
+                <sc-for list="{{ iconChoices }}" as="ic" hint-placeholder-count="10">
+                  <button onClick="{{ ic.select }}" aria-label="{{ ic.name }}" style="aspect-ratio:1; border-radius:16px; cursor:pointer; border:{{ ic.border }}; background:{{ ic.bg }}; display:flex; align-items:center; justify-content:center; transition:transform .15s, box-shadow .2s;" style-active="transform:scale(.9);">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ ic.color }};">{{ ic.sym }}</span>
+                  </button>
+                </sc-for>
+              </div>
+
+              <!-- name -->
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8AA08E; margin-bottom:9px;">Rule</div>
+              <input ref="{{ setNameRef }}" value="{{ draftName }}" onInput="{{ onName }}" placeholder="e.g. 10,000 steps" style="width:100%; height:52px; border-radius:16px; border:1.5px solid #DCE8D7; background:#fff; padding:0 16px; font-family:'Inter',sans-serif; font-size:15.5px; font-weight:600; color:#23332A; outline:none; margin-bottom:22px;" style-focus="border-color:#2BC56F; box-shadow:0 0 0 4px rgba(43,197,111,.12);" />
+
+              <!-- target -->
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8AA08E; margin-bottom:9px;">Daily target <span style="text-transform:none; letter-spacing:0; color:#B7C9B8; font-weight:600;">· optional</span></div>
+              <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <input value="{{ draftTarget }}" onInput="{{ onTarget }}" inputmode="numeric" placeholder="10,000" style="width:120px; flex:none; height:52px; border-radius:16px; border:1.5px solid #DCE8D7; background:#fff; padding:0 16px; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; color:#23332A; outline:none; font-variant-numeric:tabular-nums;" style-focus="border-color:#2BC56F; box-shadow:0 0 0 4px rgba(43,197,111,.12);" />
+                <div style="flex:1; min-width:0; display:flex; flex-wrap:wrap; gap:7px; align-content:center;">
+                  <sc-for list="{{ unitChoices }}" as="u" hint-placeholder-count="6">
+                    <button onClick="{{ u.select }}" style="height:34px; padding:0 13px; border-radius:100px; cursor:pointer; border:{{ u.border }}; background:{{ u.bg }}; color:{{ u.color }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; letter-spacing:-.005em;" style-active="transform:scale(.94);">{{ u.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- frequency -->
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8AA08E; margin:22px 0 9px;">Frequency</div>
+              <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <sc-for list="{{ freqChoices }}" as="f" hint-placeholder-count="4">
+                  <button onClick="{{ f.select }}" style="display:flex; align-items:center; gap:6px; height:40px; padding:{{ f.padding }}; border-radius:100px; cursor:pointer; border:{{ f.border }}; background:{{ f.bg }}; color:{{ f.color }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; letter-spacing:-.01em;" style-active="transform:scale(.95);">
+                    <sc-if value="{{ f.active }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'wght' 600;">check</span>
+                    </sc-if>
+                    {{ f.label }}
+                  </button>
+                </sc-for>
+              </div>
+
+            </div>
+
+            <!-- save -->
+            <div style="flex:none; padding:14px 22px 26px; background:#FBFDFA;">
+              <button onClick="{{ saveDraft }}" disabled="{{ saveDisabled }}" style="width:100%; height:56px; border:none; border-radius:100px; cursor:{{ saveCursor }}; background:{{ saveBg }}; color:{{ saveColor }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16.5px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:{{ saveShadow }}; transition:background .2s, color .2s, box-shadow .2s;" style-active="transform:scale(.99);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">{{ saveIcon }}</span>
+                {{ saveLabel }}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;recommendedMin&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:4,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:10},&quot;recommendedMax&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:12},&quot;showReorderHandles&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.ICONS = [
+      { key:'steps',    sym:'directions_walk',  color:'#2BC56F', name:'Steps' },
+      { key:'water',    sym:'water_drop',       color:'#2BA8E0', name:'Water' },
+      { key:'workout',  sym:'fitness_center',   color:'#6A5CF0', name:'Workout' },
+      { key:'run',      sym:'directions_run',   color:'#0E8FE0', name:'Run' },
+      { key:'diet',     sym:'restaurant',       color:'#E8893C', name:'Diet' },
+      { key:'nosugar',  sym:'no_meals',         color:'#EB5757', name:'No sugar' },
+      { key:'read',     sym:'menu_book',        color:'#16A085', name:'Read' },
+      { key:'sleep',    sym:'bedtime',          color:'#8B7CF0', name:'Sleep' },
+      { key:'meditate', sym:'self_improvement', color:'#21B96B', name:'Meditate' },
+      { key:'journal',  sym:'edit_note',        color:'#C77DAE', name:'Journal' },
+    ];
+    this.UNITS = ['steps','L','km','min','pages','hrs','reps','g'];
+    this.FREQS = ['Every day','Weekdays','Weekends','3×/week'];
+
+    this.cardRefs = new Map();
+    this._setRefCache = {};
+    this._editRefCache = {};
+    this._downRefCache = {};
+    this._handleRefCache = {};
+    this._swipe = null;
+    this._reorder = null;
+    this._snackTimer = null;
+    this._nameEl = null;
+
+    this.state = {
+      rules: [
+        { id:1, icon:'steps', label:'10,000 steps',   target:'10,000', unit:'steps', freq:'Every day' },
+        { id:2, icon:'water', label:'Drink 3L water',  target:'3',      unit:'L',     freq:'Every day' },
+      ],
+      nextId: 3,
+      sheetOpen: false,
+      editingId: null,
+      draft: null,
+      snack: { open:false, rule:null, index:0 },
+      dragId: null,
+    };
+  }
+
+  componentWillUnmount(){ clearTimeout(this._snackTimer); }
+
+  iconFor(key){ return this.ICONS.find(i=>i.key===key) || this.ICONS[0]; }
+  hexA(hex,a){
+    const n=parseInt(hex.slice(1),16);
+    return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+  }
+
+  setListRef = (el)=>{ this._listEl = el; };
+  setNameRef = (el)=>{ this._nameEl = el; };
+
+  getSetRef(id){
+    if(!this._setRefCache[id]){
+      this._setRefCache[id] = (el)=>{ if(el) this.cardRefs.set(id,el); else this.cardRefs.delete(id); };
+    }
+    return this._setRefCache[id];
+  }
+  getOnDown(id){
+    if(!this._downRefCache[id]) this._downRefCache[id] = (e)=> this.onCardDown(e,id);
+    return this._downRefCache[id];
+  }
+  getOnEdit(id){
+    if(!this._editRefCache[id]) this._editRefCache[id] = ()=> this.openEdit(id);
+    return this._editRefCache[id];
+  }
+  getOnHandleDown(id){
+    if(!this._handleRefCache[id]) this._handleRefCache[id] = (e)=> this.onHandleDown(e,id);
+    return this._handleRefCache[id];
+  }
+
+  /* ---------- swipe to delete ---------- */
+  onCardDown(e,id){
+    if(this._reorder) return;
+    this._swipe = { id, startX:e.clientX, startY:e.clientY, dx:0, active:false, pid:e.pointerId };
+  }
+  onCardMove = (e)=>{
+    const s=this._swipe; if(!s) return;
+    const dx=e.clientX-s.startX, dy=e.clientY-s.startY;
+    if(!s.active){
+      if(Math.abs(dx)>8 && Math.abs(dx)>Math.abs(dy)){
+        s.active=true;
+        try{ e.currentTarget.setPointerCapture(s.pid); }catch(_){}
+      } else if(Math.abs(dy)>10){ this._swipe=null; return; }
+    }
+    if(s.active){
+      s.dx=Math.min(0, dx);
+      const el=this.cardRefs.get(s.id);
+      if(el){ el.style.transition=''; el.style.transform=`translateX(${s.dx}px)`; }
+    }
+  };
+  onCardUp = (e)=>{
+    const s=this._swipe; if(!s){ return; }
+    const el=this.cardRefs.get(s.id);
+    if(s.active && s.dx < -118){
+      if(el){ el.style.transition='transform .25s ease, opacity .25s ease'; el.style.transform='translateX(-110%)'; el.style.opacity='0'; }
+      setTimeout(()=> this.deleteRule(s.id), 180);
+    } else if(el){
+      el.style.transition='transform .32s cubic-bezier(.22,1,.36,1)';
+      el.style.transform='translateX(0)';
+    }
+    this._swipe=null;
+  };
+
+  /* ---------- reorder via handle ---------- */
+  onHandleDown(e,id){
+    e.stopPropagation();
+    this._reorder = { id };
+    this.setState({ dragId:id });
+    try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){}
+    const el=this.cardRefs.get(id);
+    if(el){ el.style.transition='box-shadow .2s, transform .12s'; el.style.transform='scale(1.02)'; el.style.boxShadow='0 18px 34px -10px rgba(40,80,55,.4)'; el.style.zIndex='5'; }
+  }
+  onHandleMove = (e)=>{
+    const r=this._reorder; if(!r) return;
+    const rules=this.state.rules;
+    const fromIdx=rules.findIndex(x=>x.id===r.id);
+    if(fromIdx<0) return;
+    let target=fromIdx;
+    for(let i=0;i<rules.length;i++){
+      const el=this.cardRefs.get(rules[i].id);
+      if(!el) continue;
+      const rect=el.getBoundingClientRect();
+      if(e.clientY < rect.top+rect.height/2){ target=i; break; }
+      target=i;
+    }
+    if(target!==fromIdx){
+      const arr=rules.slice();
+      const [m]=arr.splice(fromIdx,1);
+      arr.splice(target,0,m);
+      this.setState({ rules:arr });
+    }
+  };
+  onHandleUp = (e)=>{
+    const r=this._reorder; if(!r) return;
+    const el=this.cardRefs.get(r.id);
+    if(el){ el.style.transform=''; el.style.boxShadow=''; el.style.zIndex=''; }
+    this._reorder=null;
+    this.setState({ dragId:null });
+  };
+
+  /* ---------- delete + undo ---------- */
+  deleteRule(id){
+    const idx=this.state.rules.findIndex(r=>r.id===id);
+    if(idx<0) return;
+    const rule=this.state.rules[idx];
+    const arr=this.state.rules.slice(); arr.splice(idx,1);
+    this.cardRefs.delete(id);
+    clearTimeout(this._snackTimer);
+    this.setState({ rules:arr, snack:{ open:true, rule, index:idx } });
+    this._snackTimer=setTimeout(()=> this.setState(s=>({ snack:{...s.snack, open:false} })), 4200);
+  }
+  undo = ()=>{
+    const sn=this.state.snack; if(!sn.rule) return;
+    const arr=this.state.rules.slice();
+    arr.splice(Math.min(sn.index, arr.length), 0, sn.rule);
+    clearTimeout(this._snackTimer);
+    this.setState({ rules:arr, snack:{ open:false, rule:null, index:0 } });
+  };
+
+  /* ---------- bottom sheet ---------- */
+  openAdd = ()=>{
+    this.setState({ sheetOpen:true, editingId:null, draft:{ icon:'steps', name:'', target:'', unit:'steps', freq:'Every day' } });
+  };
+  openEdit(id){
+    const r=this.state.rules.find(x=>x.id===id); if(!r) return;
+    this.setState({ sheetOpen:true, editingId:id, draft:{ icon:r.icon, name:r.label, target:r.target||'', unit:r.unit||'', freq:r.freq } });
+  }
+  closeSheet = ()=>{ this.setState({ sheetOpen:false }); };
+
+  setDraft(patch){ this.setState(s=>({ draft:{...s.draft, ...patch} })); }
+  onName = (e)=> this.setDraft({ name:e.target.value });
+  onTarget = (e)=> this.setDraft({ target:e.target.value });
+
+  saveDraft = ()=>{
+    const d=this.state.draft; if(!d || !d.name.trim()) return;
+    const rule = {
+      icon:d.icon,
+      label:d.name.trim(),
+      target:(d.target||'').trim(),
+      unit:(d.target||'').trim() ? d.unit : '',
+      freq:d.freq,
+    };
+    if(this.state.editingId){
+      const arr=this.state.rules.map(r=> r.id===this.state.editingId ? {...r, ...rule} : r);
+      this.setState({ rules:arr, sheetOpen:false });
+    } else {
+      const id=this.state.nextId;
+      this.setState(s=>({ rules:[...s.rules, {id, ...rule}], nextId:s.nextId+1, sheetOpen:false }));
+    }
+  };
+
+  back = ()=>{};
+  cont = ()=>{};
+
+  renderVals(){
+    const { rules, sheetOpen, snack, editingId, dragId } = this.state;
+    const draft = this.state.draft || { icon:'steps', name:'', target:'', unit:'steps', freq:'Every day' };
+    const recMin = this.props.recommendedMin ?? 4;
+    const recMax = this.props.recommendedMax ?? 6;
+    const showHandles = (this.props.showReorderHandles ?? true) && rules.length > 1;
+
+    const n=rules.length;
+    const countLabel = `${n} rule${n===1?'':'s'}`;
+    const helperText = `Most people pick ${recMin}–${recMax} rules. Make them specific and doable.`;
+
+    const ruleVMs = rules.map(r=>{
+      const ic=this.iconFor(r.icon);
+      const hasTarget = !!(r.target && String(r.target).trim());
+      return {
+        ...r,
+        sym: ic.sym,
+        iconColor: ic.color,
+        iconBg: this.hexA(ic.color, .13),
+        hasTarget,
+        chipText: hasTarget ? `${r.target}${r.unit?(' '+r.unit):''}` : '',
+        setRef: this.getSetRef(r.id),
+        onDown: this.getOnDown(r.id),
+        onEdit: this.getOnEdit(r.id),
+        onHandleDown: this.getOnHandleDown(r.id),
+      };
+    });
+
+    const accent='linear-gradient(135deg,#2BC56F,#16C2A6)';
+
+    // icon picker
+    const iconChoices=this.ICONS.map(ic=>{
+      const sel=draft.icon===ic.key;
+      return {
+        ...ic,
+        select: ()=> this.setDraft({ icon:ic.key }),
+        bg: sel ? this.hexA(ic.color,.16) : '#F1F6EF',
+        border: sel ? `2px solid ${ic.color}` : '2px solid transparent',
+        color: sel ? ic.color : '#9DB2A2',
+      };
+    });
+
+    // unit chips
+    const unitChoices=this.UNITS.map(u=>{
+      const sel=draft.unit===u;
+      return {
+        label:u,
+        select: ()=> this.setDraft({ unit:u }),
+        bg: sel ? accent : '#fff',
+        border: sel ? '1.5px solid transparent' : '1.5px solid #DCE8D7',
+        color: sel ? '#fff' : '#5C7163',
+      };
+    });
+
+    // freq chips
+    const freqChoices=this.FREQS.map(f=>{
+      const active=draft.freq===f;
+      return {
+        label:f, active,
+        select: ()=> this.setDraft({ freq:f }),
+        padding: active ? '0 16px 0 12px' : '0 16px',
+        bg: active ? accent : '#fff',
+        border: active ? '1.5px solid transparent' : '1.5px solid #DCE8D7',
+        color: active ? '#fff' : '#3A4A40',
+      };
+    });
+
+    const continueDisabled = n===0;
+    const saveDisabled = !draft.name.trim();
+
+    return {
+      // header / list
+      countLabel, helperText,
+      rules: ruleVMs,
+      showHandles,
+      setListRef: this.setListRef,
+      onCardMove: this.onCardMove, onCardUp: this.onCardUp,
+      onHandleMove: this.onHandleMove, onHandleUp: this.onHandleUp,
+      openAdd: this.openAdd,
+      back: this.back, cont: this.cont,
+
+      // continue button
+      continueDisabled,
+      continueBg: continueDisabled ? '#E3EBDF' : accent,
+      continueColor: continueDisabled ? '#A9BCAC' : '#fff',
+      continueCursor: continueDisabled ? 'not-allowed' : 'pointer',
+      continueShadow: continueDisabled ? 'none' : '0 14px 30px -8px rgba(22,194,166,.6)',
+      continueHover: continueDisabled ? '' : 'box-shadow:0 18px 36px -8px rgba(22,194,166,.7); transform:translateY(-1px);',
+
+      // snackbar
+      snackOpen: snack.open,
+      undo: this.undo,
+
+      // sheet
+      sheetOpen,
+      closeSheet: this.closeSheet,
+      sheetTitle: editingId ? 'Edit rule' : 'Add a rule',
+      iconChoices, unitChoices, freqChoices,
+      draftName: draft.name, draftTarget: draft.target,
+      onName: this.onName, onTarget: this.onTarget,
+      setNameRef: this.setNameRef,
+      saveDraft: this.saveDraft,
+      saveDisabled,
+      saveLabel: editingId ? 'Save changes' : 'Add rule',
+      saveIcon: editingId ? 'check' : 'add',
+      saveBg: saveDisabled ? '#E3EBDF' : accent,
+      saveColor: saveDisabled ? '#A9BCAC' : '#fff',
+      saveCursor: saveDisabled ? 'not-allowed' : 'pointer',
+      saveShadow: saveDisabled ? 'none' : '0 12px 26px -8px rgba(22,194,166,.55)',
+    };
+  }
+}
+</script>
+</body>
+</html>

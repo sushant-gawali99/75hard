@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    @keyframes sheetUp{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
+    @keyframes scrimIn{ from{ opacity:0; } to{ opacity:1; } }
+    @keyframes popIn{ 0%{ transform:scale(.6); opacity:0; } 60%{ transform:scale(1.08); } 100%{ transform:scale(1); opacity:1; } }
+    @keyframes fadeSlide{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:6px 18px 22px;">
+
+        <!-- header -->
+        <div style="padding:8px 2px 2px;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:.14em; color:#7C9080;">STREAKS</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:26px; line-height:1.12; letter-spacing:-.025em; color:#23332A; margin-top:4px;">Your consistency</div>
+        </div>
+
+        <!-- HERO STAT ROW -->
+        <div style="margin-top:16px; padding:18px 14px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); display:flex; align-items:stretch;">
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;">
+            <div style="display:flex; align-items:center; gap:3px;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:34px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#F0A93A,#E0742F); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ heroCurrent }}</span>
+            </div>
+            <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#7C9080;">Current</div>
+          </div>
+          <div style="width:1px; background:#EAF1E6; margin:4px 0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;">
+            <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:34px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F,#16C2A6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; padding-top:1px;">{{ heroLongest }}</span>
+            <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#7C9080;">Longest</div>
+          </div>
+          <div style="width:1px; background:#EAF1E6; margin:4px 0;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;">
+            <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:34px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#16C2A6,#0E9FD0); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; padding-top:1px;">{{ heroPerfect }}</span>
+            <div style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#7C9080;">Perfect days</div>
+          </div>
+        </div>
+
+        <!-- SEGMENTED CONTROL -->
+        <div style="margin-top:16px; display:flex; padding:4px; border-radius:100px; background:#E4EEDF; box-shadow:inset 0 1px 2px rgba(40,80,55,.06);">
+          <div onClick="{{ showRules }}" style="flex:1; height:40px; border-radius:100px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; background:{{ rulesTabBg }}; box-shadow:{{ rulesTabShadow }}; transition:background .2s;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' {{ rulesTabFill }},'wght' 600; color:{{ rulesTabColor }};">format_list_bulleted</span>
+            <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; letter-spacing:-.01em; color:{{ rulesTabColor }};">By rule</span>
+          </div>
+          <div onClick="{{ showCalendar }}" style="flex:1; height:40px; border-radius:100px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; background:{{ calTabBg }}; box-shadow:{{ calTabShadow }}; transition:background .2s;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' {{ calTabFill }},'wght' 600; color:{{ calTabColor }};">calendar_month</span>
+            <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; letter-spacing:-.01em; color:{{ calTabColor }};">Calendar</span>
+          </div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:22px; padding:30px 22px 28px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); display:flex; flex-direction:column; align-items:center; text-align:center; animation:fadeSlide .5s cubic-bezier(.22,1,.36,1) both;">
+            <div style="width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,#EAF3E7,#DCF0D8); display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 1px #D2E8CC;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:42px; font-variation-settings:'FILL' 1,'wght' 400; background:linear-gradient(135deg,#2BC56F,#16C2A6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">local_fire_department</span>
+            </div>
+            <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; letter-spacing:-.02em; color:#23332A; margin-top:18px;">Your streak starts today</div>
+            <div style="font-size:14px; font-weight:500; line-height:1.5; color:#7C9080; margin-top:8px; max-width:250px;">Check off your rules today and watch the chain grow. One day is all it takes to begin.</div>
+            <div style="display:flex; gap:7px; margin-top:18px;">
+              <div style="width:11px; height:11px; border-radius:3px; background:#E2EDDD;"></div>
+              <div style="width:11px; height:11px; border-radius:3px; background:#E2EDDD;"></div>
+              <div style="width:11px; height:11px; border-radius:3px; background:#E2EDDD;"></div>
+              <div style="width:11px; height:11px; border-radius:3px; background:#E2EDDD;"></div>
+              <div style="width:11px; height:11px; border-radius:3px; background:linear-gradient(135deg,#2BC56F,#16C2A6); box-shadow:0 2px 6px rgba(22,194,166,.4);"></div>
+            </div>
+            <button onClick="{{ goToday }}" style="margin-top:22px; height:50px; padding:0 28px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; box-shadow:0 10px 22px -6px rgba(22,194,166,.55);">
+              Start day 1
+              <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">arrow_forward</span>
+            </button>
+          </div>
+        </sc-if>
+
+        <!-- ============ BY RULE ============ -->
+        <sc-if value="{{ showRulesView }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:18px; display:flex; flex-direction:column; gap:12px;">
+            <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+              <div style="padding:16px 16px 15px; border-radius:22px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); animation:fadeSlide .45s cubic-bezier(.22,1,.36,1) both;">
+                <!-- top row -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:42px; height:42px; flex:none; border-radius:13px; background:{{ r.chipBg }}; display:flex; align-items:center; justify-content:center;">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 500; color:{{ r.iconColor }};">{{ r.icon }}</span>
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15px; letter-spacing:-.01em; color:#23332A;">{{ r.name }}</div>
+                    <div style="font-size:12px; font-weight:600; color:#9DB2A2; margin-top:2px;">Longest {{ r.longest }} days</div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:3px; flex:none; padding:5px 10px 5px 8px; border-radius:100px; background:#FBF1DD; border:1px solid #F2E2C2;">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:17px; color:#B97E22; font-variant-numeric:tabular-nums;">{{ r.current }}</span>
+                  </div>
+                </div>
+                <!-- 7-day tracker + milestone -->
+                <div style="margin-top:14px; display:flex; align-items:center; justify-content:space-between;">
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="font-size:10px; font-weight:700; letter-spacing:.1em; color:#A6B6A8;">LAST 7 DAYS</div>
+                    <div style="display:flex; gap:5px;">
+                      <sc-for list="{{ r.last7 }}" as="d" hint-placeholder-count="7">
+                        <div style="width:19px; height:19px; border-radius:6px; background:{{ d.bg }}; border:{{ d.border }};"></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:10px; font-weight:700; letter-spacing:.1em; color:#A6B6A8;">NEXT MILESTONE</div>
+                    <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15px; letter-spacing:-.01em; color:#23332A; margin-top:4px; font-variant-numeric:tabular-nums;">{{ r.milestoneLabel }}</div>
+                  </div>
+                </div>
+                <!-- milestone bar -->
+                <div style="margin-top:11px; height:7px; border-radius:100px; background:#E4EEDF; overflow:hidden;">
+                  <div style="height:100%; border-radius:100px; background:linear-gradient(90deg,{{ r.barFrom }},{{ r.barTo }}); width:{{ r.milestonePct }};"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- ============ CALENDAR ============ -->
+        <sc-if value="{{ showCalendarView }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px; padding:18px 16px 16px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); animation:fadeSlide .45s cubic-bezier(.22,1,.36,1) both;">
+            <!-- month switcher -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:0 2px 4px;">
+              <div onClick="{{ prevMonth }}" style="width:36px; height:36px; border-radius:50%; background:#EFF5EC; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 600; color:#4C8A5E;">chevron_left</span>
+              </div>
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:17px; letter-spacing:-.01em; color:#23332A;">{{ monthLabel }}</div>
+              <div onClick="{{ nextMonth }}" style="width:36px; height:36px; border-radius:50%; background:#EFF5EC; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'wght' 600; color:#4C8A5E;">chevron_right</span>
+              </div>
+            </div>
+            <!-- weekday header -->
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:8px;">
+              <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7">
+                <div style="text-align:center; font-size:11px; font-weight:700; color:#A6B6A8; letter-spacing:.02em;">{{ w }}</div>
+              </sc-for>
+            </div>
+            <!-- grid -->
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:7px;">
+              <sc-for list="{{ days }}" as="d" hint-placeholder-count="30">
+                <div onClick="{{ d.onClick }}" style="aspect-ratio:1; border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:{{ d.cursor }}; background:{{ d.bg }}; border:{{ d.border }}; box-shadow:{{ d.ring }}; opacity:{{ d.opacity }};">
+                  <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13px; color:{{ d.textColor }}; font-variant-numeric:tabular-nums;">{{ d.day }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <!-- legend -->
+            <div style="margin-top:16px; padding-top:14px; border-top:1px solid #EEF3EA; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <div style="display:flex; align-items:center; gap:5px;">
+                <div style="width:14px; height:14px; border-radius:4px; background:#F0CBBA;"></div>
+                <span style="font-size:11px; font-weight:600; color:#7C9080;">Missed</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:11px; font-weight:600; color:#7C9080;">Less</span>
+                <div style="display:flex; gap:3px;">
+                  <div style="width:14px; height:14px; border-radius:4px; background:#DBEFD5;"></div>
+                  <div style="width:14px; height:14px; border-radius:4px; background:#A9E0B6;"></div>
+                  <div style="width:14px; height:14px; border-radius:4px; background:#6BCF91;"></div>
+                  <div style="width:14px; height:14px; border-radius:4px; background:linear-gradient(135deg,#2BC56F,#16C2A6);"></div>
+                </div>
+                <span style="font-size:11px; font-weight:600; color:#7C9080;">All</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:5px;">
+                <div style="width:14px; height:14px; border-radius:4px; background:transparent; border:1.5px solid #E2EDDD;"></div>
+                <span style="font-size:11px; font-weight:600; color:#7C9080;">Soon</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div style="flex:none; height:74px; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-top:1px solid #E6EFE2; display:flex; align-items:center; justify-content:space-around; padding:0 8px 8px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">wb_sunny</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Today</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; padding:0 18px; border-radius:100px; background:#DCF0D8; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:#1E8A4C;">local_fire_department</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#1E8A4C; letter-spacing:.01em;">Streaks</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">monitor_weight</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Weight</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">settings</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Settings</span>
+        </div>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+      <!-- ============ DAY DETAIL BOTTOM SHEET ============ -->
+      <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute; inset:0; z-index:30; background:rgba(28,42,33,.42); animation:scrimIn .25s ease both;"></div>
+        <div style="position:absolute; left:0; right:0; bottom:0; z-index:31; background:#fff; border-radius:28px 28px 34px 34px; padding:10px 22px 30px; box-shadow:0 -12px 40px rgba(28,52,38,.22); animation:sheetUp .34s cubic-bezier(.22,1,.36,1) both;">
+          <div style="width:38px; height:5px; border-radius:3px; background:#D5E2CF; margin:0 auto 16px;"></div>
+          <!-- sheet header -->
+          <div style="display:flex; align-items:center; gap:13px;">
+            <div style="width:50px; height:50px; flex:none; border-radius:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:{{ sheetChipBg }}; box-shadow:{{ sheetChipShadow }};">
+              <span style="font-size:9px; font-weight:700; letter-spacing:.08em; color:{{ sheetChipSub }};">{{ sheetWeekday }}</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:20px; line-height:1; color:{{ sheetChipNum }}; font-variant-numeric:tabular-nums;">{{ sheetDayNum }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; letter-spacing:-.01em; color:#23332A;">{{ sheetDateLabel }}</div>
+              <div style="font-size:13px; font-weight:600; color:{{ sheetSummaryColor }}; margin-top:2px;">{{ sheetSummary }}</div>
+            </div>
+          </div>
+          <!-- rules list -->
+          <div style="margin-top:18px; display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ sheetRules }}" as="sr" hint-placeholder-count="4">
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:15px; background:{{ sr.rowBg }};">
+                <div style="width:34px; height:34px; flex:none; border-radius:11px; background:{{ sr.chipBg }}; display:flex; align-items:center; justify-content:center;">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 0,'wght' 500; color:{{ sr.iconColor }};">{{ sr.icon }}</span>
+                </div>
+                <span style="flex:1; min-width:0; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14px; letter-spacing:-.01em; color:{{ sr.nameColor }};">{{ sr.name }}</span>
+                <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ sr.markColor }};">{{ sr.mark }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <!-- note -->
+          <sc-if value="{{ sheetHasNote }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:14px; display:flex; gap:11px; align-items:flex-start; padding:14px 16px; border-radius:16px; background:#EAF3E7; border:1px solid #DCEBD6;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 500; color:#21B96B; margin-top:1px;">sticky_note_2</span>
+              <div style="font-size:13.5px; font-weight:500; line-height:1.45; color:#3A4A40;">{{ sheetNote }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;emptyState&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;startView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rules&quot;,&quot;calendar&quot;],&quot;default&quot;:&quot;rules&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    // four tracked rules
+    this.ruleDefs = [
+      { name:'Drink 3L of water',  icon:'water_drop',      iconColor:'#0E8FE0', chipBg:'#DCEEFC', current:41, longest:41, milestone:50, last7:[1,1,1,1,1,1,1] },
+      { name:'Walk 30 minutes',    icon:'directions_walk', iconColor:'#13B85F', chipBg:'#DFF4E5', current:28, longest:35, milestone:30, last7:[1,1,1,1,1,1,1] },
+      { name:'No sugar after 7pm', icon:'cookie',          iconColor:'#F0992A', chipBg:'#FDEBCF', current:12, longest:19, milestone:14, last7:[1,1,0,1,1,1,1] },
+      { name:'Lights out by 11pm', icon:'bedtime',         iconColor:'#6A5CF0', chipBg:'#E8E6FD', current:41, longest:52, milestone:50, last7:[1,1,1,1,1,1,0] },
+    ];
+    // per-day rule completion for June 2026 (index = day number). 0..4 done count, value -1 = no data
+    // day 18 = today (3/4). days 19-30 upcoming.
+    this.doneByDay = {
+      1:4,2:4,3:3,4:4,5:4,6:2,7:4,8:4,9:4,10:3,11:4,12:4,13:0,14:4,15:4,16:3,17:4,18:3
+    };
+    // which specific rules done per day (for sheet). default: first N rules.
+    this.rulesDoneByDay = {
+      6:[1,0,1,0], 10:[1,1,0,1], 13:[0,0,0,0], 16:[1,1,1,0], 18:[1,1,1,0]
+    };
+    this.notesByDay = {
+      4:'Nailed all four. Slept like a rock.',
+      6:'Travel day — kept water and sleep, slipped on the walk and a late snack.',
+      10:'Skipped the evening walk, rained all day. Everything else solid.',
+      13:'Rough one. Got sick and let the whole day go. Back at it tomorrow.',
+      16:'Stayed up finishing a deadline — missed lights out. No regrets.',
+      18:'Three down, just need to wind down early tonight.',
+    };
+    this.state = {
+      view: (props.startView === 'calendar') ? 'calendar' : 'rules',
+      monthOffset: 0, // 0 = June 2026
+      selectedDay: null,
+    };
+  }
+
+  showRules = ()=> this.setState({ view:'rules' });
+  showCalendar = ()=> this.setState({ view:'calendar' });
+  prevMonth = ()=> this.setState(s=>({ monthOffset: s.monthOffset - 1, selectedDay:null }));
+  nextMonth = ()=> this.setState(s=>({ monthOffset: Math.min(0, s.monthOffset + 1), selectedDay:null }));
+  closeSheet = ()=> this.setState({ selectedDay:null });
+  goToday = ()=>{};
+
+  // discrete color buckets for a day cell
+  cellStyle(doneCount, isToday, isUpcoming, isEmptyMonth){
+    if(isUpcoming) return { bg:'transparent', border:'1.5px solid #E2EDDD', text:'#B6C6B8', ring:'none', opacity:'1', cursor:'default' };
+    let s;
+    if(doneCount === 0) s = { bg:'#F0CBBA', border:'none', text:'#9C5E45' };
+    else if(doneCount === 1) s = { bg:'#DBEFD5', border:'none', text:'#5E7E62' };
+    else if(doneCount === 2) s = { bg:'#A9E0B6', border:'none', text:'#2C6B3F' };
+    else if(doneCount === 3) s = { bg:'#6BCF91', border:'none', text:'#FFFFFF' };
+    else s = { bg:'linear-gradient(135deg,#2BC56F,#16C2A6)', border:'none', text:'#FFFFFF' };
+    s.ring = isToday ? '0 0 0 2px #fff, 0 0 0 4px #16C2A6' : 'none';
+    s.opacity = '1';
+    s.cursor = 'pointer';
+    return s;
+  }
+
+  buildMonth(offset){
+    // base June 2026 (month index 5). offset shifts months.
+    const base = new Date(2026, 5 + offset, 1);
+    const year = base.getFullYear();
+    const month = base.getMonth();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const firstWeekday = base.getDay(); // 0=Sun
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const isJune2026 = (offset === 0);
+    const todayNum = 18;
+    const cells = [];
+    for(let i=0;i<firstWeekday;i++) cells.push({ blank:true });
+    for(let d=1; d<=daysInMonth; d++){
+      cells.push({ blank:false, day:d, year, month, monthName:monthNames[month] });
+    }
+    return { year, month, monthName:monthNames[month], cells, isJune2026, todayNum };
+  }
+
+  openDay = (cell)=>{
+    this.setState({ selectedDay: { day:cell.day, month:cell.month, year:cell.year, monthName:cell.monthName } });
+  };
+
+  renderVals(){
+    const isEmpty = !!this.props.emptyState;
+    const view = this.state.view;
+    const m = this.buildMonth(this.state.monthOffset);
+    const WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+    // ---- rule cards ----
+    const last7Style = (on)=> on
+      ? { bg:'linear-gradient(135deg,#2BC56F,#16C2A6)', border:'none' }
+      : { bg:'#EDF3EA', border:'1.5px solid #DFEAD9' };
+    const rules = this.ruleDefs.map(r=>{
+      const remaining = Math.max(0, r.milestone - r.current);
+      const pct = Math.min(100, Math.round(r.current / r.milestone * 100));
+      return {
+        name:r.name, icon:r.icon, iconColor:r.iconColor, chipBg:r.chipBg,
+        current:r.current, longest:r.longest,
+        last7: r.last7.map(v=>last7Style(v)),
+        milestoneLabel: remaining === 0 ? 'Reached!' : (remaining + ' to ' + r.milestone),
+        milestonePct: pct + '%',
+        barFrom:'#2BC56F', barTo:'#16C2A6',
+      };
+    });
+
+    // ---- calendar days ----
+    const weekNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const days = m.cells.map(c=>{
+      if(c.blank) return { day:'', bg:'transparent', border:'none', ring:'none', textColor:'transparent', opacity:'0', cursor:'default', onClick:()=>{} };
+      const future = new Date(c.year, c.month, c.day) > new Date(2026, 5, 18);
+      const isToday = m.isJune2026 && c.day === m.todayNum;
+      const hasData = m.isJune2026 && (c.day in this.doneByDay);
+      const upcoming = future || !hasData;
+      const doneCount = hasData ? this.doneByDay[c.day] : 0;
+      const st = this.cellStyle(doneCount, isToday, upcoming, false);
+      return {
+        day:c.day, bg:st.bg, border:st.border, ring:st.ring, textColor:st.text, opacity:st.opacity, cursor:st.cursor,
+        onClick: upcoming ? (()=>{}) : (()=> this.openDay(c)),
+      };
+    });
+
+    // ---- bottom sheet detail ----
+    const sel = this.state.selectedDay;
+    let sheet = {};
+    if(sel){
+      const wdIdx = new Date(sel.year, sel.month, sel.day).getDay();
+      const doneCount = (sel.month===5 && sel.year===2026 && (sel.day in this.doneByDay)) ? this.doneByDay[sel.day] : 0;
+      const perRule = this.rulesDoneByDay[sel.day] || this.ruleDefs.map((_,i)=> i < doneCount ? 1 : 0);
+      const note = this.notesByDay[sel.day] || '';
+      const allDone = doneCount === this.ruleDefs.length;
+      const missed = doneCount === 0;
+      sheet = {
+        sheetOpen: true,
+        sheetWeekday: WD[wdIdx],
+        sheetDayNum: sel.day,
+        sheetDateLabel: weekNames[wdIdx] + ', ' + sel.monthName + ' ' + sel.day,
+        sheetSummary: missed ? 'No rules completed' : (doneCount + ' of ' + this.ruleDefs.length + ' rules done'),
+        sheetSummaryColor: missed ? '#C26A4A' : (allDone ? '#21B96B' : '#7C9080'),
+        sheetChipBg: missed ? '#FBE4DA' : (allDone ? 'linear-gradient(135deg,#2BC56F,#16C2A6)' : '#EAF3E7'),
+        sheetChipShadow: allDone ? '0 6px 16px -4px rgba(22,194,166,.45)' : 'none',
+        sheetChipSub: (missed) ? '#C26A4A' : (allDone ? 'rgba(255,255,255,.85)' : '#7C9080'),
+        sheetChipNum: missed ? '#9C5E45' : (allDone ? '#fff' : '#23332A'),
+        sheetRules: this.ruleDefs.map((r,i)=>{
+          const ok = perRule[i] === 1;
+          return {
+            name:r.name, icon:r.icon, iconColor: ok ? r.iconColor : '#B7C4B8',
+            chipBg: ok ? r.chipBg : '#EFF3EC',
+            rowBg: ok ? '#F4F8F1' : '#FAFBF9',
+            nameColor: ok ? '#23332A' : '#9DB2A2',
+            mark: ok ? 'check_circle' : 'cancel',
+            markColor: ok ? '#21B96B' : '#D9B0A0',
+          };
+        }),
+        sheetHasNote: !!note,
+        sheetNote: note,
+      };
+    } else {
+      sheet = { sheetOpen:false, sheetWeekday:'', sheetDayNum:'', sheetDateLabel:'', sheetSummary:'', sheetSummaryColor:'#7C9080', sheetChipBg:'#EAF3E7', sheetChipShadow:'none', sheetChipSub:'#7C9080', sheetChipNum:'#23332A', sheetRules:[], sheetHasNote:false, sheetNote:'' };
+    }
+
+    // ---- segmented control styling ----
+    const activeRules = view === 'rules';
+    return {
+      isEmpty,
+      heroCurrent: isEmpty ? 0 : 41,
+      heroLongest: isEmpty ? 0 : 52,
+      heroPerfect: isEmpty ? 0 : 38,
+
+      showRules: this.showRules,
+      showCalendar: this.showCalendar,
+      showRulesView: !isEmpty && activeRules,
+      showCalendarView: !isEmpty && !activeRules,
+      rulesTabBg: activeRules ? '#fff' : 'transparent',
+      rulesTabShadow: activeRules ? '0 2px 8px rgba(40,80,55,.12)' : 'none',
+      rulesTabColor: activeRules ? '#1E8A4C' : '#7C9080',
+      rulesTabFill: activeRules ? 1 : 0,
+      calTabBg: !activeRules ? '#fff' : 'transparent',
+      calTabShadow: !activeRules ? '0 2px 8px rgba(40,80,55,.12)' : 'none',
+      calTabColor: !activeRules ? '#1E8A4C' : '#7C9080',
+      calTabFill: !activeRules ? 1 : 0,
+
+      rules,
+      weekdays: ['S','M','T','W','T','F','S'],
+      days,
+      monthLabel: m.monthName + ' ' + m.year,
+      prevMonth: this.prevMonth,
+      nextMonth: this.nextMonth,
+      goToday: this.goToday,
+      closeSheet: this.closeSheet,
+      ...sheet,
+    };
+  }
+}
+</script>
+</body>
+</html>

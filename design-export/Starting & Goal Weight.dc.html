@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    @keyframes scRise{ 0%{ opacity:0; transform:translateY(14px); } 100%{ opacity:1; transform:translateY(0); } }
+    .sc-rise{ animation:scRise .8s cubic-bezier(.22,1,.36,1) both; }
+    .sc-scroll{ scrollbar-width:none; }
+    .sc-scroll::-webkit-scrollbar{ display:none; }
+    .sc-ruler{ scrollbar-width:none; touch-action:pan-x; }
+    .sc-ruler::-webkit-scrollbar{ display:none; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- soft glow -->
+      <div style="position:absolute; top:-160px; left:50%; transform:translateX(-50%); width:520px; height:520px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.22) 0%, rgba(22,194,166,.15) 38%, rgba(14,143,224,.08) 62%, rgba(14,143,224,0) 76%); filter:blur(8px); pointer-events:none;"></div>
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- TOP APP BAR -->
+      <div style="position:relative; z-index:3; flex:none; padding:4px 20px 0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <button onClick="{{ back }}" style="width:44px; height:44px; flex:none; margin-left:-10px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#23332A;" style-hover="background:rgba(35,51,42,.06);" style-active="transform:scale(.92);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:25px; font-variation-settings:'wght' 500;">arrow_back</span>
+          </button>
+          <div style="display:inline-flex; align-items:center; gap:0; padding:3px; border-radius:100px; background:#E4EFE0; box-shadow:inset 0 0 0 1px rgba(40,80,55,.06);">
+            <sc-for list="{{ unitSegs }}" as="u" hint-placeholder-count="2">
+              <button onClick="{{ u.select }}" style="height:30px; padding:0 16px; border:none; border-radius:100px; cursor:pointer; background:{{ u.bg }}; color:{{ u.color }}; box-shadow:{{ u.shadow }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:.01em; transition:background .22s, color .22s, box-shadow .22s;" style-active="transform:scale(.95);">{{ u.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; margin-top:12px; padding:0 2px;">
+          <div style="flex:1; min-width:0;">
+            <div style="height:6px; border-radius:100px; background:#DBEBD6; overflow:hidden;">
+              <div style="height:100%; width:100%; border-radius:100px; background:linear-gradient(110deg,#2BC56F 0%,#16C2A6 55%,#0E8FE0 100%);"></div>
+            </div>
+          </div>
+          <span style="flex:none; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:#7C9080; font-variant-numeric:tabular-nums;">Step 3 of 3</span>
+        </div>
+      </div>
+
+      <!-- CONTENT (scroll) -->
+      <div class="sc-scroll" style="position:relative; z-index:2; flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; padding:18px 24px 4px;">
+
+        <!-- heading -->
+        <h1 class="sc-rise" style="margin:0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:27px; line-height:1.2; letter-spacing:-.025em; color:#23332A; text-wrap:balance; max-width:300px;">Where are you starting?</h1>
+        <p class="sc-rise" style="margin:9px 0 0; animation-delay:.07s; font-size:14.5px; font-weight:500; line-height:1.5; color:#7C9080; max-width:290px; text-wrap:pretty;">We'll track your progress — privately, just for you.</p>
+
+        <!-- FIELD CARDS -->
+        <div class="sc-rise" style="animation-delay:.13s; display:flex; flex-direction:column; gap:11px; margin-top:18px;">
+          <sc-for list="{{ fields }}" as="f" hint-placeholder-count="2">
+            <button onClick="{{ f.select }}" style="display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:20px; cursor:pointer; border:none; text-align:left; background:{{ f.cardBg }}; box-shadow:{{ f.ring }}; transition:box-shadow .25s, background .25s;">
+              <div style="width:40px; height:40px; flex:none; border-radius:13px; display:flex; align-items:center; justify-content:center; background:{{ f.iconBg }};">
+                <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 1,'wght' 500; color:{{ f.iconColor }};">{{ f.icon }}</span>
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; letter-spacing:-.01em; color:#23332A;">{{ f.label }}</div>
+                <div style="font-size:11.5px; font-weight:600; color:#9DB2A2; margin-top:1px;">{{ f.sub }}</div>
+              </div>
+              <div style="flex:none; display:flex; align-items:baseline; gap:5px;">
+                <span ref="{{ f.setRef }}" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:38px; line-height:1; letter-spacing:-.035em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F 0%,#16C2A6 45%,#0E8FE0 78%,#6A5CF0 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; opacity:{{ f.op }};">{{ f.valueText }}</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#9DB2A2; opacity:{{ f.unitOp }};">{{ f.unit }}</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- WEIGHT RULER -->
+        <div class="sc-rise" style="animation-delay:.18s; margin-top:14px; border-radius:22px; background:#fff; box-shadow:0 8px 22px -12px rgba(40,80,55,.28), 0 1px 2px rgba(40,80,55,.05); overflow:hidden;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 0 4px;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:15px; font-variation-settings:'wght' 600; color:#A6BBA8;">drag_pan</span>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#9DB2A2;">{{ wRuler.caption }}</span>
+          </div>
+          <div style="position:relative; height:74px;">
+            <div style="position:absolute; left:50%; top:6px; transform:translateX(-50%); z-index:3; pointer-events:none; display:flex; flex-direction:column; align-items:center;">
+              <div style="width:10px; height:10px; border-radius:50%; background:#16C2A6; box-shadow:0 2px 6px rgba(22,194,166,.55);"></div>
+              <div style="width:3px; height:42px; margin-top:1px; border-radius:3px; background:linear-gradient(#16C2A6,#2BC56F);"></div>
+            </div>
+            <div style="position:absolute; left:0; top:0; bottom:0; width:54px; z-index:2; pointer-events:none; background:linear-gradient(90deg,#fff 10%,rgba(255,255,255,0));"></div>
+            <div style="position:absolute; right:0; top:0; bottom:0; width:54px; z-index:2; pointer-events:none; background:linear-gradient(270deg,#fff 10%,rgba(255,255,255,0));"></div>
+            <div ref="{{ wRuler.setRef }}" class="sc-ruler" onScroll="{{ wRuler.onScroll }}" onPointerDown="{{ wRuler.onDown }}" onPointerMove="{{ wRuler.onMove }}" onPointerUp="{{ wRuler.onUp }}" onPointerCancel="{{ wRuler.onUp }}" style="position:absolute; inset:0; overflow-x:auto; overflow-y:hidden; display:flex; align-items:flex-end; cursor:grab;">
+              <div style="flex:none; width:171px;"></div>
+              <sc-for list="{{ wRuler.ticks }}" as="t" hint-placeholder-count="40">
+                <div style="flex:none; width:{{ wRuler.tickW }}px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:68px;">
+                  <div style="width:{{ t.barW }}px; height:{{ t.barH }}px; border-radius:2px; background:{{ t.barColor }};"></div>
+                  <div style="height:16px; line-height:16px; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; color:#A2B6A6; font-variant-numeric:tabular-nums;">{{ t.label }}</div>
+                </div>
+              </sc-for>
+              <div style="flex:none; width:171px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUMMARY CARD -->
+        <div class="sc-rise" style="animation-delay:.22s; margin-top:13px; display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:20px; background:linear-gradient(135deg,rgba(43,197,111,.07),rgba(14,143,224,.06)); box-shadow:inset 0 0 0 1px rgba(40,80,55,.07);">
+          <svg width="96" height="56" viewBox="0 0 96 56" style="flex:none; display:block;">
+            <defs>
+              <linearGradient id="wgArea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(43,197,111,.32)"/>
+                <stop offset="100%" stop-color="rgba(43,197,111,0)"/>
+              </linearGradient>
+              <linearGradient id="wgLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#2BC56F"/>
+                <stop offset="100%" stop-color="#0E8FE0"/>
+              </linearGradient>
+            </defs>
+            <path d="M2,10 C18,12 26,22 40,30 C54,38 64,42 94,46 L94,54 L2,54 Z" fill="url(#wgArea)"/>
+            <line x1="2" y1="46" x2="94" y2="46" stroke="#7FB98C" stroke-width="1.5" stroke-dasharray="4 4" opacity=".75"/>
+            <path d="M2,10 C18,12 26,22 40,30 C54,38 64,42 94,46" fill="none" stroke="url(#wgLine)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="2" cy="10" r="3.4" fill="#2BC56F"/>
+            <circle cx="94" cy="46" r="3.6" fill="#0E8FE0" stroke="#fff" stroke-width="1.6"/>
+          </svg>
+          <div style="flex:1; min-width:0;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#7C9080;">{{ summaryLabel }}</div>
+            <div style="display:flex; align-items:baseline; gap:5px; margin-top:2px;">
+              <span ref="{{ setToLose }}" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:30px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F,#0E8FE0); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ summaryValue }}</span>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:15px; color:#7C9080;">{{ summaryUnit }}</span>
+            </div>
+          </div>
+          <span style="flex:none; font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'FILL' 1,'wght' 500; color:#9DB2A2;">{{ summaryIcon }}</span>
+        </div>
+
+        <!-- ABOUT YOU -->
+        <div class="sc-rise" style="animation-delay:.26s; margin-top:22px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:17px; letter-spacing:-.02em; color:#23332A;">About you</span>
+            <span style="flex:1; height:1.5px; border-radius:2px; background:linear-gradient(90deg,#D4E4CE,rgba(212,228,206,0));"></span>
+          </div>
+          <p style="margin:6px 0 0; font-size:12.5px; font-weight:500; line-height:1.45; color:#9DB2A2; max-width:300px;">Used to tailor your daily targets — edit anytime in Settings.</p>
+
+          <!-- sex + age -->
+          <div style="display:flex; gap:11px; margin-top:14px;">
+            <!-- sex -->
+            <div style="flex:1; min-width:0; padding:12px 13px 13px; border-radius:18px; background:#fff; box-shadow:inset 0 0 0 1.5px #E2ECDF;">
+              <div style="font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#A6BBA8;">Sex</div>
+              <div style="display:flex; gap:0; margin-top:9px; padding:3px; border-radius:100px; background:#EEF4EB;">
+                <sc-for list="{{ sexSegs }}" as="s" hint-placeholder-count="2">
+                  <button onClick="{{ s.select }}" style="flex:1; height:34px; border:none; border-radius:100px; cursor:pointer; background:{{ s.bg }}; color:{{ s.color }}; box-shadow:{{ s.shadow }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; transition:background .2s, color .2s;" style-active="transform:scale(.96);">{{ s.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <!-- age -->
+            <div style="flex:none; width:138px; padding:12px 13px 11px; border-radius:18px; background:#fff; box-shadow:inset 0 0 0 1.5px #E2ECDF;">
+              <div style="font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#A6BBA8;">Age</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:5px;">
+                <button onClick="{{ ageDec }}" style="width:32px; height:32px; flex:none; border:none; border-radius:50%; cursor:pointer; background:#EEF4EB; color:#5E7A66; display:flex; align-items:center; justify-content:center;" style-hover="background:#E2EEDD;" style-active="transform:scale(.9);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">remove</span>
+                </button>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:27px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F,#0E8FE0); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ age }}</span>
+                <button onClick="{{ ageInc }}" style="width:32px; height:32px; flex:none; border:none; border-radius:50%; cursor:pointer; background:#EEF4EB; color:#5E7A66; display:flex; align-items:center; justify-content:center;" style-hover="background:#E2EEDD;" style-active="transform:scale(.9);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- height -->
+          <div style="margin-top:11px; padding:13px 15px 6px; border-radius:18px; background:#fff; box-shadow:inset 0 0 0 1.5px #E2ECDF;">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px;">
+              <div style="font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#A6BBA8; padding-bottom:6px;">Height</div>
+              <div style="display:flex; align-items:baseline; gap:5px;">
+                <span ref="{{ setHeight }}" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:30px; line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F 0%,#16C2A6 50%,#0E8FE0 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ heightNum }}</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#9DB2A2;">{{ heightUnit }}</span>
+              </div>
+            </div>
+            <div style="position:relative; height:60px; margin-top:6px;">
+              <div style="position:absolute; left:50%; top:2px; transform:translateX(-50%); z-index:3; pointer-events:none; display:flex; flex-direction:column; align-items:center;">
+                <div style="width:9px; height:9px; border-radius:50%; background:#16C2A6; box-shadow:0 2px 6px rgba(22,194,166,.5);"></div>
+                <div style="width:3px; height:34px; margin-top:1px; border-radius:3px; background:linear-gradient(#16C2A6,#2BC56F);"></div>
+              </div>
+              <div style="position:absolute; left:0; top:0; bottom:0; width:44px; z-index:2; pointer-events:none; background:linear-gradient(90deg,#fff 12%,rgba(255,255,255,0));"></div>
+              <div style="position:absolute; right:0; top:0; bottom:0; width:44px; z-index:2; pointer-events:none; background:linear-gradient(270deg,#fff 12%,rgba(255,255,255,0));"></div>
+              <div ref="{{ hRuler.setRef }}" class="sc-ruler" onScroll="{{ hRuler.onScroll }}" onPointerDown="{{ hRuler.onDown }}" onPointerMove="{{ hRuler.onMove }}" onPointerUp="{{ hRuler.onUp }}" onPointerCancel="{{ hRuler.onUp }}" style="position:absolute; inset:0; overflow-x:auto; overflow-y:hidden; display:flex; align-items:flex-end; cursor:grab;">
+                <div style="flex:none; width:153px;"></div>
+                <sc-for list="{{ hRuler.ticks }}" as="t" hint-placeholder-count="40">
+                  <div style="flex:none; width:{{ hRuler.tickW }}px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:54px;">
+                    <div style="width:{{ t.barW }}px; height:{{ t.barH }}px; border-radius:2px; background:{{ t.barColor }};"></div>
+                    <div style="height:15px; line-height:15px; font-family:'Inter',sans-serif; font-size:9.5px; font-weight:700; color:#A2B6A6; font-variant-numeric:tabular-nums;">{{ t.label }}</div>
+                  </div>
+                </sc-for>
+                <div style="flex:none; width:153px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- activity -->
+          <div style="margin-top:11px; padding:13px 15px 15px; border-radius:18px; background:#fff; box-shadow:inset 0 0 0 1.5px #E2ECDF;">
+            <div style="font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#A6BBA8;">Activity level</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+              <sc-for list="{{ activities }}" as="a" hint-placeholder-count="4">
+                <button onClick="{{ a.select }}" style="display:inline-flex; align-items:center; gap:7px; height:38px; padding:0 15px; border:none; border-radius:100px; cursor:pointer; background:{{ a.bg }}; color:{{ a.color }}; box-shadow:{{ a.ring }}; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; letter-spacing:-.005em; transition:background .2s, color .2s, box-shadow .2s;" style-active="transform:scale(.96);">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 600;">{{ a.icon }}</span>
+                  {{ a.label }}
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- DAILY TARGET RESULT -->
+          <div style="margin-top:11px; padding:15px 17px; border-radius:20px; background:linear-gradient(135deg,rgba(43,197,111,.1),rgba(14,143,224,.09)); box-shadow:inset 0 0 0 1px rgba(40,80,55,.08);">
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px;">
+              <div style="min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:16px; font-variation-settings:'FILL' 1,'wght' 600; color:#16C2A6;">local_fire_department</span>
+                  <span style="font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#7C9080;">Daily target</span>
+                </div>
+                <div style="display:flex; align-items:baseline; gap:5px; margin-top:3px;">
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:34px; line-height:1; letter-spacing:-.035em; font-variant-numeric:tabular-nums; background:linear-gradient(135deg,#2BC56F,#0E8FE0); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{ kcal }}</span>
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#7C9080;">kcal/day</span>
+                </div>
+              </div>
+              <div style="flex:none; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 14px; border-radius:14px; background:{{ bmiBg }};">
+                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:18px; line-height:1; letter-spacing:-.02em; color:{{ bmiColor }}; font-variant-numeric:tabular-nums;">{{ bmiValue }}</span>
+                <span style="font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:{{ bmiColor }}; margin-top:3px;">BMI · {{ bmiCat }}</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:13px;">
+              <sc-for list="{{ macros }}" as="m" hint-placeholder-count="3">
+                <div style="flex:1; padding:9px 0; border-radius:13px; background:rgba(255,255,255,.65); display:flex; flex-direction:column; align-items:center;">
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; line-height:1; letter-spacing:-.02em; color:{{ m.color }}; font-variant-numeric:tabular-nums;">{{ m.grams }}<span style="font-size:11px; font-weight:700; color:#9DB2A2;">g</span></span>
+                  <span style="font-size:9.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#9DB2A2; margin-top:4px;">{{ m.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div style="position:relative; z-index:2; flex:none; padding:12px 24px 24px; background:linear-gradient(to top,#F4F8F1 64%,rgba(244,248,241,0));">
+        <button onClick="{{ start }}" style="width:100%; height:62px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F 0%,#16C2A6 52%,#0E8FE0 100%); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:18px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 16px 34px -8px rgba(22,194,166,.6);" style-hover="box-shadow:0 20px 40px -8px rgba(22,194,166,.72); transform:translateY(-1px);" style-active="transform:translateY(1px) scale(.99);">
+          <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 600;">rocket_launch</span>
+          Start my challenge
+        </button>
+        <div style="text-align:center; margin-top:10px; font-size:12px; font-weight:600; color:#9DB2A2; letter-spacing:-.005em;">You can skip the extras and add them later</div>
+      </div>
+
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;startWeightKg&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:78.6,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:30,&quot;max&quot;:180,&quot;step&quot;:0.1},&quot;goalWeightKg&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:72.0,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:30,&quot;max&quot;:180,&quot;step&quot;:0.1},&quot;defaultUnit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;kg&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;kg&quot;,&quot;lb&quot;]},&quot;sex&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;female&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;female&quot;,&quot;male&quot;]},&quot;age&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:30,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:13,&quot;max&quot;:100},&quot;heightCm&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:175,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:120,&quot;max&quot;:220},&quot;activity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;moderate&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;sedentary&quot;,&quot;light&quot;,&quot;moderate&quot;,&quot;very&quot;]}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.RULER_W = {
+      kg: { min:30, max:180, step:0.1, tick:0.5, major:5,  pxPerUnit:24 },
+      lb: { min:66, max:400, step:0.2, tick:1,   major:10, pxPerUnit:11 },
+    };
+    this.RULER_H = {
+      cm: { min:120, max:220, step:1, tick:1, major:10, mid:5, pxPerUnit:7 },
+      in: { min:48,  max:84,  step:1, tick:1, major:12, mid:6, pxPerUnit:18 },
+    };
+    this.ACT_FACTOR = { sedentary:1.2, light:1.375, moderate:1.55, very:1.725 };
+
+    this._curEl = null;
+    this._goalEl = null;
+    this._toLoseEl = null;
+    this._heightEl = null;
+    this._rulers = { weight:{ el:null, drag:null, snapping:false, live:null, endT:null },
+                     height:{ el:null, drag:null, snapping:false, live:null, endT:null } };
+    this._rh = {};
+
+    this.state = {
+      unit: (props.defaultUnit === 'lb') ? 'lb' : 'kg',
+      currentKg: props.startWeightKg ?? 78.6,
+      goalKg: props.goalWeightKg ?? 72.0,
+      activeField: 'current',
+      sex: (props.sex === 'male') ? 'male' : 'female',
+      age: props.age ?? 30,
+      heightCm: props.heightCm ?? 175,
+      activity: props.activity ?? 'moderate',
+    };
+  }
+
+  componentDidMount(){
+    setTimeout(()=>{ this.positionRuler('weight'); this.positionRuler('height'); }, 0);
+  }
+  componentDidUpdate(prevP, prevS){
+    if(prevS.unit !== this.state.unit){
+      this.positionRuler('weight'); this.positionRuler('height');
+    } else if(prevS.activeField !== this.state.activeField){
+      this.positionRuler('weight');
+    }
+  }
+  componentWillUnmount(){
+    clearTimeout(this._rulers.weight.endT);
+    clearTimeout(this._rulers.height.endT);
+  }
+
+  /* ---- unit helpers ---- */
+  toKg(v){ return this.state.unit === 'kg' ? v : v / 2.2046226; }
+  fromKg(kg){ return this.state.unit === 'kg' ? kg : kg * 2.2046226; }
+  fmt(v){ return (Math.round(v * 10) / 10).toFixed(1); }
+  heightKind(){ return this.state.unit === 'kg' ? 'cm' : 'in'; }
+  heightDisplay(){ return this.heightKind() === 'cm' ? this.state.heightCm : this.state.heightCm / 2.54; }
+  heightNumStr(v){
+    if(this.heightKind() === 'cm') return String(Math.round(v));
+    let t = Math.round(v), ft = Math.floor(t / 12), inch = t - ft * 12;
+    if(inch === 12){ ft++; inch = 0; }
+    return ft + '′' + inch + '″';
+  }
+
+  /* ---- generic ruler ---- */
+  cfgFor(key){ return key === 'weight' ? this.RULER_W[this.state.unit] : this.RULER_H[this.heightKind()]; }
+  valueFor(key){
+    if(key === 'weight'){
+      const kg = this.state.activeField === 'current' ? this.state.currentKg : this.state.goalKg;
+      return this.fromKg(kg);
+    }
+    return this.heightDisplay();
+  }
+  handlers(key){
+    if(!this._rh[key]){
+      this._rh[key] = {
+        setRef: (el)=>{
+          const r = this._rulers[key];
+          const fresh = el && el !== r.el;
+          r.el = el;
+          if(fresh) setTimeout(()=> this.positionRuler(key), 0);
+        },
+        onScroll: ()=> this.onRulerScroll(key),
+        onDown: (e)=> this.onRulerDown(key, e),
+        onMove: (e)=> this.onRulerMove(key, e),
+        onUp: ()=> this.onRulerUp(key),
+      };
+    }
+    return this._rh[key];
+  }
+
+  positionRuler(key, tries){
+    const cfg = this.cfgFor(key), r = this._rulers[key], sc = r.el;
+    if(!sc) return;
+    const target = (this.valueFor(key) - cfg.min) * cfg.pxPerUnit;
+    if(sc.scrollWidth - sc.clientWidth < target - 1 && (tries || 0) < 40){
+      setTimeout(()=> this.positionRuler(key, (tries || 0) + 1), 16);
+      return;
+    }
+    r.snapping = true;
+    sc.scrollLeft = target;
+    setTimeout(()=> { r.snapping = false; }, 60);
+  }
+
+  onRulerScroll(key){
+    const r = this._rulers[key];
+    if(r.snapping) return;
+    const cfg = this.cfgFor(key), sc = r.el;
+    if(!sc) return;
+    let v = cfg.min + sc.scrollLeft / cfg.pxPerUnit;
+    v = Math.round(v / cfg.step) * cfg.step;
+    v = Math.max(cfg.min, Math.min(cfg.max, v));
+    r.live = v;
+    this.paintLive(key, v);
+    clearTimeout(r.endT);
+    r.endT = setTimeout(()=> this.commitVal(key), 140);
+  }
+
+  paintLive(key, v){
+    if(key === 'weight'){
+      const f = this.state.activeField;
+      const el = f === 'current' ? this._curEl : this._goalEl;
+      if(el) el.textContent = this.fmt(v);
+      const curD  = f === 'current' ? v : this.fromKg(this.state.currentKg);
+      const goalD = f === 'goal'    ? v : this.fromKg(this.state.goalKg);
+      if(this._toLoseEl) this._toLoseEl.textContent = this.fmt(Math.abs(curD - goalD));
+    } else {
+      if(this._heightEl) this._heightEl.textContent = this.heightNumStr(v);
+    }
+  }
+
+  commitVal(key){
+    const r = this._rulers[key];
+    if(r.live == null) return;
+    if(key === 'weight'){
+      const kg = this.toKg(r.live);
+      if(this.state.activeField === 'current') this.setState({ currentKg: kg });
+      else this.setState({ goalKg: kg });
+    } else {
+      const cm = this.heightKind() === 'cm' ? r.live : r.live * 2.54;
+      this.setState({ heightCm: cm });
+    }
+    r.live = null;
+  }
+
+  /* ---- drag (desktop) ---- */
+  onRulerDown(key, e){
+    const r = this._rulers[key];
+    if(!r.el) return;
+    r.drag = { x:e.clientX, sl:r.el.scrollLeft };
+    try{ r.el.setPointerCapture(e.pointerId); }catch(_){}
+    r.el.style.cursor = 'grabbing';
+  }
+  onRulerMove(key, e){
+    const r = this._rulers[key];
+    if(!r.drag || !r.el) return;
+    r.el.scrollLeft = r.drag.sl - (e.clientX - r.drag.x);
+  }
+  onRulerUp(key){
+    const r = this._rulers[key];
+    if(r.drag && r.el) r.el.style.cursor = 'grab';
+    r.drag = null;
+  }
+
+  buildTicks(key){
+    const cfg = this.cfgFor(key), ticks = [], eps = 1e-6;
+    const n = Math.round((cfg.max - cfg.min) / cfg.tick);
+    for(let i=0;i<=n;i++){
+      const val = +(cfg.min + i * cfg.tick).toFixed(2);
+      const isMajor = Math.abs(val % cfg.major) < eps;
+      const isMid = cfg.mid ? Math.abs(val % cfg.mid) < eps : (Math.abs(val % 1) < eps);
+      let barH, barW, barColor, label = '';
+      if(isMajor){
+        barH = key === 'weight' ? 30 : 26; barW = 2.4; barColor = '#5E7A66';
+        label = (key === 'height' && this.heightKind() === 'in') ? (val/12) + '′' : String(Math.round(val));
+      } else if(isMid){
+        barH = key === 'weight' ? 19 : 16; barW = 1.8; barColor = '#8FAA92';
+      } else {
+        barH = key === 'weight' ? 12 : 10; barW = 1.5; barColor = '#C6D6C2';
+      }
+      ticks.push({ key:i, barH, barW, barColor, label });
+    }
+    return ticks;
+  }
+
+  /* ---- interactions ---- */
+  selectField(f){ if(this.state.activeField !== f) this.setState({ activeField: f }); }
+  setUnit(u){ if(this.state.unit !== u) this.setState({ unit: u }); }
+  setSex(s){ if(this.state.sex !== s) this.setState({ sex: s }); }
+  setActivity(a){ if(this.state.activity !== a) this.setState({ activity: a }); }
+  ageInc = ()=> this.setState(s=>({ age: Math.min(100, s.age + 1) }));
+  ageDec = ()=> this.setState(s=>({ age: Math.max(13, s.age - 1) }));
+  back = ()=>{};
+  start = ()=>{};
+
+  renderVals(){
+    const { unit, currentKg, goalKg, activeField, sex, age, heightCm, activity } = this.state;
+    const accent = 'linear-gradient(135deg,#2BC56F,#16C2A6)';
+
+    /* unit segmented */
+    const unitSegs = ['kg','lb'].map(u=>{
+      const sel = unit === u;
+      return { label:u, select:()=> this.setUnit(u),
+        bg: sel ? accent : 'transparent', color: sel ? '#fff' : '#6E8674',
+        shadow: sel ? '0 4px 10px -3px rgba(22,194,166,.55)' : 'none' };
+    });
+
+    /* weight field cards */
+    const fieldMeta = {
+      current: { label:'Current weight', sub:'Where you are now',  icon:'my_location', color:'#16C2A6' },
+      goal:    { label:'Goal weight',    sub:"Where you're headed", icon:'flag',        color:'#0E8FE0' },
+    };
+    const fields = ['current','goal'].map(key=>{
+      const active = activeField === key, m = fieldMeta[key];
+      const kg = key === 'current' ? currentKg : goalKg;
+      return {
+        key, label:m.label, sub:m.sub, icon:m.icon,
+        iconColor: active ? m.color : '#9DB2A2',
+        iconBg: active ? 'rgba(22,194,166,.12)' : 'rgba(124,144,128,.1)',
+        valueText: this.fmt(this.fromKg(kg)), unit,
+        op: active ? '1' : '.4', unitOp: active ? '1' : '.6',
+        select: ()=> this.selectField(key),
+        setRef: (el)=>{ if(key === 'current') this._curEl = el; else this._goalEl = el; },
+        cardBg: active ? '#fff' : 'rgba(255,255,255,.5)',
+        ring: active ? 'inset 0 0 0 2px #2BC56F, 0 12px 26px -12px rgba(40,80,55,.3)' : 'inset 0 0 0 1.5px #E2ECDF',
+      };
+    });
+
+    /* summary */
+    const curD = this.fromKg(currentKg), goalD = this.fromKg(goalKg);
+    const diff = curD - goalD;
+    const losing = diff > 0.05, gaining = diff < -0.05;
+    const summaryLabel = losing ? 'To lose' : gaining ? 'To gain' : 'Maintaining';
+
+    /* sex segmented */
+    const sexSegs = [{k:'female',l:'Female'},{k:'male',l:'Male'}].map(o=>{
+      const sel = sex === o.k;
+      return { label:o.l, select:()=> this.setSex(o.k),
+        bg: sel ? accent : 'transparent', color: sel ? '#fff' : '#6E8674',
+        shadow: sel ? '0 3px 9px -3px rgba(22,194,166,.5)' : 'none' };
+    });
+
+    /* activity chips */
+    const actMeta = [
+      { k:'sedentary', l:'Sedentary', icon:'chair' },
+      { k:'light',     l:'Light',     icon:'directions_walk' },
+      { k:'moderate',  l:'Moderate',  icon:'directions_run' },
+      { k:'very',      l:'Very active', icon:'exercise' },
+    ];
+    const activities = actMeta.map(a=>{
+      const sel = activity === a.k;
+      return { label:a.l, icon:a.icon, select:()=> this.setActivity(a.k),
+        bg: sel ? accent : '#F3F8F0', color: sel ? '#fff' : '#5E7A66',
+        ring: sel ? '0 6px 14px -5px rgba(22,194,166,.5)' : 'inset 0 0 0 1.5px #E2ECDF' };
+    });
+
+    /* BMI */
+    const m = heightCm / 100, bmi = currentKg / (m * m);
+    let bmiCat = 'Healthy', bmiColor = '#1E9E5E', bmiBg = 'rgba(43,197,111,.14)';
+    if(bmi < 18.5){ bmiCat='Low';  bmiColor='#0E8FE0'; bmiBg='rgba(14,143,224,.12)'; }
+    else if(bmi < 25){ bmiCat='Healthy'; bmiColor='#1E9E5E'; bmiBg='rgba(43,197,111,.14)'; }
+    else if(bmi < 30){ bmiCat='Over'; bmiColor='#E8893C'; bmiBg='rgba(232,137,60,.14)'; }
+    else { bmiCat='High'; bmiColor='#EB5757'; bmiBg='rgba(235,87,87,.14)'; }
+
+    /* daily calorie budget — Mifflin-St Jeor */
+    const bmr = 10 * currentKg + 6.25 * heightCm - 5 * age + (sex === 'male' ? 5 : -161);
+    const kcalRaw = bmr * (this.ACT_FACTOR[activity] || 1.55);
+    const kcal = Math.round(kcalRaw / 10) * 10;
+    const macros = [
+      { label:'Protein', grams: Math.round(kcal * 0.30 / 4), color:'#1E9E5E' },
+      { label:'Carbs',   grams: Math.round(kcal * 0.40 / 4), color:'#0E8FE0' },
+      { label:'Fat',     grams: Math.round(kcal * 0.30 / 9), color:'#E8893C' },
+    ];
+
+    return {
+      back: this.back, start: this.start,
+      unitSegs, fields,
+      summaryLabel, summaryValue: this.fmt(Math.abs(diff)), summaryUnit: unit,
+      summaryIcon: losing ? 'trending_down' : gaining ? 'trending_up' : 'trending_flat',
+      setToLose: (el)=>{ this._toLoseEl = el; },
+      // weight ruler
+      wRuler: Object.assign({}, this.handlers('weight'), {
+        caption: 'Adjust ' + (activeField === 'current' ? 'current weight' : 'goal weight'),
+        ticks: this.buildTicks('weight'),
+        tickW: this.RULER_W[unit].pxPerUnit * this.RULER_W[unit].tick,
+      }),
+      // about you
+      sexSegs, age, ageInc: this.ageInc, ageDec: this.ageDec,
+      activities,
+      setHeight: (el)=>{ this._heightEl = el; },
+      heightNum: this.heightNumStr(this.heightDisplay()),
+      heightUnit: this.heightKind() === 'in' ? '' : 'cm',
+      hRuler: Object.assign({}, this.handlers('height'), {
+        ticks: this.buildTicks('height'),
+        tickW: this.cfgFor('height').pxPerUnit * this.cfgFor('height').tick,
+      }),
+      bmiValue: (Math.round(bmi * 10) / 10).toFixed(1), bmiCat, bmiColor, bmiBg,
+      kcal: kcal.toLocaleString('en-US'),
+      macros,
+    };
+  }
+}
+</script>
+</body>
+</html>

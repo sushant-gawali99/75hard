@@ -1,2 +1,28 @@
 # Visual brainstorming companion working files
 .superpowers/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.turbo/
+
+# Expo / React Native
+.expo/
+*.orig.*
+web-build/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & coverage
+*.log
+npm-debug.*
+coverage/
+
+# OS
+.DS_Store

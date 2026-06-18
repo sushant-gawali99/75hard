@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    @keyframes confettiFall{
+      0%{ transform:translateY(-20px) rotate(0deg); opacity:0; }
+      12%{ opacity:1; }
+      100%{ transform:translateY(720px) rotate(640deg); opacity:0; }
+    }
+    @keyframes popIn{
+      0%{ transform:scale(.6); opacity:0; }
+      60%{ transform:scale(1.08); }
+      100%{ transform:scale(1); opacity:1; }
+    }
+    @keyframes softFloat{
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-4px); }
+    }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:6px 18px 22px;">
+
+        <!-- top bar -->
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:8px 2px 2px;">
+          <div style="min-width:0;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:23px; line-height:1.15; letter-spacing:-.02em; color:#23332A;">Good morning, Sushant</div>
+            <div style="font-size:13px; font-weight:500; color:#7C9080; margin-top:3px;">{{ todayDate }}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:9px; flex:none;">
+            <div style="display:flex; align-items:center; gap:5px; height:38px; padding:0 12px 0 10px; border-radius:100px; background:#FBF1DD; border:1px solid #F2E2C2;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:19px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+              <span style="font-weight:700; font-size:15px; color:#B97E22; font-variant-numeric:tabular-nums;">41</span>
+            </div>
+            <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Plus Jakarta Sans'; font-weight:800; font-size:17px; box-shadow:0 6px 16px rgba(22,194,166,.35); border:2px solid #fff;">S</div>
+          </div>
+        </div>
+
+        <!-- philosophy banner -->
+        <div style="margin-top:16px; display:flex; gap:11px; align-items:flex-start; padding:14px 16px; border-radius:20px; background:#EAF3E7; border:1px solid #DCEBD6;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'FILL' 1,'wght' 500; color:#21B96B; margin-top:1px;">format_quote</span>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:14.5px; line-height:1.45; letter-spacing:-.01em; color:#3A4A40;">Real change happens only by following <span style="background:linear-gradient(135deg,#2BC56F,#16C2A6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; font-weight:800;">the process daily.</span></div>
+        </div>
+
+        <!-- PROGRESS HERO -->
+        <div style="margin-top:14px; padding:20px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); display:flex; gap:18px; align-items:center;">
+          <!-- ring -->
+          <div ref="{{ setRingRef }}" style="position:relative; width:150px; height:150px; flex:none;">
+            <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2BC56F"></stop>
+                  <stop offset="100%" stop-color="#16C2A6"></stop>
+                </linearGradient>
+              </defs>
+              <circle cx="75" cy="75" r="64" fill="none" stroke="#DBEBD6" stroke-width="13"></circle>
+              <circle cx="75" cy="75" r="64" fill="none" stroke="url(#ringGrad)" stroke-width="13" stroke-linecap="round" style="stroke-dasharray:{{ ringC }}; stroke-dashoffset:{{ ringOffset }}; transition:stroke-dashoffset 1.7s cubic-bezier(.22,1,.36,1);"></circle>
+            </svg>
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+              <span style="font-size:10px; font-weight:700; letter-spacing:.14em; color:#7C9080;">DAY</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:38px; line-height:1; letter-spacing:-.03em; color:#23332A; font-variant-numeric:tabular-nums;">41</span>
+              <span style="font-size:12px; font-weight:600; color:#7C9080; margin-top:2px; font-variant-numeric:tabular-nums;">of 75</span>
+            </div>
+          </div>
+          <!-- stats -->
+          <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:15px;">
+            <div>
+              <div style="font-size:10px; font-weight:700; letter-spacing:.13em; color:#7C9080;">DAY STREAK</div>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:3px;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+                <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:24px; letter-spacing:-.02em; color:#23332A; font-variant-numeric:tabular-nums;">41</span>
+                <span style="font-size:13px; font-weight:600; color:#7C9080;">days</span>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <span style="font-size:10px; font-weight:700; letter-spacing:.13em; color:#7C9080;">TODAY</span>
+                <span style="font-size:12px; font-weight:700; color:#21B96B; font-variant-numeric:tabular-nums;">{{ doneLabel }}</span>
+              </div>
+              <div style="margin-top:7px; height:8px; border-radius:100px; background:#DBEBD6; overflow:hidden;">
+                <div style="height:100%; border-radius:100px; background:linear-gradient(135deg,#2BC56F,#16C2A6); width:{{ todayBarPct }}; transition:width .6s cubic-bezier(.34,1.4,.5,1);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODAY'S PROCESS -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin:22px 4px 10px;">
+          <span style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C9080;">TODAY'S PROCESS</span>
+          <span style="font-size:11px; font-weight:700; letter-spacing:.04em; color:#A6B6A8; font-variant-numeric:tabular-nums;">{{ doneLabel }}</span>
+        </div>
+
+        <div style="border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); padding:4px 6px 14px; overflow:hidden;">
+          <sc-for list="{{ habits }}" as="item" hint-placeholder-count="4">
+            <div onClick="{{ item.toggle }}" style="display:flex; align-items:center; gap:12px; padding:11px 10px; cursor:pointer; border-top:{{ item.borderTop }};">
+              <!-- checkbox (tap target) -->
+              <div style="width:44px; height:44px; flex:none; display:flex; align-items:center; justify-content:center; margin:-2px 0;">
+                <div ref="{{ item.setRef }}" style="width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none; background:{{ item.boxBg }}; border:2px solid {{ item.boxBorder }}; box-shadow:{{ item.boxShadow }};">
+                  <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 700; color:#fff; opacity:{{ item.checkOpacity }}; transition:opacity .18s;">check</span>
+                </div>
+              </div>
+              <!-- rule icon -->
+              <div style="width:38px; height:38px; flex:none; border-radius:12px; background:{{ item.chipBg }}; display:flex; align-items:center; justify-content:center;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:21px; font-variation-settings:'FILL' 0,'wght' 500; color:{{ item.iconColor }};">{{ item.icon }}</span>
+              </div>
+              <!-- name -->
+              <div style="flex:1; min-width:0;">
+                <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; letter-spacing:-.01em; color:{{ item.nameColor }}; text-decoration:{{ item.nameDecoration }}; transition:color .2s;">{{ item.name }}</div>
+              </div>
+              <!-- per-rule streak -->
+              <div style="display:flex; align-items:center; gap:3px; flex:none; padding-right:4px;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500; color:#E0A33A;">local_fire_department</span>
+                <span style="font-weight:700; font-size:14px; color:#B97E22; font-variant-numeric:tabular-nums;">{{ item.streak }}</span>
+              </div>
+            </div>
+          </sc-for>
+
+          <!-- footer: CTA or completion banner -->
+          <div style="padding:8px 6px 2px;">
+            <sc-if value="{{ notAllDone }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ openCheckin }}" style="width:100%; height:52px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15.5px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 22px -6px rgba(22,194,166,.55);">
+                Open check-in
+                <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600;">arrow_forward</span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; align-items:center; gap:11px; padding:14px 16px; border-radius:18px; background:#DCF0D8; border:1px solid #C6E6C0; animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:26px; font-variation-settings:'FILL' 1,'wght' 500; color:#21B96B;">task_alt</span>
+                <div>
+                  <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15px; letter-spacing:-.01em; color:#1E6B3C;">Day complete.</div>
+                  <div style="font-size:12.5px; font-weight:500; color:#4C8A5E; margin-top:1px;">See you tomorrow. Don't break the chain.</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <!-- QUICK WEIGHT ADD -->
+        <div onClick="{{ openWeight }}" style="margin-top:16px; padding:16px 18px; border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); display:flex; align-items:center; gap:14px; cursor:pointer;">
+          <div style="width:42px; height:42px; flex:none; border-radius:14px; background:#EAF3E7; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 500; color:#21B96B;">monitor_weight</span>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:11px; font-weight:700; letter-spacing:.1em; color:#7C9080;">TODAY'S WEIGHT</div>
+            <div style="display:flex; align-items:baseline; gap:8px; margin-top:2px;">
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:22px; letter-spacing:-.02em; color:#23332A; font-variant-numeric:tabular-nums;">{{ weightLabel }}</span>
+              <span style="display:inline-flex; align-items:center; gap:1px; font-size:12.5px; font-weight:700; color:#21B96B;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:15px; font-variation-settings:'FILL' 1,'wght' 600;">south</span>0.3 kg
+              </span>
+            </div>
+          </div>
+          <div onClick="{{ addWeight }}" style="width:46px; height:46px; flex:none; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 18px -4px rgba(22,194,166,.5);">
+            <span style="font-family:'Material Symbols Rounded'; font-size:24px; font-variation-settings:'wght' 600; color:#fff;">add</span>
+          </div>
+        </div>
+
+        <!-- motivation -->
+        <div style="margin-top:22px; text-align:center; padding:0 12px;">
+          <div ref="{{ setMotivRef }}" style="font-family:'Plus Jakarta Sans'; font-weight:600; font-size:14px; letter-spacing:-.01em; color:#8AA08E;">{{ motivation }}</div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div style="flex:none; height:74px; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-top:1px solid #E6EFE2; display:flex; align-items:center; justify-content:space-around; padding:0 8px 8px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; padding:0 18px; border-radius:100px; background:#DCF0D8; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:#1E8A4C;">wb_sunny</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#1E8A4C; letter-spacing:.01em;">Today</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">local_fire_department</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Streaks</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">monitor_weight</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Weight</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px; width:68px; cursor:pointer;">
+          <div style="height:32px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">settings</span>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#7C9080;">Settings</span>
+        </div>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:6;"></div>
+
+      <!-- CONFETTI overlay -->
+      <sc-if value="{{ celebrate }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:20;">
+          <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
+            <div style="position:absolute; top:120px; left:{{ c.left }}; width:{{ c.size }}; height:{{ c.size }}; border-radius:{{ c.radius }}; background:{{ c.color }}; animation:confettiFall {{ c.dur }} cubic-bezier(.3,.5,.6,1) {{ c.delay }} forwards;"></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this._boxes = [];
+    this._ringEl = null;
+    this._motivEl = null;
+    this.lines = [
+      'You showed up today.',
+      'One day at a time.',
+      'Small steps, every day.',
+      "Don't break the chain.",
+    ];
+    const palette = ['#21B96B','#16C2A6','#E0A33A','#2BC56F','#7FD9B0'];
+    this.confetti = Array.from({length:22}, (_,i)=>{
+      const seed = (i*73)%100;
+      return {
+        left: (3 + (seed*0.92)).toFixed(1) + '%',
+        size: (7 + (i%4)*2) + 'px',
+        radius: i%3===0 ? '2px' : '50%',
+        color: palette[i%palette.length],
+        dur: (1.5 + (i%5)*0.22).toFixed(2) + 's',
+        delay: ((i%7)*0.09).toFixed(2) + 's',
+      };
+    });
+    this.state = {
+      ringReady: false,
+      celebrate: false,
+      motivIdx: 0,
+      habits: [
+        { name:'Drink 3L of water',   icon:'water_drop',      streak:41, done:true,
+          iconColor:'#0E8FE0', chipBg:'#DCEEFC', grad:'linear-gradient(135deg,#36C0F5,#0E8FE0)', glow:'rgba(14,143,224,.55)' },
+        { name:'Walk 30 minutes',     icon:'directions_walk', streak:28, done:true,
+          iconColor:'#13B85F', chipBg:'#DFF4E5', grad:'linear-gradient(135deg,#1FD976,#08C2A0)', glow:'rgba(16,200,150,.55)' },
+        { name:'No sugar after 7pm',  icon:'cookie',          streak:12, done:true,
+          iconColor:'#F0992A', chipBg:'#FDEBCF', grad:'linear-gradient(135deg,#FFB23E,#F2715A)', glow:'rgba(240,140,42,.55)' },
+        { name:'Lights out by 11pm',  icon:'bedtime',         streak:41, done:false,
+          iconColor:'#6A5CF0', chipBg:'#E8E6FD', grad:'linear-gradient(135deg,#8A78FF,#6A5CF0)', glow:'rgba(106,92,240,.55)' },
+      ],
+    };
+  }
+
+  componentDidMount(){
+    setTimeout(()=> this.setState({ ringReady:true }), 80);
+    this._timer = setInterval(()=>{
+      this.setState(s=>({ motivIdx: (s.motivIdx+1) % this.lines.length }));
+      if(this._motivEl){
+        this._motivEl.animate(
+          [{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'translateY(0)'}],
+          {duration:520, easing:'cubic-bezier(.22,1,.36,1)'}
+        );
+      }
+    }, 4200);
+  }
+  componentWillUnmount(){ clearInterval(this._timer); }
+
+  setRingRef = (el)=>{ this._ringEl = el; };
+  setMotivRef = (el)=>{ this._motivEl = el; };
+
+  toggle(i){
+    const el = this._boxes[i];
+    const wasAll = this.state.habits.every(h=>h.done);
+    this.setState(s=>{
+      const habits = s.habits.map((h,idx)=> idx===i ? {...h, done:!h.done} : h);
+      const nowAll = habits.every(h=>h.done);
+      if(nowAll && !wasAll){
+        this.fireCelebrate();
+        if(this._ringEl){
+          this._ringEl.animate(
+            [{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],
+            {duration:700, easing:'cubic-bezier(.34,1.56,.64,1)'}
+          );
+        }
+      }
+      return { habits };
+    });
+    // bounce the checkbox
+    if(el){
+      el.animate(
+        [{transform:'scale(1)'},{transform:'scale(1.28)'},{transform:'scale(.92)'},{transform:'scale(1)'}],
+        {duration:420, easing:'cubic-bezier(.34,1.56,.64,1)'}
+      );
+    }
+  }
+
+  fireCelebrate(){
+    this.setState({ celebrate:true });
+    clearTimeout(this._celebTimer);
+    this._celebTimer = setTimeout(()=> this.setState({ celebrate:false }), 2900);
+  }
+
+  openCheckin = ()=>{};
+  openWeight = ()=>{};
+  addWeight = (e)=>{ if(e && e.stopPropagation) e.stopPropagation(); };
+
+  renderVals(){
+    const habits = this.state.habits;
+    const done = habits.filter(h=>h.done).length;
+    const total = habits.length;
+    const allDone = done === total;
+
+    // program ring 41/75
+    const ringC = 2 * Math.PI * 64;
+    const ringPct = 41/75;
+    const ringOffset = this.state.ringReady ? ringC * (1 - ringPct) : ringC;
+
+    const items = habits.map((h,i)=>({
+      name: h.name,
+      icon: h.icon,
+      streak: h.streak,
+      borderTop: i===0 ? 'none' : '1px solid #EEF3EA',
+      iconColor: h.iconColor,
+      chipBg: h.chipBg,
+      boxBg: h.done ? h.grad : '#fff',
+      boxBorder: h.done ? 'rgba(0,0,0,0)' : '#CFE2C8',
+      boxShadow: h.done ? ('0 4px 10px -2px ' + h.glow) : 'none',
+      checkOpacity: h.done ? 1 : 0,
+      nameColor: h.done ? '#9DB2A2' : '#23332A',
+      nameDecoration: h.done ? 'line-through' : 'none',
+      toggle: ()=> this.toggle(i),
+      setRef: (el)=>{ this._boxes[i] = el; },
+    }));
+
+    return {
+      todayDate: 'Thursday, June 18',
+      habits: items,
+      doneLabel: done + ' of ' + total + ' done',
+      todayBarPct: Math.round(done/total*100) + '%',
+      allDone,
+      notAllDone: !allDone,
+      ringC,
+      ringOffset,
+      weightLabel: '74.2 kg',
+      celebrate: this.state.celebrate,
+      confetti: this.confetti,
+      motivation: this.lines[this.state.motivIdx],
+      openCheckin: this.openCheckin,
+      openWeight: this.openWeight,
+      addWeight: this.addWeight,
+      setRingRef: this.setRingRef,
+      setMotivRef: this.setMotivRef,
+    };
+  }
+}
+</script>
+</body>
+</html>

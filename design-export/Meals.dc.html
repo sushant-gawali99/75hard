@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block">
+  <style>
+    *{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body{ margin:0; }
+    .pscroll{ scrollbar-width:none; }
+    .pscroll::-webkit-scrollbar{ width:0; height:0; }
+    @keyframes mealIn{ 0%{ opacity:0; transform:translateY(8px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes emptyFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+    @keyframes fabGlow{ 0%,100%{ box-shadow:0 12px 26px -6px rgba(22,194,166,.6); } 50%{ box-shadow:0 14px 32px -4px rgba(22,194,166,.78); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:40px 20px; background:radial-gradient(120% 90% at 50% 0%, #EAF3E7 0%, #E2EEE0 45%, #D6E6D2 100%); font-family:'Inter',system-ui,sans-serif;">
+
+  <!-- PHONE -->
+  <div style="position:relative; width:418px; padding:14px; border-radius:46px; background:linear-gradient(155deg,#26312b,#161e19); box-shadow:0 40px 90px -20px rgba(28,52,38,.55), 0 8px 24px rgba(40,80,55,.18), inset 0 0 0 1.5px rgba(255,255,255,.06);">
+
+    <div data-screen-label="Meals" data-comment-anchor="meals-screen" style="position:relative; width:390px; height:812px; border-radius:34px; overflow:hidden; background:#F4F8F1; display:flex; flex-direction:column;">
+
+      <!-- soft glow -->
+      <div style="position:absolute; top:-170px; left:50%; transform:translateX(-50%); width:520px; height:520px; border-radius:50%; background:radial-gradient(circle at 42% 42%, rgba(43,197,111,.16) 0%, rgba(22,194,166,.10) 42%, rgba(14,143,224,0) 72%); filter:blur(8px); pointer-events:none;"></div>
+
+      <!-- status bar -->
+      <div style="height:44px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; position:relative; z-index:5;">
+        <span style="font-size:14px; font-weight:600; color:#23332A; font-variant-numeric:tabular-nums; letter-spacing:.2px;">9:30</span>
+        <div style="position:absolute; left:50%; top:11px; transform:translateX(-50%); width:11px; height:11px; border-radius:50%; background:#0c120e;"></div>
+        <div style="display:flex; align-items:center; gap:6px; color:#23332A;">
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">signal_cellular_alt</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:17px; font-variation-settings:'FILL' 1,'wght' 500;">wifi</span>
+          <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 1,'wght' 500;">battery_full</span>
+        </div>
+      </div>
+
+      <!-- HEADER -->
+      <div style="flex:none; position:relative; z-index:3; padding:8px 20px 4px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+          <div style="min-width:0;">
+            <h1 style="margin:0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:28px; line-height:1.1; letter-spacing:-.03em; color:#23332A;">Meals</h1>
+            <div style="font-size:13px; font-weight:600; color:#7C9080; margin-top:3px; letter-spacing:-.005em;">{{ dateLabel }}</div>
+          </div>
+          <sc-if value="{{ showTodayShortcut }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ jumpToday }}" style="flex:none; display:flex; align-items:center; gap:5px; height:38px; padding:0 14px 0 11px; border:1px solid #C9E2C2; border-radius:100px; cursor:pointer; background:#fff; box-shadow:0 4px 12px rgba(40,80,55,.07);" style-active="transform:scale(.96);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:18px; font-variation-settings:'FILL' 0,'wght' 600; color:#1E8A4C;">today</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; color:#1E8A4C; letter-spacing:-.01em;">Today</span>
+            </button>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- DATE STRIP -->
+      <div style="flex:none; position:relative; z-index:3; padding:10px 16px 6px;">
+        <div style="display:flex; gap:6px;">
+          <sc-for list="{{ dayStrip }}" as="d" hint-placeholder-count="7">
+            <button onClick="{{ d.select }}" style="flex:1; min-width:0; height:64px; border:none; cursor:pointer; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; background:{{ d.bg }}; box-shadow:{{ d.shadow }}; transition:transform .15s, background .2s;" style-active="transform:scale(.93);">
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:11px; letter-spacing:.04em; color:{{ d.dowColor }};">{{ d.dow }}</span>
+              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:16px; line-height:1; letter-spacing:-.02em; color:{{ d.dateColor }}; font-variant-numeric:tabular-nums;">{{ d.date }}</span>
+              <span style="width:5px; height:5px; border-radius:50%; background:{{ d.dot }};"></span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- SCROLL AREA -->
+      <div class="pscroll" style="position:relative; z-index:2; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:8px 18px 22px;">
+
+        <!-- ===================== LOGGED DAY ===================== -->
+        <sc-if value="{{ dayHasLog }}" hint-placeholder-val="{{ true }}">
+
+          <!-- DAILY SUMMARY CARD -->
+          <div style="border-radius:24px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); padding:22px 20px 20px;">
+
+            <!-- calorie ring -->
+            <div style="display:flex; justify-content:center;">
+              <div ref="{{ setRingRef }}" style="position:relative; width:178px; height:178px;">
+                <svg width="178" height="178" viewBox="0 0 178 178" style="transform:rotate(-90deg);">
+                  <defs>
+                    <linearGradient id="calGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#2BC56F"></stop>
+                      <stop offset="100%" stop-color="#16C2A6"></stop>
+                    </linearGradient>
+                    <linearGradient id="calGradOver" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#F2B23C"></stop>
+                      <stop offset="100%" stop-color="#E58057"></stop>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="89" cy="89" r="76" fill="none" stroke="#E4EEDF" stroke-width="15"></circle>
+                  <circle cx="89" cy="89" r="76" fill="none" stroke="{{ ringStroke }}" stroke-width="15" stroke-linecap="round" style="stroke-dasharray:{{ ringC }}; stroke-dashoffset:{{ ringOffset }}; transition:stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1);"></circle>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                  <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:34px; line-height:1; letter-spacing:-.03em; color:#23332A; font-variant-numeric:tabular-nums;">{{ eatenLabel }}</span>
+                  <span style="font-size:12px; font-weight:600; color:#7C9080; margin-top:4px; font-variant-numeric:tabular-nums;">of {{ budgetLabel }} kcal</span>
+                  <span style="margin-top:9px; display:inline-flex; align-items:center; gap:4px; height:24px; padding:0 11px; border-radius:100px; background:{{ leftChipBg }};">
+                    <span style="font-family:'Material Symbols Rounded'; font-size:14px; font-variation-settings:'FILL' 1,'wght' 600; color:{{ leftChipColor }};">{{ leftChipIcon }}</span>
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:12.5px; color:{{ leftChipColor }}; letter-spacing:-.01em; font-variant-numeric:tabular-nums;">{{ leftLabel }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- macro bars -->
+            <div style="margin-top:20px; display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ macros }}" as="mac" hint-placeholder-count="3">
+                <div>
+                  <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px;">
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; letter-spacing:-.01em; color:#3A4A40;">{{ mac.name }}</span>
+                    <span style="font-size:12.5px; font-weight:600; color:#8AA08E; font-variant-numeric:tabular-nums;">{{ mac.valueLabel }}</span>
+                  </div>
+                  <div style="height:9px; border-radius:100px; background:{{ mac.track }}; overflow:hidden;">
+                    <div style="height:100%; border-radius:100px; background:{{ mac.color }}; width:{{ mac.barWidth }}; transition:width 1.1s cubic-bezier(.22,1,.36,1);"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- daily nutrition score -->
+            <sc-if value="{{ showScores }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top:20px; padding-top:18px; border-top:1px solid #EEF3EA;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-size:11px; font-weight:700; letter-spacing:.13em; color:#7C9080;">DAILY NUTRITION SCORE</span>
+                  <div style="display:flex; align-items:baseline; gap:2px;">
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:30px; line-height:1; letter-spacing:-.03em; color:{{ scoreColor }}; font-variant-numeric:tabular-nums;">{{ score }}</span>
+                    <span style="font-size:13px; font-weight:700; color:#A6B6A8;">/100</span>
+                  </div>
+                </div>
+                <div style="position:relative; margin-top:11px; height:12px; border-radius:100px; background:linear-gradient(90deg,#E5634D 0%,#E8A93C 50%,#2BC56F 100%);">
+                  <div style="position:absolute; top:50%; left:{{ scoreMarkerLeft }}; transform:translate(-50%,-50%); width:18px; height:18px; border-radius:50%; background:#fff; border:3.5px solid {{ scoreColor }}; box-shadow:0 2px 6px rgba(20,40,28,.28); transition:left 1.2s cubic-bezier(.22,1,.36,1);"></div>
+                </div>
+                <div style="margin-top:11px; font-family:'Plus Jakarta Sans'; font-weight:600; font-size:13.5px; line-height:1.4; letter-spacing:-.01em; color:#5E7763; text-wrap:pretty;">{{ verdict }}</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- MEALS LIST -->
+          <div style="margin-top:8px;">
+            <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="4">
+              <div style="margin-top:18px;">
+                <!-- section header -->
+                <div style="display:flex; align-items:center; justify-content:space-between; margin:0 4px 9px;">
+                  <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:15px; letter-spacing:-.01em; color:#23332A;">{{ sec.name }}</span>
+                  <span style="font-size:12px; font-weight:700; color:#A6B6A8; font-variant-numeric:tabular-nums;">{{ sec.kcalLabel }}</span>
+                </div>
+
+                <!-- meals -->
+                <sc-if value="{{ sec.hasMeals }}" hint-placeholder-val="{{ true }}">
+                  <div style="border-radius:22px; background:#fff; box-shadow:0 8px 24px rgba(40,80,55,.08); overflow:hidden;">
+                    <sc-for list="{{ sec.meals }}" as="m" hint-placeholder-count="1">
+                      <div style="display:flex; align-items:center; gap:13px; padding:12px 14px; cursor:pointer; border-top:{{ m.borderTop }};" style-hover="background:#F7FAF5;">
+                        <!-- thumbnail -->
+                        <div style="width:54px; height:54px; flex:none; border-radius:16px; background:{{ m.thumbGrad }}; display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);">
+                          <span style="font-family:'Material Symbols Rounded'; font-size:27px; font-variation-settings:'FILL' 1,'wght' 500; color:rgba(255,255,255,.95);">{{ m.icon }}</span>
+                        </div>
+                        <!-- name + time -->
+                        <div style="flex:1; min-width:0;">
+                          <div style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:14.5px; letter-spacing:-.01em; color:#23332A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ m.name }}</div>
+                          <div style="display:flex; align-items:center; gap:5px; margin-top:3px;">
+                            <span style="font-family:'Material Symbols Rounded'; font-size:14px; font-variation-settings:'FILL' 0,'wght' 500; color:#A6B6A8;">schedule</span>
+                            <span style="font-size:12px; font-weight:600; color:#8AA08E; font-variant-numeric:tabular-nums;">{{ m.time }}</span>
+                          </div>
+                        </div>
+                        <!-- kcal + score chip -->
+                        <div style="flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+                          <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:14.5px; letter-spacing:-.01em; color:#23332A; font-variant-numeric:tabular-nums;">{{ m.kcalLabel }}</span>
+                          <sc-if value="{{ showScores }}" hint-placeholder-val="{{ true }}">
+                            <span style="display:inline-flex; align-items:center; gap:3px; height:21px; padding:0 8px; border-radius:100px; background:{{ m.chipBg }};">
+                              <span style="font-family:'Material Symbols Rounded'; font-size:13px; font-variation-settings:'FILL' 1,'wght' 600; color:{{ m.chipColor }};">eco</span>
+                              <span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:11.5px; color:{{ m.chipColor }}; font-variant-numeric:tabular-nums;">{{ m.score }}</span>
+                            </span>
+                          </sc-if>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <!-- empty section prompt -->
+                <sc-if value="{{ sec.empty }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ sec.add }}" style="border-radius:20px; border:1.5px dashed #C9DCC3; background:rgba(255,255,255,.45); padding:15px 16px; display:flex; align-items:center; gap:11px; cursor:pointer;" style-hover="background:rgba(255,255,255,.8); border-color:#9FCB97;">
+                    <div style="width:34px; height:34px; flex:none; border-radius:11px; background:#E4EFDF; display:flex; align-items:center; justify-content:center;">
+                      <span style="font-family:'Material Symbols Rounded'; font-size:20px; font-variation-settings:'wght' 600; color:#7FA886;">add</span>
+                    </div>
+                    <span style="font-family:'Plus Jakarta Sans'; font-weight:700; font-size:13.5px; letter-spacing:-.01em; color:#8AA08E;">{{ sec.addLabel }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+        </sc-if>
+
+        <!-- ===================== EMPTY DAY STATE ===================== -->
+        <sc-if value="{{ dayEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:34px 18px 10px; display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <!-- warm illustration -->
+            <div style="position:relative; width:188px; height:188px; animation:emptyFloat 5s ease-in-out infinite;">
+              <div style="position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 50% 42%, #FFF1D9 0%, #FBE7C4 55%, #F6DDB2 100%); box-shadow:0 18px 40px -12px rgba(196,150,60,.35);"></div>
+              <div style="position:absolute; inset:30px; border-radius:50%; background:linear-gradient(150deg,#FFFDF8,#FCEFD7); display:flex; align-items:center; justify-content:center; box-shadow:inset 0 2px 10px rgba(196,150,60,.18);">
+                <span style="font-family:'Material Symbols Rounded'; font-size:62px; font-variation-settings:'FILL' 1,'wght' 400; color:#E6A742;">restaurant</span>
+              </div>
+              <div style="position:absolute; right:18px; bottom:20px; width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 22px -6px rgba(22,194,166,.6); border:3px solid #fff;">
+                <span style="font-family:'Material Symbols Rounded'; font-size:27px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">photo_camera</span>
+              </div>
+            </div>
+
+            <h2 style="margin:24px 0 0; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:22px; letter-spacing:-.02em; color:#23332A;">Snap your first meal</h2>
+            <p style="margin:9px 0 0; font-size:14px; font-weight:500; line-height:1.5; color:#7C9080; max-width:262px; text-wrap:pretty;">{{ emptyCopy }}</p>
+
+            <button onClick="{{ pressFab }}" style="margin-top:24px; height:54px; padding:0 26px; border:none; border-radius:100px; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); color:#fff; font-family:'Plus Jakarta Sans'; font-weight:700; font-size:15.5px; letter-spacing:-.01em; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 12px 26px -6px rgba(22,194,166,.6);" style-active="transform:scale(.97);">
+              <span style="font-family:'Material Symbols Rounded'; font-size:22px; font-variation-settings:'FILL' 1,'wght' 500;">photo_camera</span>
+              Open camera
+            </button>
+          </div>
+        </sc-if>
+
+        <div style="height:74px;"></div>
+      </div>
+
+      <!-- BOTTOM NAV + DOCKED FAB -->
+      <div style="flex:none; position:relative; z-index:6;">
+        <!-- camera FAB -->
+        <div ref="{{ setFabRef }}" onClick="{{ pressFab }}" style="position:absolute; left:50%; top:0; transform:translateX(-50%) translateY(-46%); width:62px; height:62px; border-radius:50%; cursor:pointer; background:linear-gradient(135deg,#2BC56F,#16C2A6); display:flex; align-items:center; justify-content:center; border:4px solid #F4F8F1; animation:fabGlow 3.6s ease-in-out infinite; z-index:7;" style-active="transform:translateX(-50%) translateY(-46%) scale(.92);">
+          <span style="font-family:'Material Symbols Rounded'; font-size:28px; font-variation-settings:'FILL' 1,'wght' 500; color:#fff;">photo_camera</span>
+        </div>
+
+        <div style="height:74px; background:rgba(255,255,255,.94); backdrop-filter:blur(12px); border-top:1px solid #E6EFE2; display:flex; align-items:center; padding:0 6px 8px;">
+          <!-- Today -->
+          <div onClick="{{ goToday }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer;">
+            <div style="height:30px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">wb_sunny</span>
+            </div>
+            <span style="font-size:11px; font-weight:600; color:#7C9080;">Today</span>
+          </div>
+          <!-- Meals (active) -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer;">
+            <div style="height:30px; padding:0 16px; border-radius:100px; background:#DCF0D8; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 1,'wght' 500; color:#1E8A4C;">restaurant</span>
+            </div>
+            <span style="font-size:11px; font-weight:700; color:#1E8A4C; letter-spacing:.01em;">Meals</span>
+          </div>
+          <!-- FAB spacer -->
+          <div style="width:62px; flex:none;"></div>
+          <!-- Weight -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer;">
+            <div style="height:30px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">monitor_weight</span>
+            </div>
+            <span style="font-size:11px; font-weight:600; color:#7C9080;">Weight</span>
+          </div>
+          <!-- Settings -->
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer;">
+            <div style="height:30px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'Material Symbols Rounded'; font-size:23px; font-variation-settings:'FILL' 0,'wght' 400; color:#7C9080;">settings</span>
+            </div>
+            <span style="font-size:11px; font-weight:600; color:#7C9080;">Settings</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- gesture pill -->
+      <div style="position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:120px; height:5px; border-radius:3px; background:#23332A; opacity:.18; z-index:8;"></div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:910},&quot;calorieBudget&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2000,&quot;min&quot;:1200,&quot;max&quot;:3500,&quot;step&quot;:50,&quot;tsType&quot;:&quot;number&quot;},&quot;showScores&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this._ringEl = null;
+    this._fabEl = null;
+
+    // ---- week strip: Mon Jun 15 .. Sun Jun 21, today = Thu (idx 3) ----
+    this.days = [
+      { dow:'M', date:15, full:'Monday',    rel:'past',  log:'mon' },
+      { dow:'T', date:16, full:'Tuesday',   rel:'past',  log:'tue' },
+      { dow:'W', date:17, full:'Wednesday', rel:'past',  log:'wed' },
+      { dow:'T', date:18, full:'Thursday',  rel:'today', log:'thu' },
+      { dow:'F', date:19, full:'Friday',    rel:'future', log:null },
+      { dow:'S', date:20, full:'Saturday',  rel:'future', log:null },
+      { dow:'S', date:21, full:'Sunday',    rel:'future', log:null },
+    ];
+    this.todayIdx = 3;
+
+    // macro targets
+    this.targets = { protein:140, carbs:220, fat:65 };
+
+    // ---- per-day logs ----
+    this.logs = {
+      thu: {
+        eaten:1420, score:82, verdict:'Balanced day — solid protein. Save your budget for dinner.',
+        macros:{ protein:92, carbs:168, fat:46 },
+        sections:{
+          Breakfast:[ { name:'Greek yogurt, berries & granola', kcal:360, score:90, time:'8:10 AM', icon:'breakfast_dining', grad:'linear-gradient(135deg,#F4A65A,#E8823E)' } ],
+          Lunch:[ { name:'Grilled chicken quinoa bowl', kcal:640, score:86, time:'12:45 PM', icon:'lunch_dining', grad:'linear-gradient(135deg,#3FBE6E,#1FA98E)' } ],
+          Dinner:[],
+          Snacks:[
+            { name:'Almonds & dark chocolate', kcal:240, score:74, time:'3:30 PM', icon:'nutrition', grad:'linear-gradient(135deg,#C58D5A,#9C6A3C)' },
+            { name:'Oat-milk latte', kcal:180, score:68, time:'4:15 PM', icon:'local_cafe', grad:'linear-gradient(135deg,#B89B7A,#8E7355)' },
+          ],
+        },
+      },
+      mon: {
+        eaten:1650, score:88, verdict:'Great balance across the board. Strong protein, plenty of veg.',
+        macros:{ protein:126, carbs:158, fat:54 },
+        sections:{
+          Breakfast:[ { name:'Veggie omelette & rye toast', kcal:420, score:88, time:'8:00 AM', icon:'egg_alt', grad:'linear-gradient(135deg,#F4B65A,#E89240)' } ],
+          Lunch:[ { name:'Salmon poke bowl', kcal:560, score:92, time:'1:00 PM', icon:'set_meal', grad:'linear-gradient(135deg,#3FB6BE,#1F8EA9)' } ],
+          Dinner:[ { name:'Turkey & bean chili', kcal:520, score:84, time:'7:30 PM', icon:'soup_kitchen', grad:'linear-gradient(135deg,#E07A52,#C2542F)' } ],
+          Snacks:[ { name:'Greek yogurt & honey', kcal:150, score:86, time:'4:00 PM', icon:'icecream', grad:'linear-gradient(135deg,#E8C26A,#D49E3E)' } ],
+        },
+      },
+      tue: {
+        eaten:2180, score:64, verdict:'Heavy on fat — a big dinner pushed you over. Ease up tomorrow.',
+        macros:{ protein:96, carbs:212, fat:104 },
+        sections:{
+          Breakfast:[ { name:'Bacon & egg muffin', kcal:480, score:60, time:'8:20 AM', icon:'bakery_dining', grad:'linear-gradient(135deg,#E89A52,#C2702F)' } ],
+          Lunch:[ { name:'Cheeseburger & fries', kcal:920, score:48, time:'1:15 PM', icon:'lunch_dining', grad:'linear-gradient(135deg,#E2704E,#C04A2C)' } ],
+          Dinner:[ { name:'Pasta carbonara', kcal:640, score:62, time:'8:00 PM', icon:'ramen_dining', grad:'linear-gradient(135deg,#E8B45A,#D08E36)' } ],
+          Snacks:[ { name:'Chocolate-chip cookies', kcal:140, score:54, time:'3:00 PM', icon:'cookie', grad:'linear-gradient(135deg,#C58D5A,#9C6A3C)' } ],
+        },
+      },
+      wed: {
+        eaten:1780, score:80, verdict:'Good day — a touch low on fibre. Add some greens at lunch.',
+        macros:{ protein:104, carbs:198, fat:60 },
+        sections:{
+          Breakfast:[ { name:'Overnight oats & banana', kcal:340, score:84, time:'7:50 AM', icon:'breakfast_dining', grad:'linear-gradient(135deg,#E8B45A,#D08E36)' } ],
+          Lunch:[ { name:'Chicken Caesar wrap', kcal:520, score:76, time:'12:30 PM', icon:'lunch_dining', grad:'linear-gradient(135deg,#3FBE6E,#1FA98E)' } ],
+          Dinner:[ { name:'Tofu stir-fry & rice', kcal:620, score:82, time:'7:15 PM', icon:'rice_bowl', grad:'linear-gradient(135deg,#3FB6BE,#1F8EA9)' } ],
+          Snacks:[ { name:'Protein bar', kcal:300, score:70, time:'4:30 PM', icon:'nutrition', grad:'linear-gradient(135deg,#C58D5A,#9C6A3C)' } ],
+        },
+      },
+    };
+
+    this.sectionOrder = ['Breakfast','Lunch','Dinner','Snacks'];
+    this.addLabels = { Breakfast:'+ Add breakfast', Lunch:'+ Add lunch', Dinner:'+ Add dinner', Snacks:'+ Add a snack' };
+
+    this.state = { selectedIdx: this.todayIdx, loaded: false };
+  }
+
+  componentDidMount(){ setTimeout(()=> this.setState({ loaded:true }), 90); }
+
+  setRingRef = (el)=>{ this._ringEl = el; };
+  setFabRef = (el)=>{ this._fabEl = el; };
+
+  selectDay(i){ this.setState({ selectedIdx:i }); }
+  jumpToday = ()=> this.setState({ selectedIdx:this.todayIdx });
+  goToday = ()=>{ window.location.href = 'Today.dc.html'; };
+
+  pressFab = ()=>{
+    if(this._fabEl){
+      this._fabEl.animate(
+        [{transform:'translateX(-50%) translateY(-46%) scale(1)'},
+         {transform:'translateX(-50%) translateY(-46%) scale(.86)'},
+         {transform:'translateX(-50%) translateY(-46%) scale(1.06)'},
+         {transform:'translateX(-50%) translateY(-46%) scale(1)'}],
+        {duration:480, easing:'cubic-bezier(.34,1.56,.64,1)'}
+      );
+    }
+  };
+
+  fmt(n){ return n.toLocaleString('en-US'); }
+
+  scoreStyle(s){
+    if(s >= 80) return { num:'#1E7E45', chipBg:'#DCF0D8', chipColor:'#1E7E45' };
+    if(s >= 60) return { num:'#B97E22', chipBg:'#FBEFD6', chipColor:'#B97E22' };
+    return { num:'#C0523B', chipBg:'#FBE3DD', chipColor:'#C0523B' };
+  }
+
+  renderVals(){
+    const s = this.state;
+    const budget = this.props.calorieBudget ?? 2000;
+    const showScores = this.props.showScores ?? true;
+    const day = this.days[s.selectedIdx];
+    const log = day.log ? this.logs[day.log] : null;
+
+    // date strip
+    const dayStrip = this.days.map((d,i)=>{
+      const sel = i === s.selectedIdx;
+      const future = d.rel === 'future';
+      return {
+        dow: d.dow, date: d.date,
+        select: ()=> this.selectDay(i),
+        bg: sel ? 'linear-gradient(135deg,#2BC56F,#16C2A6)' : '#fff',
+        shadow: sel ? '0 8px 18px -5px rgba(22,194,166,.55)' : '0 3px 10px rgba(40,80,55,.06)',
+        dowColor: sel ? 'rgba(255,255,255,.85)' : (future ? '#B3C3B4' : '#8AA08E'),
+        dateColor: sel ? '#fff' : (future ? '#B3C3B4' : '#23332A'),
+        dot: sel ? '#fff' : (d.rel==='today' ? '#21B96B' : (d.log ? '#CFE0CC' : 'transparent')),
+      };
+    });
+
+    // header date label
+    let dateLabel;
+    if(day.rel === 'today') dateLabel = 'Today · ' + day.full.slice(0,3) + ' 18';
+    else dateLabel = day.full + ', Jun ' + day.date;
+
+    const base = {
+      dayStrip,
+      dateLabel,
+      showTodayShortcut: s.selectedIdx !== this.todayIdx,
+      jumpToday: this.jumpToday,
+      goToday: this.goToday,
+      pressFab: this.pressFab,
+      setFabRef: this.setFabRef,
+      setRingRef: this.setRingRef,
+      showScores,
+    };
+
+    if(!log){
+      const copy = day.rel === 'future'
+        ? 'Nothing logged for ' + day.full + ' yet. Tap the camera to capture a meal and we\u2019ll do the rest.'
+        : 'No meals logged this day. Snap a photo and we\u2019ll estimate calories, macros and a nutrition score.';
+      return { ...base, dayHasLog:false, dayEmpty:true, emptyCopy:copy };
+    }
+
+    // ----- calorie ring -----
+    const eaten = log.eaten;
+    const pct = eaten / budget;
+    const over = pct > 1;
+    const ringR = 76;
+    const ringC = 2 * Math.PI * ringR;
+    const frac = Math.min(pct, 1);
+    const ringOffset = s.loaded ? ringC * (1 - frac) : ringC;
+    const leftVal = budget - eaten;
+    const leftChip = over
+      ? { bg:'#FBE3DD', color:'#C0523B', icon:'trending_up', label:this.fmt(Math.abs(leftVal)) + ' over' }
+      : { bg:'#DCF0D8', color:'#1E7E45', icon:'bolt', label:this.fmt(leftVal) + ' left' };
+
+    // ----- macros -----
+    const macroDefs = [
+      { name:'Protein', key:'protein', color:'#16B069', track:'#D7EFE0' },
+      { name:'Carbs',   key:'carbs',   color:'#E0A33A', track:'#FBEAC9' },
+      { name:'Fat',     key:'fat',     color:'#EC6F59', track:'#FBE0D9' },
+    ];
+    const macros = macroDefs.map(m=>{
+      const val = log.macros[m.key];
+      const tgt = this.targets[m.key];
+      const p = Math.min(val / tgt, 1);
+      return {
+        name: m.name,
+        valueLabel: val + ' / ' + tgt + ' g',
+        color: m.color, track: m.track,
+        barWidth: s.loaded ? Math.round(p*100) + '%' : '0%',
+      };
+    });
+
+    // ----- nutrition score -----
+    const ss = this.scoreStyle(log.score);
+
+    // ----- sections / meals -----
+    const sections = this.sectionOrder.map(secName=>{
+      const meals = log.sections[secName] || [];
+      const hasMeals = meals.length > 0;
+      const total = meals.reduce((a,m)=>a+m.kcal,0);
+      return {
+        name: secName,
+        hasMeals,
+        empty: !hasMeals,
+        addLabel: this.addLabels[secName],
+        add: this.pressFab,
+        kcalLabel: hasMeals ? this.fmt(total) + ' kcal' : '',
+        meals: meals.map((m,mi)=>{
+          const mss = this.scoreStyle(m.score);
+          return {
+            name:m.name, time:m.time, icon:m.icon, thumbGrad:m.grad,
+            kcalLabel: this.fmt(m.kcal) + ' kcal',
+            score:m.score, chipBg:mss.chipBg, chipColor:mss.chipColor,
+            borderTop: mi===0 ? 'none' : '1px solid #EEF3EA',
+          };
+        }),
+      };
+    });
+
+    return {
+      ...base,
+      dayHasLog:true, dayEmpty:false,
+      ringC, ringOffset,
+      ringStroke: over ? 'url(#calGradOver)' : 'url(#calGrad)',
+      eatenLabel: this.fmt(eaten),
+      budgetLabel: this.fmt(budget),
+      leftChipBg: leftChip.bg, leftChipColor: leftChip.color,
+      leftChipIcon: leftChip.icon, leftLabel: leftChip.label,
+      macros,
+      score: log.score,
+      scoreColor: ss.num,
+      scoreMarkerLeft: s.loaded ? Math.max(0, Math.min(100, log.score)) + '%' : '0%',
+      verdict: log.verdict,
+      sections,
+    };
+  }
+}
+</script>
+</body>
+</html>
