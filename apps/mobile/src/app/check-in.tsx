@@ -4,17 +4,10 @@ import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Button, Card, Icon, type IconName } from '@/components/ui';
-import { colors, radius, ruleIconPalettes, spacing, type RuleIconPalette } from '@/theme';
+import { useChallenge, useRuleLogs, useRules, useSetRuleState, useStreaks } from '@/lib/queries';
+import { colors, radius, ruleIconPalettes, type RuleIconPalette } from '@/theme';
 
 type RState = 'done' | 'skipped' | 'missed';
-type Rule = { name: string; icon: IconName; palette: RuleIconPalette; streak: number };
-
-const RULES: Rule[] = [
-  { name: 'Drink 3L of water', icon: 'water-drop', palette: 'water', streak: 41 },
-  { name: 'Walk 30 minutes', icon: 'directions-walk', palette: 'green', streak: 28 },
-  { name: 'No sugar after 7pm', icon: 'cookie', palette: 'orange', streak: 12 },
-  { name: 'Lights out by 11pm', icon: 'bedtime', palette: 'purple', streak: 41 },
-];
 
 const STATE_OPTS: { key: RState; label: string; fg: string; activeBg: string }[] = [
   { key: 'done', label: 'Done', fg: colors.green, activeBg: colors.green },
@@ -23,16 +16,36 @@ const STATE_OPTS: { key: RState; label: string; fg: string; activeBg: string }[]
 ];
 
 const MOODS = ['😞', '😐', '🙂', '😄', '🤩'];
+const todayIso = () => new Date().toISOString().slice(0, 10);
 
 export default function CheckInScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const today = todayIso();
 
-  const [states, setStates] = useState<Record<number, RState>>({ 0: 'done', 1: 'done', 2: 'done' });
+  const { data: rules = [] } = useRules();
+  const { data: logs = [] } = useRuleLogs(today);
+  const { data: streaks } = useStreaks();
+  const { data: challenge } = useChallenge();
+  const setState = useSetRuleState();
+
   const [note, setNote] = useState('');
   const [mood, setMood] = useState<number | null>(3);
+  const [override, setOverride] = useState<Record<string, RState>>({});
+
+  const serverState = new Map(logs.map((l) => [l.ruleId, l.state as RState]));
+  const streakByRule = new Map((streaks?.rules ?? []).map((s) => [s.ruleId, s.current]));
 
   const dateLabel = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  const challengeTotal = challenge?.days ?? 75;
+  const challengeDay = challenge
+    ? Math.min(challengeTotal, Math.floor((Date.parse(today) - Date.parse(challenge.startDate)) / 86400000) + 1)
+    : 1;
+
+  const select = (ruleId: string, state: RState) => {
+    setOverride((o) => ({ ...o, [ruleId]: state }));
+    setState.mutate({ ruleId, date: today, state });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
@@ -46,7 +59,7 @@ export default function CheckInScreen() {
         </AppText>
         <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderRadius: radius.pill, backgroundColor: colors.sage }}>
           <AppText variant="caption" color={colors.green}>
-            Day 41
+            Day {challengeDay}
           </AppText>
         </View>
       </View>
@@ -56,55 +69,65 @@ export default function CheckInScreen() {
           How did today go?
         </AppText>
 
-        <View style={{ gap: 12 }}>
-          {RULES.map((r, i) => {
-            const p = ruleIconPalettes[r.palette];
-            const cur = states[i];
-            return (
-              <Card key={r.name} style={{ padding: 16 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <View style={{ width: 40, height: 40, borderRadius: radius.md, backgroundColor: p.chipBg, alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name={r.icon} size={22} color={p.icon} />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <AppText variant="itemTitle">{r.name}</AppText>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 }}>
-                      <Icon name="local-fire-department" size={14} color={colors.amber} />
-                      <AppText variant="caption" color={colors.muted}>
-                        {r.streak} day streak
-                      </AppText>
+        {rules.length === 0 ? (
+          <Card style={{ padding: 18, alignItems: 'center' }}>
+            <AppText variant="bodyMuted" color={colors.muted}>
+              No rules yet. Add your daily process first.
+            </AppText>
+          </Card>
+        ) : (
+          <View style={{ gap: 12 }}>
+            {rules.map((r) => {
+              const palette = r.palette as RuleIconPalette;
+              const p = ruleIconPalettes[palette];
+              const cur = override[r.id] ?? serverState.get(r.id);
+              const streak = streakByRule.get(r.id) ?? 0;
+              return (
+                <Card key={r.id} style={{ padding: 16 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                    <View style={{ width: 40, height: 40, borderRadius: radius.md, backgroundColor: p.chipBg, alignItems: 'center', justifyContent: 'center' }}>
+                      <Icon name={r.icon as IconName} size={22} color={p.icon} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <AppText variant="itemTitle">{r.name}</AppText>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 }}>
+                        <Icon name="local-fire-department" size={14} color={colors.amber} />
+                        <AppText variant="caption" color={colors.muted}>
+                          {streak} day streak
+                        </AppText>
+                      </View>
                     </View>
                   </View>
-                </View>
-                {/* 3-state selector */}
-                <View style={{ flexDirection: 'row', gap: 8, marginTop: 14 }}>
-                  {STATE_OPTS.map((opt) => {
-                    const active = cur === opt.key;
-                    return (
-                      <Pressable
-                        key={opt.key}
-                        onPress={() => setStates((s) => ({ ...s, [i]: opt.key }))}
-                        style={{
-                          flex: 1,
-                          paddingVertical: 10,
-                          borderRadius: radius.pill,
-                          alignItems: 'center',
-                          backgroundColor: active ? opt.activeBg : colors.appBg,
-                          borderWidth: 1,
-                          borderColor: active ? opt.activeBg : colors.sageBorder,
-                        }}
-                      >
-                        <AppText variant="caption" color={active ? colors.white : opt.fg} style={{ fontSize: 13 }}>
-                          {opt.label}
-                        </AppText>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              </Card>
-            );
-          })}
-        </View>
+                  {/* 3-state selector */}
+                  <View style={{ flexDirection: 'row', gap: 8, marginTop: 14 }}>
+                    {STATE_OPTS.map((opt) => {
+                      const active = cur === opt.key;
+                      return (
+                        <Pressable
+                          key={opt.key}
+                          onPress={() => select(r.id, opt.key)}
+                          style={{
+                            flex: 1,
+                            paddingVertical: 10,
+                            borderRadius: radius.pill,
+                            alignItems: 'center',
+                            backgroundColor: active ? opt.activeBg : colors.appBg,
+                            borderWidth: 1,
+                            borderColor: active ? opt.activeBg : colors.sageBorder,
+                          }}
+                        >
+                          <AppText variant="caption" color={active ? colors.white : opt.fg} style={{ fontSize: 13 }}>
+                            {opt.label}
+                          </AppText>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+                </Card>
+              );
+            })}
+          </View>
+        )}
 
         {/* reflection */}
         <AppText variant="label" color={colors.muted} style={{ marginTop: 24, marginBottom: 10, paddingHorizontal: 4 }}>
@@ -147,7 +170,7 @@ export default function CheckInScreen() {
 
       {/* save */}
       <View style={{ paddingHorizontal: 18, paddingBottom: insets.bottom + 14, paddingTop: 8 }}>
-        <Button title="Save today" onPress={() => router.back()} />
+        <Button title="Done" onPress={() => router.back()} />
       </View>
     </View>
   );
