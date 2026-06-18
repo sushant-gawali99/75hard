@@ -1,10 +1,11 @@
+import { useRouter } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { ActivityIndicator, Dimensions, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WeightChart } from '@/components/charts/WeightChart';
 import { AppText, Button, Card, Icon } from '@/components/ui';
-import { useAddWeight, useWeights } from '@/lib/queries';
+import { useWeights } from '@/lib/queries';
 import { colors, radius, spacing } from '@/theme';
 
 const GOAL = 72.0;
@@ -14,13 +15,12 @@ const SCREEN_PAD = 18;
 const CARD_PAD = 18;
 
 const fmt = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-const today = () => new Date().toISOString().slice(0, 10);
 
 export default function WeightScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [range, setRange] = useState<Range>('Month');
   const { data: weights = [], isLoading, isError, refetch } = useWeights();
-  const addWeight = useAddWeight();
 
   const header = (
     <AppText variant="title" style={{ paddingHorizontal: 2 }}>
@@ -60,11 +60,6 @@ export default function WeightScreen() {
     );
   }
 
-  const addDemo = () => {
-    const last = weights.length ? weights[weights.length - 1]!.valueKg : 80;
-    addWeight.mutate({ date: today(), value: +(last - 0.1).toFixed(1), unit: 'kg' });
-  };
-
   if (weights.length === 0) {
     return wrap(
       <View style={{ paddingTop: 50, alignItems: 'center', gap: 14 }}>
@@ -72,7 +67,7 @@ export default function WeightScreen() {
         <AppText variant="bodyMuted" color={colors.muted}>
           No weigh-ins yet. Add your first.
         </AppText>
-        <Button title="Add weight" icon="add" onPress={addDemo} />
+        <Button title="Add weight" icon="add" onPress={() => router.push('/add-weight')} />
       </View>,
     );
   }
@@ -159,7 +154,7 @@ export default function WeightScreen() {
       </View>
 
       {/* add (demo value until the entry sheet — WGT-1) */}
-      <Button title="Add weigh-in" icon="add" onPress={addDemo} disabled={addWeight.isPending} style={{ marginTop: 16 }} />
+      <Button title="Add weigh-in" icon="add" onPress={() => router.push('/add-weight')} style={{ marginTop: 16 }} />
 
       {/* history */}
       <AppText variant="label" color={colors.muted} style={{ marginTop: 24, marginBottom: 10, paddingHorizontal: 4 }}>
