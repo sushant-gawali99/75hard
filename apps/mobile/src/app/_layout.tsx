@@ -22,6 +22,7 @@ export default function RootLayout() {
             <Stack.Screen name="capture" options={{ presentation: 'modal' }} />
             <Stack.Screen name="check-in" options={{ presentation: 'modal' }} />
             <Stack.Screen name="analysis" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="milestone" options={{ presentation: 'fullScreenModal' }} />
           </Stack>
           <StatusBar style="dark" />
         </ThemeProvider>
