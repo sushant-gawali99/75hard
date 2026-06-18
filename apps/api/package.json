@@ -1,0 +1,10 @@
+{
+  "name": "@process/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"(api: build added in FND-3)\"",
+    "typecheck": "echo \"(api: typecheck added in FND-3)\"",
+    "lint": "echo \"(api: lint added in FND-3)\""
+  }
+}

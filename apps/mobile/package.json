@@ -1,0 +1,9 @@
+{
+  "name": "@process/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "echo \"(mobile: typecheck added in FND-2)\"",
+    "lint": "echo \"(mobile: lint added in FND-2)\""
+  }
+}
