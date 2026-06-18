@@ -5,6 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 
 import { AuthGuard } from './auth/auth.guard';
 import { ChallengeModule } from './challenge/challenge.module';
+import { CheckinsModule } from './checkins/checkins.module';
 import { validateEnv } from './config/env.validation';
 import { DbModule } from './db/db.module';
 import { HealthModule } from './health/health.module';
@@ -36,6 +37,7 @@ import { WeightsModule } from './weights/weights.module';
     ProfileModule,
     ChallengeModule,
     MealsModule,
+    CheckinsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })

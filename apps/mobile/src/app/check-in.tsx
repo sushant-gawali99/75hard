@@ -1,10 +1,18 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, Button, Card, Icon, type IconName } from '@/components/ui';
-import { useChallenge, useRuleLogs, useRules, useSetRuleState, useStreaks } from '@/lib/queries';
+import {
+  useChallenge,
+  useCheckin,
+  useRuleLogs,
+  useRules,
+  useSetRuleState,
+  useStreaks,
+  useUpsertCheckin,
+} from '@/lib/queries';
 import { colors, radius, ruleIconPalettes, type RuleIconPalette } from '@/theme';
 
 type RState = 'done' | 'skipped' | 'missed';
@@ -27,11 +35,23 @@ export default function CheckInScreen() {
   const { data: logs = [] } = useRuleLogs(today);
   const { data: streaks } = useStreaks();
   const { data: challenge } = useChallenge();
+  const { data: checkin } = useCheckin(today);
   const setState = useSetRuleState();
+  const upsertCheckin = useUpsertCheckin();
 
   const [note, setNote] = useState('');
   const [mood, setMood] = useState<number | null>(3);
   const [override, setOverride] = useState<Record<string, RState>>({});
+
+  // Hydrate the reflection once from the server (don't clobber in-progress edits on refetch).
+  const hydrated = useRef(false);
+  useEffect(() => {
+    if (checkin && !hydrated.current) {
+      hydrated.current = true;
+      setNote(checkin.note ?? '');
+      setMood(checkin.mood ?? null);
+    }
+  }, [checkin]);
 
   const serverState = new Map(logs.map((l) => [l.ruleId, l.state as RState]));
   const streakByRule = new Map((streaks?.rules ?? []).map((s) => [s.ruleId, s.current]));
@@ -45,6 +65,15 @@ export default function CheckInScreen() {
   const select = (ruleId: string, state: RState) => {
     setOverride((o) => ({ ...o, [ruleId]: state }));
     setState.mutate({ ruleId, date: today, state });
+  };
+
+  const onDone = async () => {
+    try {
+      await upsertCheckin.mutateAsync({ date: today, mood, note: note.trim() ? note.trim() : null });
+    } catch {
+      // reflection is best-effort; rule states already saved on tap
+    }
+    router.back();
   };
 
   return (
@@ -170,7 +199,7 @@ export default function CheckInScreen() {
 
       {/* save */}
       <View style={{ paddingHorizontal: 18, paddingBottom: insets.bottom + 14, paddingTop: 8 }}>
-        <Button title="Done" onPress={() => router.back()} />
+        <Button title="Done" onPress={onDone} />
       </View>
     </View>
   );

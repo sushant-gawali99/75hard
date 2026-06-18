@@ -13,3 +13,4 @@ export * from "./rules";
 export * from "./weight";
 export * from "./profile";
 export * from "./meals";
+export * from "./checkin";

@@ -8,6 +8,7 @@ import type {
   SaveMealInput,
   SetRuleStateInput,
   Sex,
+  UpsertCheckinInput,
   WeightUnit,
 } from '@process/shared';
 import { api } from './api';
@@ -44,6 +45,20 @@ export function useStreaksCalendar(month: string) {
   return useQuery({
     queryKey: ['streaks', 'calendar', month],
     queryFn: () => api.getStreaksCalendar(month),
+  });
+}
+
+export function useCheckin(date: string) {
+  return useQuery({ queryKey: ['checkin', date], queryFn: () => api.getCheckin(date) });
+}
+
+export function useUpsertCheckin() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: UpsertCheckinInput) => api.upsertCheckin(body),
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ['checkin', vars.date] });
+    },
   });
 }
 

@@ -2,6 +2,7 @@ import type {
   AddWeightInput,
   AnalyzeMealInput,
   Challenge,
+  Checkin,
   CreateChallengeInput,
   CreateRuleInput,
   MealAnalysis,
@@ -13,6 +14,7 @@ import type {
   SetRuleStateInput,
   StreaksSummary,
   StreaksCalendar,
+  UpsertCheckinInput,
   UpsertProfileInput,
   WeightEntry,
 } from '@process/shared';
@@ -68,4 +70,7 @@ export const api = {
   analyzeMeal: (body: AnalyzeMealInput) => request<MealAnalysis>('/meals/analyze', { method: 'POST', body: JSON.stringify(body) }),
   saveMeal: (body: SaveMealInput) => request<{ id: string }>('/meals', { method: 'POST', body: JSON.stringify(body) }),
   listMeals: (date: string) => request<MealRow[]>(`/meals?date=${date}`),
+  getCheckin: (date: string) => request<Checkin | null>(`/checkins?date=${date}`),
+  upsertCheckin: (body: UpsertCheckinInput) =>
+    request<Checkin>('/checkins', { method: 'PUT', body: JSON.stringify(body) }),
 };
