@@ -1,16 +1,18 @@
-import { type ReactNode, useState } from 'react';
-import { Pressable, ScrollView, Switch, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { type ReactNode } from 'react';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
 import { AppText, Card, Icon, type IconName } from '@/components/ui';
+import { signOut } from '@/lib/auth';
+import { useChallenge, useNutritionTargets, useProfile } from '@/lib/queries';
 import { colors, radius, spacing } from '@/theme';
 
 function Row({
   icon,
   label,
   value,
-  trailing,
   danger,
   last,
   onPress,
@@ -18,7 +20,6 @@ function Row({
   icon: IconName;
   label: string;
   value?: string;
-  trailing?: ReactNode;
   danger?: boolean;
   last?: boolean;
   onPress?: () => void;
@@ -47,7 +48,7 @@ function Row({
           {value}
         </AppText>
       ) : null}
-      {trailing ?? (onPress ? <Icon name="chevron-right" size={22} color={colors.mutedSoft} /> : null)}
+      {onPress ? <Icon name="chevron-right" size={22} color={colors.mutedSoft} /> : null}
     </Pressable>
   );
 }
@@ -65,7 +66,39 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
-  const [reminder, setReminder] = useState(true);
+  const router = useRouter();
+  const { data: profile } = useProfile();
+  const { data: challenge } = useChallenge();
+  const { data: targets } = useNutritionTargets();
+
+  const challengeLabel = challenge
+    ? `Day ${Math.min(
+        challenge.days,
+        Math.floor((Date.now() - Date.parse(challenge.startDate)) / 86400000) + 1,
+      )} of ${challenge.days}`
+    : '—';
+  const unit = profile?.unit ?? 'kg';
+  const goal = profile?.goalWeightKg ? `${profile.goalWeightKg.toFixed(1)} kg` : '—';
+  const kcal = targets?.kcal ? `${targets.kcal.toLocaleString()} kcal` : '—';
+
+  const confirmRestart = () =>
+    Alert.alert('Restart challenge?', 'This starts a new challenge from onboarding.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Restart', style: 'destructive', onPress: () => router.replace('/set-days') },
+    ]);
+
+  const confirmSignOut = () =>
+    Alert.alert('Sign out?', '', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign out',
+        style: 'destructive',
+        onPress: async () => {
+          await signOut().catch(() => {});
+          router.replace('/welcome');
+        },
+      },
+    ]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
@@ -77,45 +110,24 @@ export default function SettingsScreen() {
           Settings
         </AppText>
 
-        <Section title="PROFILE">
-          <Row icon="person" label="Name" value="Sushant" onPress={() => {}} />
-          <Row icon="straighten" label="Units" value="kg" last onPress={() => {}} />
-        </Section>
-
         <Section title="YOUR CHALLENGE">
-          <Row icon="calendar-today" label="Current" value="Day 41 of 75" />
-          <Row icon="checklist" label="Edit rules" onPress={() => {}} />
-          <Row icon="flag" label="Goal weight" value="72.0 kg" onPress={() => {}} />
-          <Row icon="restart-alt" label="Restart challenge" danger last onPress={() => {}} />
+          <Row icon="calendar-today" label="Current" value={challengeLabel} />
+          <Row icon="checklist" label="Edit rules" onPress={() => router.push('/define-rules')} />
+          <Row icon="flag" label="Goal weight" value={goal} />
+          <Row icon="restart-alt" label="Restart challenge" danger last onPress={confirmRestart} />
         </Section>
 
         <Section title="NUTRITION">
-          <Row icon="local-fire-department" label="Daily targets" value="2,000 kcal" last onPress={() => {}} />
+          <Row icon="local-fire-department" label="Daily targets" value={kcal} />
+          <Row icon="straighten" label="Units" value={unit} last />
         </Section>
 
-        <Section title="REMINDERS">
-          <Row
-            icon="notifications"
-            label="Daily reminder"
-            last
-            trailing={
-              <Switch
-                value={reminder}
-                onValueChange={setReminder}
-                trackColor={{ true: colors.green, false: colors.track }}
-                thumbColor={colors.white}
-              />
-            }
-          />
+        <Section title="NOTIFICATIONS">
+          <Row icon="notifications" label="Reminders" last onPress={() => router.push('/reminders')} />
         </Section>
 
-        <Section title="APPEARANCE">
-          <Row icon="palette" label="Theme" value="System" last onPress={() => {}} />
-        </Section>
-
-        <Section title="DATA">
-          <Row icon="ios-share" label="Export data" onPress={() => {}} />
-          <Row icon="delete-outline" label="Reset all data" danger last onPress={() => {}} />
+        <Section title="ACCOUNT">
+          <Row icon="logout" label="Sign out" danger last onPress={confirmSignOut} />
         </Section>
 
         <Section title="ABOUT">
