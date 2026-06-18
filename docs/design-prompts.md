@@ -85,7 +85,8 @@ AA contrast, 48dp minimum tap targets, support dynamic text scaling, never rely 
 alone (always pair with icon or label).
 
 NAVIGATION MODEL
-Onboarding is a pre-app flow: Welcome -> Set Days -> Define Rules -> Starting & Goal Weight.
+Auth is Google Sign-In on the Welcome screen (the only sign-in method). New users then run onboarding
+(Welcome -> Set Days -> Define Rules -> Starting & Goal Weight); returning users skip straight to Today.
 Main app uses bottom navigation: Today, Meals, Streaks, Weight, Settings, with a center camera
 FAB for quick meal capture. The Daily Check-in opens from the Today screen; capturing a meal
 goes Camera -> AI Analysis -> Save. The Milestone celebration is a full-screen overlay triggered on completion.
@@ -109,8 +110,11 @@ Full-screen, centered, generous vertical rhythm.
   Emphasize "the process daily" in the green->teal gradient.
   Below, a calm subline: "Pick your days. Set your rules. Show up every day."
 - Three tiny value chips in a row: "Commit", "Your rules", "See change" (with small icons).
-- Bottom: a full-width primary pill gradient button "Begin", and a muted text link
-  "I already started" beneath it.
+- Bottom: a full-width "Continue with Google" button (white surface, Google "G" mark, subtle border —
+  follow Google's branding guidelines); Google is the only sign-in method. Tiny legal line beneath:
+  "By continuing you agree to our Terms & Privacy."
+- New users then enter onboarding (Set Days → Define Rules → Starting & Goal Weight); returning users
+  land straight on Today.
 
 Motion: text fades and rises on entry; the gradient glow breathes slowly.
 Edge-to-edge, transparent status bar, large bottom safe padding.

@@ -58,7 +58,7 @@ screens with RN components (Paper + custom). The design tokens and layouts carry
 | Framework | **NestJS** | Structured, opinionated, excellent TS DX. Lighter alternatives: **Fastify** or **Express**. |
 | ORM | **Drizzle ORM** | TS-first, lightweight, SQL-ish. Alternative: **Prisma**. |
 | Database | **PostgreSQL** (managed) | Tables per the AI spec: `meals`, `meal_items`, `nutrition_targets`, plus habit `rules`, `rule_logs`, `weights`, `users`. |
-| Auth | **Clerk** (managed) or **Better Auth** (self-hosted TS) | Clerk = fastest with great Expo SDK; Better Auth = keep it all in-house. JWT access + refresh either way. |
+| Auth | **Better Auth** (self-hosted) — **Google Sign-In only** | Google social provider via the **idToken flow** (native Android account picker) + Drizzle/Postgres adapter + `@better-auth/expo`. Users & sessions in your own DB. See [auth.md](auth.md). |
 | Cache / rate limit | **Redis (Upstash)** | Cache the FatSecret OAuth token + `food.get` results by `food_id`; per-user rate limit on `/meals/analyze`. (A Postgres cache table works too.) |
 | Validation | **zod** (shared) | Same schemas validate API I/O and Claude's structured output. |
 | AI | **@anthropic-ai/sdk** | `messages.parse()` + zod for vision identification and the tip call. |
