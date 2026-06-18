@@ -1,56 +1,65 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appMeta } from '@/constants/app';
 import { AppText, Button, Card, HabitRow, Icon, ProgressRing, type IconName } from '@/components/ui';
+import { useRuleLogs, useRules, useSetRuleState, useStreaks, useWeights } from '@/lib/queries';
 import { colors, gradient, radius, shadows, spacing, type RuleIconPalette } from '@/theme';
 
-type Habit = { name: string; icon: IconName; palette: RuleIconPalette; streak: number; done: boolean };
-
+// TODO: derive from the persisted challenge (onboarding persistence).
 const PROGRAM_DAY = 41;
 const PROGRAM_TOTAL = 75;
-const STREAK = 41;
 
 const MOTIVATION = ['You showed up today.', 'One day at a time.', 'Small steps, every day.', "Don't break the chain."];
 
-// Split the philosophy so we can emphasise the tail (keeps the shared constant as source of truth).
 const SPLIT_AT = appMeta.philosophy.indexOf('the process');
 const PHILO_PRE = appMeta.philosophy.slice(0, SPLIT_AT);
 const PHILO_EMPH = appMeta.philosophy.slice(SPLIT_AT);
 
+const todayIso = () => new Date().toISOString().slice(0, 10);
+
 export default function TodayScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const today = todayIso();
 
-  const [habits, setHabits] = useState<Habit[]>([
-    { name: 'Drink 3L of water', icon: 'water-drop', palette: 'water', streak: 41, done: true },
-    { name: 'Walk 30 minutes', icon: 'directions-walk', palette: 'green', streak: 28, done: true },
-    { name: 'No sugar after 7pm', icon: 'cookie', palette: 'orange', streak: 12, done: true },
-    { name: 'Lights out by 11pm', icon: 'bedtime', palette: 'purple', streak: 41, done: false },
-  ]);
+  const { data: rules = [], isLoading } = useRules();
+  const { data: logs = [] } = useRuleLogs(today);
+  const { data: streaks } = useStreaks();
+  const { data: weights = [] } = useWeights();
+  const setState = useSetRuleState();
+
   const [motivIdx, setMotivIdx] = useState(0);
-
   useEffect(() => {
     const t = setInterval(() => setMotivIdx((i) => (i + 1) % MOTIVATION.length), 4200);
     return () => clearInterval(t);
   }, []);
 
+  const stateByRule = new Map(logs.map((l) => [l.ruleId, l.state]));
+  const currentByRule = new Map((streaks?.rules ?? []).map((s) => [s.ruleId, s.current]));
+  const habits = rules.map((r) => ({
+    id: r.id,
+    name: r.name,
+    icon: r.icon as IconName,
+    palette: r.palette as RuleIconPalette,
+    done: stateByRule.get(r.id) === 'done',
+    streak: currentByRule.get(r.id) ?? 0,
+  }));
+
   const done = habits.filter((h) => h.done).length;
   const total = habits.length;
-  const allDone = done === total;
+  const allDone = total > 0 && done === total;
   const doneLabel = `${done} of ${total} done`;
+  const dayStreak = streaks?.overall.current ?? 0;
 
-  const toggle = (i: number) =>
-    setHabits((hs) => hs.map((h, idx) => (idx === i ? { ...h, done: !h.done } : h)));
+  const latest = weights.length ? weights[weights.length - 1] : undefined;
+  const prev = weights.length > 1 ? weights[weights.length - 2] : undefined;
+  const weightDelta = latest && prev ? +(latest.valueKg - prev.valueKg).toFixed(1) : null;
 
-  const dateLabel = new Date().toLocaleDateString(undefined, {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
+  const dateLabel = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.appBg }}>
@@ -67,30 +76,13 @@ export default function TodayScreen() {
             </AppText>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 5,
-                height: 38,
-                paddingHorizontal: 12,
-                borderRadius: radius.pill,
-                backgroundColor: colors.amberChipBg,
-                borderWidth: 1,
-                borderColor: colors.amberChipBorder,
-              }}
-            >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, height: 38, paddingHorizontal: 12, borderRadius: radius.pill, backgroundColor: colors.amberChipBg, borderWidth: 1, borderColor: colors.amberChipBorder }}>
               <Icon name="local-fire-department" size={19} color={colors.amber} />
               <AppText variant="caption" color={colors.amberText} style={{ fontSize: 15 }}>
-                {STREAK}
+                {dayStreak}
               </AppText>
             </View>
-            <LinearGradient
-              colors={gradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}
-            >
+            <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}>
               <AppText variant="heading" color={colors.white} style={{ fontSize: 17 }}>
                 S
               </AppText>
@@ -99,20 +91,7 @@ export default function TodayScreen() {
         </View>
 
         {/* philosophy banner */}
-        <View
-          style={{
-            marginTop: 16,
-            flexDirection: 'row',
-            gap: 11,
-            alignItems: 'flex-start',
-            padding: 14,
-            paddingHorizontal: 16,
-            borderRadius: radius.xl,
-            backgroundColor: colors.sage,
-            borderWidth: 1,
-            borderColor: colors.sageBorder,
-          }}
-        >
+        <View style={{ marginTop: 16, flexDirection: 'row', gap: 11, alignItems: 'flex-start', padding: 14, paddingHorizontal: 16, borderRadius: radius.xl, backgroundColor: colors.sage, borderWidth: 1, borderColor: colors.sageBorder }}>
           <Icon name="format-quote" size={20} color={colors.green} />
           <AppText variant="bodyStrong" color={colors.inkSoft} style={{ flex: 1 }}>
             {PHILO_PRE}
@@ -135,7 +114,6 @@ export default function TodayScreen() {
               of {PROGRAM_TOTAL}
             </AppText>
           </ProgressRing>
-
           <View style={{ flex: 1, gap: 15 }}>
             <View>
               <AppText variant="label" color={colors.muted}>
@@ -144,7 +122,7 @@ export default function TodayScreen() {
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 3 }}>
                 <Icon name="local-fire-department" size={22} color={colors.amber} />
                 <AppText variant="stat" color={colors.ink}>
-                  {STREAK}
+                  {dayStreak}
                 </AppText>
                 <AppText variant="bodyMuted" color={colors.muted}>
                   days
@@ -161,12 +139,7 @@ export default function TodayScreen() {
                 </AppText>
               </View>
               <View style={{ marginTop: 7, height: 8, borderRadius: radius.pill, backgroundColor: colors.track, overflow: 'hidden' }}>
-                <LinearGradient
-                  colors={gradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{ height: '100%', borderRadius: radius.pill, width: `${Math.round((done / total) * 100)}%` }}
-                />
+                <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ height: '100%', borderRadius: radius.pill, width: `${total ? Math.round((done / total) * 100) : 0}%` }} />
               </View>
             </View>
           </View>
@@ -182,50 +155,50 @@ export default function TodayScreen() {
           </AppText>
         </View>
 
-        <Card style={{ paddingHorizontal: 6, paddingTop: 4, paddingBottom: 14 }}>
-          {habits.map((h, i) => (
-            <HabitRow
-              key={h.name}
-              name={h.name}
-              icon={h.icon}
-              palette={h.palette}
-              streak={h.streak}
-              done={h.done}
-              showDivider={i > 0}
-              onToggle={() => toggle(i)}
-            />
-          ))}
-
-          <View style={{ paddingHorizontal: 6, paddingTop: 8 }}>
-            {allDone ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 11,
-                  padding: 14,
-                  paddingHorizontal: 16,
-                  borderRadius: radius.lg,
-                  backgroundColor: colors.successBg,
-                  borderWidth: 1,
-                  borderColor: colors.successBorder,
-                }}
-              >
-                <Icon name="task-alt" size={26} color={colors.green} />
-                <View style={{ flex: 1 }}>
-                  <AppText variant="itemTitle" color={colors.successInk} style={{ fontSize: 15 }}>
-                    Day complete.
-                  </AppText>
-                  <AppText variant="bodyMuted" color={colors.successInkSoft} style={{ marginTop: 1 }}>
-                    See you tomorrow. Don't break the chain.
-                  </AppText>
+        {isLoading ? (
+          <Card style={{ padding: 28, alignItems: 'center' }}>
+            <ActivityIndicator color={colors.green} />
+          </Card>
+        ) : habits.length === 0 ? (
+          <Card style={{ padding: 22, alignItems: 'center', gap: 12 }}>
+            <AppText variant="bodyMuted" color={colors.muted}>
+              No rules yet. Set up your daily process.
+            </AppText>
+            <Button title="Define rules" icon="add" onPress={() => router.push('/define-rules')} />
+          </Card>
+        ) : (
+          <Card style={{ paddingHorizontal: 6, paddingTop: 4, paddingBottom: 14 }}>
+            {habits.map((h, i) => (
+              <HabitRow
+                key={h.id}
+                name={h.name}
+                icon={h.icon}
+                palette={h.palette}
+                streak={h.streak}
+                done={h.done}
+                showDivider={i > 0}
+                onToggle={() => setState.mutate({ ruleId: h.id, date: today, state: h.done ? 'missed' : 'done' })}
+              />
+            ))}
+            <View style={{ paddingHorizontal: 6, paddingTop: 8 }}>
+              {allDone ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 11, padding: 14, paddingHorizontal: 16, borderRadius: radius.lg, backgroundColor: colors.successBg, borderWidth: 1, borderColor: colors.successBorder }}>
+                  <Icon name="task-alt" size={26} color={colors.green} />
+                  <View style={{ flex: 1 }}>
+                    <AppText variant="itemTitle" color={colors.successInk} style={{ fontSize: 15 }}>
+                      Day complete.
+                    </AppText>
+                    <AppText variant="bodyMuted" color={colors.successInkSoft} style={{ marginTop: 1 }}>
+                      See you tomorrow. Don't break the chain.
+                    </AppText>
+                  </View>
                 </View>
-              </View>
-            ) : (
-              <Button title="Open check-in" icon="arrow-forward" onPress={() => router.push('/check-in')} />
-            )}
-          </View>
-        </Card>
+              ) : (
+                <Button title="Open check-in" icon="arrow-forward" onPress={() => router.push('/check-in')} />
+              )}
+            </View>
+          </Card>
+        )}
 
         {/* quick weight add */}
         <Pressable onPress={() => router.push('/weight')}>
@@ -239,24 +212,23 @@ export default function TodayScreen() {
               </AppText>
               <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8, marginTop: 2 }}>
                 <AppText variant="stat" color={colors.ink} style={{ fontSize: 22 }}>
-                  74.2 kg
+                  {latest ? `${latest.valueKg.toFixed(1)} kg` : '—'}
                 </AppText>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-                  <Icon name="south" size={15} color={colors.green} />
-                  <AppText variant="caption" color={colors.green}>
-                    0.3 kg
-                  </AppText>
-                </View>
+                {weightDelta !== null ? (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
+                    <Icon name={weightDelta <= 0 ? 'south' : 'north'} size={15} color={colors.green} />
+                    <AppText variant="caption" color={colors.green}>
+                      {Math.abs(weightDelta)} kg
+                    </AppText>
+                  </View>
+                ) : null}
               </View>
             </View>
-            <LinearGradient
-              colors={gradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={[{ width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center' }, shadows.fab]}
-            >
-              <Icon name="add" size={24} color={colors.white} />
-            </LinearGradient>
+            <View style={{ width: 46, height: 46, borderRadius: 23, overflow: 'hidden' }}>
+              <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[{ flex: 1, alignItems: 'center', justifyContent: 'center' }, shadows.fab]}>
+                <Icon name="add" size={24} color={colors.white} />
+              </LinearGradient>
+            </View>
           </Card>
         </Pressable>
 

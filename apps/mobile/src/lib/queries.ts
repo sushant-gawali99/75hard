@@ -27,10 +27,17 @@ export function useRuleLogs(date: string) {
   return useQuery({ queryKey: ['rule-logs', date], queryFn: () => api.listRuleLogs(date) });
 }
 
+export function useStreaks() {
+  return useQuery({ queryKey: ['streaks'], queryFn: api.getStreaks });
+}
+
 export function useSetRuleState() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: SetRuleStateInput) => api.setRuleState(body),
-    onSuccess: (_data, vars) => qc.invalidateQueries({ queryKey: ['rule-logs', vars.date] }),
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ['rule-logs', vars.date] });
+      qc.invalidateQueries({ queryKey: ['streaks'] });
+    },
   });
 }

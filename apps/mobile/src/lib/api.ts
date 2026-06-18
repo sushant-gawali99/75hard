@@ -4,6 +4,7 @@ import type {
   Rule,
   RuleLog,
   SetRuleStateInput,
+  StreaksSummary,
   WeightEntry,
 } from '@process/shared';
 import { authClient } from './auth';
@@ -33,4 +34,5 @@ export const api = {
   setRuleState: (body: SetRuleStateInput) => request<RuleLog>('/rule-logs', { method: 'POST', body: JSON.stringify(body) }),
   listWeights: () => request<WeightEntry[]>('/weights'),
   addWeight: (body: AddWeightInput) => request<WeightEntry>('/weights', { method: 'POST', body: JSON.stringify(body) }),
+  getStreaks: () => request<StreaksSummary>('/streaks'),
 };
