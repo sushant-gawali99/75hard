@@ -5,7 +5,9 @@ import { LoggerModule } from 'nestjs-pino';
 import { validateEnv } from './config/env.validation';
 import { DbModule } from './db/db.module';
 import { HealthModule } from './health/health.module';
+import { RuleLogsModule } from './rule-logs/rule-logs.module';
 import { RulesModule } from './rules/rules.module';
+import { WeightsModule } from './weights/weights.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { RulesModule } from './rules/rules.module';
     DbModule,
     HealthModule,
     RulesModule,
+    RuleLogsModule,
+    WeightsModule,
   ],
 })
 export class AppModule {}
