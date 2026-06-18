@@ -45,7 +45,18 @@ export function HabitRow({
             colors={p.grad}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={{ width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' }}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: p.icon,
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 4,
+            }}
           >
             <Icon name="check" size={18} color={colors.white} />
           </LinearGradient>
